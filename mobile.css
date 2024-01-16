@@ -1,0 +1,17 @@
+@media (max-aspect-ratio: 4/3) {
+
+    .desktopOnly {
+        display:none;
+    }
+
+    #mobileFigure {
+        position: absolute;
+        bottom:0;
+        height:95%;
+        right:clamp(0rem, 30vw, 40vw);
+        margin-right: -18rem;
+        margin-bottom: -5rem;
+        pointer-events: none;
+    }
+
+}

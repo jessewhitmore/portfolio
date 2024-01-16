@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>HTML 5 Boilerplate</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="mobile.css">
+    <link rel="stylesheet" href="desktop.css">
+
+    <script src="https://assets.playground.xyz/kristjanfreelance/d89b7c52_gsap.min.js"></script>
+    <script src="https://assets.playground.xyz/kristjanfreelance/4c934217_Draggable.min.js"></script>
+    <script src="https://assets.playground.xyz/kristjanfreelance/89d3b4dc_InertiaPlugin.min.js"></script>    
+  </head>
+  <body>
+
+    <div id="templateStructures">
+
+    </div>
+
+    <div id="wrapper">
+      <div id="header" class = "section void">
+
+        <div class="copy">        
+
+          <div class="headerSections desktopHeader desktopOnly">
+            <div class="screen selOff float vel dur500 dist50 si3 pushable react-play"> </div>
+            <div class="screen selOff float vel dur500 dist50 si1 pushable react-play"> </div>
+            <div class="screen selOff float vel dur500 dist50 si1 pushable react-play"> </div>
+            <div class="screen selOff float vel dur500 dist30 si1 pushable react-play"> </div>
+            <div class="screen selOff float vel dur500 dist70 si1 pushable react-play"> </div>
+            <div class="screen selOff float vel dur500 dist50 si1 pushable react-play"> </div>
+            <div class="screen selOff float vel dur500 dist30 si1 pushable react-play"> </div>
+            
+
+            <div id="desktopNamePlate" class = "pushable vel dur500 dist90">
+              <span>JESSE</br>WHITMORE</span></br>
+              <span>DESIGN // PRODUCT // CODE</span>
+            </div>
+            <img id="desktopFigure" src="./img/person-test.png" />
+
+            <div class="screen selOff float vel dur500 dist150 si1 pushable react-play"> </div>
+            <div class="screen selOff float vel dur500 dist80 si1 pushable react-play"> </div>
+
+          </div>
+
+          <div class="headerSections mobileOnly">
+            <div class="screen selOff float vel dur500 dist50 si1 pushable react-play"> </div>
+            <div class="screen selOff float vel dur500 dist30 si1 pushable react-play"> </div>
+            <div class="screen selOff float vel dur500 dist70 si1 pushable react-play"> </div>
+    
+            <!-- picture -->
+            <img id="mobileFigure" src="./img/person-test.png" />
+
+
+            <div class="screen selOff float vel dur500 dist90 si2 pushable react-play"> </div>
+            <div id="namePlate" class="pushable mobileOnly">          
+              <div class="screen float vel dur500 dist30 si3"></div>
+
+              <div id="name" class = "vel dur500 dist20">
+                <span>JESSE WHITMORE</span>
+                <span>DESIGN // PRODUCT // CODE</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <canvas class = "staticBlocksH" width = "800" height="400" ></canvas>
+
+      </div>
+      <div id="about" class = "section col">
+
+        <div class="copy desktopOnly">
+          <div>xxx</div>
+        </div>
+
+        <div class="copy">
+          <div class ="vel dur900 dist15">
+            <h1 id = "text" class ="text selOff">ABOUT</h1>
+          </div>  
+          <span id = "aboutTxt" class = "about selOff">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas ac turpis turpis. Fusce consectetur risus eros, nec semper metus hendrerit sed. Suspendisse potenti. Donec iaculis eget sem eu tincidunt. Sed est mauris, vulputate ac consequat quis, euismod ut ligula. Vivamus vel nunc porta. 
+          </span>
+          
+          <div class="buttonPlate pushable react-open"> MORE > 
+            <div class = "button vel dur800 dist70" data-linkRef = "0">
+            MORE >
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="projects" class = "section">
+      </div>
+      <div id="contact" class = "section void">
+        <canvas class = "staticBlocksH" width = "800" height="400" ></canvas>
+
+        <div class="contactMax">
+
+          <div class="screen selOff float vel dur800 dist50 pushable react-play"> </div>
+          <div class="screen selOff float vel dur800 dist30 pushable react-play"> </div>
+          <div class="screen selOff float vel dur800 dist90 pushable react-play"> </div>
+          <div class="screen selOff float vel dur800 dist50 pushable react-play"> </div>
+          <div class="screen selOff float vel dur800 dist30 pushable react-play"> </div>
+
+        <div class="copy">
+  
+          <div class="heading">
+            Like what</br>
+            you see?
+            <hr>
+          </div>
+          <div class="buttonPlate vel dur800 dist120 pushable">
+            <div class="button">
+              <div id = "buttonText" class = "default-state ">
+                <div class = "telButton react-copy" data-linkRef = "2">(+61) 4 21 907 903</div>
+                <div class = "emailButton react-copy" data-linkRef = "3">j.whitmore.mail</br>@gmail.com</div>
+                <div class = "socialsButton react-open" data-linkRef = "4">@jwhitmore</div>
+                <div class="defaultState react-play" data-linkRef = "5">contact</div>
+              </div>
+              <div class="buttonCells">
+                <div id = "telButton" class = "react-copy">T</div>
+                <div id = "emailButton" class = "react-copy">E</div>
+                <div id = "socialsButton" class = "react-open">in</div>
+              </div>
+            </div>
+            <div id = "local">
+            Local Time: <span id = "localTime">x</span></br>
+            Location: <span id = "location">x</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+        <div id="contactPlate">
+          <div class="contactInfo">
+          </div>
+        </div>
+      </div>
+      <div id = "nav" >
+        <div class = "screen float pushable react-play"></div>
+        <div class = "screen float pushable react-play"></div>        
+        <div class = "screen float pushable react-play"></div>        
+
+        <div class="copy">
+          <span data-linkRef="6" class = "react-play">HOME</span>
+          <span data-linkRef="6" class = "react-play">ABOUT</span>
+          <span data-linkRef="6" class = "react-play">PROJECTS</span>
+          <span data-linkRef="6" class = "react-play">CONTACT</span>
+        </div>
+      </div>
+
+      <canvas class = "menuWipe"></canvas>
+
+      <div id = "navCanvas">
+      </div>
+
+      <div id="menu" class = "vel float dur1000 dist20">
+        |||
+      </div>
+
+      <div id="menuDesktop"><span  class = "react-play">HOME</span><span  class = "react-play">ABOUT</span><span  class = "react-play">PROJECTS</span><span  class = "react-play">CONTACT</span><span>|||</span>
+</div>
+    </div>
+
+    <div id="mousePointer" ></div>
+
+    <div id="blocker" style = "background:rgb(38, 42, 44); width:100%; height:100%; pointer-events:none; position:fixed; top:0; left:0;"></div>
+
+    <div class="linkClick"></div>
+    <canvas class="linkClickCanvas"></canvas>
+    <script>
+
+    </script>
+  <script src="js/grained.min.js"></script>
+	<script src="js/base.js"></script>
+	<script src="js/index.js"></script>
+
+  </body>
+</html>

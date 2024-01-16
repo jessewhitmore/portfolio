@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>HTML 5 Boilerplate</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="mobile.css">
+    <link rel="stylesheet" href="desktop.css">
+
+    <script src="https://assets.playground.xyz/kristjanfreelance/d89b7c52_gsap.min.js"></script>
+    <script src="https://assets.playground.xyz/kristjanfreelance/4c934217_Draggable.min.js"></script>
+    <script src="https://assets.playground.xyz/kristjanfreelance/89d3b4dc_InertiaPlugin.min.js"></script>    
+  </head>
+  <body>
+
+    <div id="wrapper">
+
+      <div id="projectHeading" ></div>
+
+      <div id="project" class = "section">
+      </div>
+      
+      <div id="contact" class = "section">
+        <canvas class = "staticBlocksH" width = "800" height="400" ></canvas>
+
+
+        <div class="screen selOff float vel dur800 dist50 pushable"> </div>
+        <div class="screen selOff float vel dur800 dist30 pushable"> </div>
+        <div class="screen selOff float vel dur800 dist90 pushable"> </div>
+
+
+        <div class="copy">
+          Like what</br>
+          you see?
+          <hr>
+        </div>
+        <div class="buttonPlate vel dur800 dist120 pushable">
+          <div class="button ">
+            <div id = "buttonText" class = "default-state ">
+              <div class = "telButton" data-linkRef = "2">(+61) 4 21 907 903</div>
+              <div class = "emailButton" data-linkRef = "3">j.whitmore.mail @gmail.com</div>
+              <div class = "socialsButton" data-linkRef = "4">@jwhitmore</div>
+              <div class="defaultState" data-linkRef = "5">contact</div>
+            </div>
+            <div class="buttonCells">
+              <div id = "telButton">T</div>
+              <div id = "emailButton">E</div>
+              <div id = "socialsButton">in</div>
+            </div>
+          </div>
+          <div id = "local">
+          Local Time: <span id = "localTime">x</span></br>
+          Location: <span id = "location">x</span>
+        </div>
+      </div>
+
+        <div id="contactPlate">
+          <div class="contactInfo">
+          </div>
+        </div>
+
+      </div>
+      <div id = "nav" >
+        <div class = "screen float pushable"></div>
+        <div class = "screen float pushable"></div>        
+        <div class = "screen float pushable"></div>        
+
+        <div class="copy">
+          <span class = "currentPage" data-linkRef="6">HOME</span>
+          <span data-linkRef="6">ABOUT</span>
+          <span data-linkRef="6">PROJECTS</span>
+          <span data-linkRef="6">CONTACT</span>
+        </div>
+      </div>
+
+      <canvas class = "menuWipe"></canvas>
+
+      <div id = "navCanvas">
+      </div>
+
+      <div id="menu" class = "vel float dur1000 dist20">
+        |||
+      </div>
+    </div>
+
+    <div id="mousePointer" ></div>
+
+    <div id="blocker" style = "background:black; width:100%; height:100%; pointer-events:none; position:fixed; top:0; left:0;"></div>
+
+    <div class="linkClick"></div>
+    <canvas class="linkClickCanvas"></canvas>
+    <script>
+
+    </script>
+  <script src="js/grained.min.js"></script>
+	<script src="js/base.js"></script>
+	<script src="js/index.js"></script>
+
+  </body>
+</html>
