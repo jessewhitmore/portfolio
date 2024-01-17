@@ -65,37 +65,20 @@ let props = {
     {
         title: 'test title',
         desc: 'PROJECT - TYPE - CODE' 
-    }, {
+    }, 
+    {
         title: 'test title',
         desc: 'PROJECT - TYPE - CODE' 
-    }, {
+    }, 
+    {
         title: 'test title',
         desc: 'PROJECT - TYPE - CODE' 
-    }, {
+    }, 
+    {
         title: 'test title',
         desc: 'PROJECT - TYPE - CODE' 
-    }, {
-        title: 'test title',
-        desc: 'PROJECT - TYPE - CODE' 
-    }, {
-        title: 'test title',
-        desc: 'PROJECT - TYPE - CODE' 
-    }, {
-        title: 'test title',
-        desc: 'PROJECT - TYPE - CODE' 
-    }, {
-        title: 'test title',
-        desc: 'PROJECT - TYPE - CODE' 
-    }, {
-        title: 'test title',
-        desc: 'PROJECT - TYPE - CODE' 
-    }, {
-        title: 'test title',
-        desc: 'PROJECT - TYPE - CODE' 
-    }, {
-        title: 'test title',
-        desc: 'PROJECT - TYPE - CODE' 
-    }, {
+    }, 
+    {
         title: 'test title',
         desc: 'PROJECT - TYPE - CODE' 
     }
@@ -211,6 +194,10 @@ function exponentialDecayWithMax(currentValue, targetValue, decayRate) { // bigg
     return currentValue + (0 - currentValue) * Math.exp(-decayRate);
 }
 
+Number.prototype.clamp = function(min, max) {
+    return Math.min(Math.max(this, min), max);
+};
+
 function wrapContent(outer, name) {
     let inner = document.createElement('div')
     if(name !== null) inner.classList.add(name)
@@ -252,16 +239,18 @@ class blockCanvas { // canvas builder
         })
 
         this.resizeTimer = null
-        window.addEventListener('resize', () => {
-            clearTimeout(this.resizeTimer);
-            if (!this.resizeTimer) {
-                this.onResizeStart();
-            }
-            this.resizeTimer = setTimeout(() => {
-                this.resizeTimer = null;
-                this.onResizeEnd();
-            }, 100); 
-        });         
+        if(!props.mobile) {
+            window.addEventListener('resize', () => {
+                clearTimeout(this.resizeTimer)
+                if (!this.resizeTimer) {
+                    this.onResizeStart()
+                }
+                this.resizeTimer = setTimeout(() => {
+                    this.resizeTimer = null
+                    this.onResizeEnd()
+                }, 100)
+            })
+        }
     }  
 
     onResizeStart() {
@@ -453,15 +442,17 @@ class blockCanvas { // canvas builder
                 // Remove the square from the array if opacity is zero
                 squares.splice(i, 1);
             } else {
+                let driftSpeed = (elapsed / 1000 * square.movementSpeed * 150)
+                let opacityScale = (driftSpeed > 0) ? 1 / (1 + Math.exp(-(opacity * 5 - 2.5)))  : 1
                 this.eles.forEach((co) => {
                     // Draw the square with updated opacity
                     if (co.running) {
-                        let driftSpeed = (elapsed / 1000 * square.movementSpeed * 150)
                         co.ctx.globalAlpha = square.globalAlpha * opacity;
                         // const pattern = (textureLoaded) ? ctx.createPattern(textureImage, 'repeat') : 
                         const pattern = this.colour
                         co.ctx.fillStyle = pattern
-                        co.ctx.fillRect(square.x + driftSpeed * square.drift[0], square.y + driftSpeed * square.drift[1], square.w, square.h);
+                        
+                        co.ctx.fillRect(square.x + driftSpeed * square.drift[0], square.y + driftSpeed * square.drift[1], square.w * opacityScale, square.h * opacityScale);
                     }
                 })
             }
@@ -540,7 +531,7 @@ function scrollObservation() {
 
         /*  Custom function for all pages */
 
-        if (typeof custScrollAnimation === 'function') custScrollAnimation()
+        if (typeof customScroll === 'function') customScroll()
 
         // -------------
 
@@ -907,7 +898,6 @@ function mouseOver(ev) {
     /*          mouse follower          */
     const mouseX = ev.clientX;
     const mouseY = ev.clientY;
-    let highlightValid = true;
 
     setTimeout(()=>{
         qs('#mousePointer').style.display = 'block';
@@ -1006,7 +996,7 @@ function mouseOver(ev) {
     })
 
     push.target = ev.target
-
+    if(typeof customMouse === 'function') customMouse()
 }
 
 // menu open
@@ -1354,24 +1344,26 @@ function generateScreen(parent, col) {
 let resizeTimer;
 function onResizeStart() {
     document.body.classList.add('no-transition')
+    if(typeof customDuringResizer === 'function') customDuringResizer()
 }
 
 function onResizeEnd() {
-    document.body.classList.remove('no-transition')
     if(typeof customResizer === 'function') customResizer()
+    document.body.classList.remove('no-transition')
 }
 
-window.addEventListener('resize', function() {
-    clearTimeout(resizeTimer);
-    if (!resizeTimer) {
-        onResizeStart();
-    }
-    resizeTimer = setTimeout(function() {
-        resizeTimer = null;
-        onResizeEnd();
-    }, 200); 
-});
-
+if(!props.mobile) {
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer)
+        if (!resizeTimer) {
+            onResizeStart()
+        }
+        resizeTimer = setTimeout(function() {
+            resizeTimer = null
+            onResizeEnd()
+        }, 200)
+    })
+}
 
 
 

@@ -34,8 +34,6 @@ function processCanvas() {
 } 
 
 
-
-
 // -------------------------------------
 // -------------------------------------
 
@@ -61,33 +59,15 @@ function processElements() {
 
     /*          Gen projects            */
 
+    props.projectIMG = []
     projectManifest.forEach((v,i) => {
 
         // create and tag - project
         let project = document.createElement('div')
         project.classList.add('project', 'react-open')
         project.setAttribute('data-linkRef',1)
+        project.setAttribute('data-project', v.title.toLowerCase().replace(' ','-'))
 
-        // create and tag - copy
-        let copy = document.createElement('div')
-        copy.classList.add('copy')
-
-        // create and tag & attach to parent - title
-        let title = document.createElement('div')
-        title.classList.add('title')
-        title.innerText = v.title        
-        copy.appendChild(title)
-
-        // create and tag & attach to parent - desc
-        let desc = document.createElement('div')
-        desc.classList.add('desc')
-        desc.innerText = v.desc
-        copy.appendChild(desc)
-
-        // create and tag & attach copy to - closed
-        let closed = document.createElement('div')
-        closed.classList.add('closed')
-        closed.appendChild(copy.cloneNode(true))
 
         // create, tag, img setup & attach copy to - reveal
         let reveal = document.createElement('div')
@@ -98,21 +78,80 @@ function processElements() {
             this.src = './img/test.jpg'
         }
         img.src = `./projects/title-${v.title.toLowerCase().replace(' ','-')}.jpg`;
+        img.setAttribute('data-projectIndex', i+1)
         reveal.appendChild(img)
-        reveal.appendChild(copy)
+
+        props.projectIMG[`pi${i+1}`] = { im: img, last: 0 }
 
         // checky hover shade
         let shade = document.createElement('div')
         shade.classList.add('shade')
 
+        // Create an SVG element
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const clipPath = path.cloneNode()
+
+        path.setAttribute('fill', `rgb(${props.primaryCol})`)
+        path.classList = "SVGblocker";
+        path.id = "SVGblocker";
+
+        // clip path
+        const def = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+        const clip = document.createElementNS('http://www.w3.org/2000/svg', 'clipPath');
+        clip.id = `SVGclip${i}`
+        clip.classList = "SVGclip"
+        svg.appendChild(def).appendChild(clip).appendChild(clipPath)
+
+        const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        group.setAttribute('clip-path', `url('#${clip.id}')`)
+
+        const titleTxt = document.createElementNS('http://www.w3.org/2000/svg', 'text')
+        titleTxt.classList.add('SVGtitle')
+        titleTxt.setAttribute('y','50%')
+        titleTxt.setAttribute('transform-origin', '0% 29%')
+        titleTxt.setAttribute('fill',`rgb(${props.secondaryCol})`)
+        
+        const titleTxtNode = document.createTextNode(v.title);
+        titleTxt.appendChild(titleTxtNode)
+
+        const backTitleTxt = titleTxt.cloneNode(true)
+        backTitleTxt.setAttribute('fill',`rgb(${props.primaryCol})`)
+
+
+        const descTxt = document.createElementNS('http://www.w3.org/2000/svg', 'text')
+        descTxt.classList.add('SVGdesc')
+        descTxt.setAttribute('y','67%')
+        descTxt.setAttribute('transform-origin', '0% -6%')
+        descTxt.setAttribute('fill',`rgb(${props.secondaryCol})`)
+
+        const descTxtNode = document.createTextNode(v.desc);
+        descTxt.appendChild(descTxtNode)        
+
+        const backDescTxt = descTxt.cloneNode(true)
+        backDescTxt.setAttribute('fill',`rgb(${props.primaryCol})`)
+
+
+        svg.appendChild(backTitleTxt)
+        svg.appendChild(backDescTxt)
+
+        svg.appendChild(path)
+
+        group.appendChild(titleTxt)
+        group.appendChild(descTxt)
+        svg.appendChild(group)
+
+
         // finalise elements and attach to .project node
-        project.appendChild(closed)
         project.appendChild(reveal)
+        project.appendChild(svg)
         project.appendChild(shade)
 
         // finalise and attach
         qs('#projects').appendChild(project)
     })
+    projectSVGshape()
     
     
     /*          Generate contact info           */
@@ -535,6 +574,10 @@ function aboutSetup() {
     timeline.timeScale(ts)
 }
 
+function customDuringResizer() {
+    qs('#projects').classList.add('resizeOff')
+}
+
 function customResizer() {
         // Get the parent and child elements
         const parent = qs('#text');
@@ -582,12 +625,179 @@ function customResizer() {
             fontSizePercentage -= 0.001
         }         
 
+
+        projectSVGshape()
+        qs('#projects').classList.remove('resizeOff')
+
 } 
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * 
+ * 
+ *          PROJECTS
+ * 
+ * 
+ */
+props.performanceCount = 0;
+function projectSVGshape() {
+
+
+    const parent = qs('#projects svg').parentElement
+    const w = qs('#wrapper').offsetWidth
+    const h = parent.offsetHeight
+    const remOffset = (window.innerWidth / window.innerHeight > 4/3) ? 12 * props.rem : 7 * props.rem
+
+
+    qsa('#projects svg').forEach(ele => {
+
+        ele.setAttribute('viewBox', `0 0 ${ w } ${h}`)
+        ele.querySelectorAll('path').forEach(path => {
+            path.setAttribute('d',`M 0 0 H ${ w } L ${ w + remOffset } ${ h } H 0 z`)
+        })
+        ele.querySelectorAll('.SVGtitle').forEach(title => {
+            title.setAttribute('x', (w * 0.12).clamp(2.5 * props.rem, 15 * props.rem))
+        })
+        ele.querySelectorAll('.SVGdesc').forEach(title => {
+            title.setAttribute('x', (w * 0.12).clamp(3.1 * props.rem, 15.4 * props.rem))
+        })
+
+    })
+
+
+    let windowHeight = window.innerHeight
+    for (const [key, obj] of Object.entries(props.projectIMG)) {
+        const parent = obj.im.parentElement.getBoundingClientRect()
+        obj.im.style.marginTop = -obj.im.offsetHeight/2 + 'px'
+
+        obj.mid = window.scrollY + parent.top + (parent.height / 2)
+        obj.sh = windowHeight / 2
+    }
+
+    gsap.set(qsa('.highlight .SVGblocker, .highlight .SVclip'), { x: '0vw' })
+    gsap.set(qsa('.highlight .SVGtitle, .highlight .SVGdesc'), { x: 0, scale:1 })    
+    projectDraw()
+}
+function projectParallax() {
+
+    if(props.projectAnimatable) {
+        const cTime = parseInt(Date.now())
+        let propjectAnimatable = false;
+        let windowY = window.scrollY
+        for (const [key, obj] of Object.entries(props.projectIMG)) {
+            if(!propjectAnimatable) {
+                if(obj.last === null || obj.last + 500 > cTime) {
+                    let relativePos = (windowY + obj.sh - obj.mid)
+                    let speed = relativePos * (obj.im.dataset.dist/100)
+                    obj.im.style.transform = `translateY(${speed}px)`
+                    projectAnimatable = true
+                }
+            }
+        }
+        props.projectAnimatable = projectAnimatable
+    }
+
+}
+
+function projectDraw(target) {
+
+    if(typeof target == 'object') target.classList.add('highlight');
+    let xOffset = (window.innerWidth / window.innerHeight < 4/3) ? '-74vw' : '-54vw'
+    qsa('#projects .highlight').forEach((ele)=> {
+        let img = ele.querySelector('img')
+        if(ele == target) {
+            gsap.to(ele.querySelectorAll('.SVGblocker, .SVGclip'), {
+                x: xOffset
+            })
+
+            gsap.to(ele.querySelectorAll('.SVGtitle, .SVGdesc'), {
+                x: -(0.04*window.innerWidth).clamp(1.5*props.rem, 7.5*props.rem),
+                scale: 0.85                
+            })
+
+            gsap.to(ele.querySelectorAll('g'), {
+                opacity: 0.4
+            })
+
+            gsap.to(ele.querySelector('.shade'), {
+                opacity:0.3
+            })
+
+            props.projectAnimatable = true            
+            if(props.projectIMG[`pi${img.dataset.projectindex}`].last !== null) props.projectIMG[`pi${img.dataset.projectindex}`].last = null
+
+        } else {
+            gsap.to(ele.querySelectorAll('.SVGblocker, .SVGclip'), {
+                x: '0vw'
+            })
+            gsap.to(ele.querySelectorAll('.SVGtitle, .SVGdesc'), {
+                x: 0,
+                scale:1
+            })
+
+            gsap.to(ele.querySelectorAll('g'), {
+                opacity: 1
+            })
+
+            gsap.to(ele.querySelector('.shade'), {
+                opacity:0
+            })
+
+            ele.classList.remove('highlight')
+
+            props.projectIMG[`pi${img.dataset.projectindex}`].last = parseInt(Date.now())
+
+        }
+
+        projectParallax()
+
+    })
+}
+
+function customMouse() {
+    if(qs('.highlight') !== null && !push.target.classList.contains('project')) { 
+        projectDraw()
+    }
+    if(!push.target.classList.contains('project') || push.target.classList.contains('highlight')) return;
+    projectDraw(push.target)
+}
 
 
 
@@ -695,10 +905,8 @@ function intersections() {
     function projectIntersect(entries, observer) {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('highlight');
-            } else {
-                entry.target.classList.remove('highlight');
-            }
+                projectDraw(entry.target)
+            } 
         });
     }
 
@@ -840,16 +1048,10 @@ function intersections() {
  * 
  */
 
-function custScrollAnimation() {
+function customScroll() {
         /*      highlight parallax           */
 
-        qsa('#projects img').forEach((ele)=> {
-            let eleBounding = ele.getBoundingClientRect()
-            let posM = eleBounding.top + eleBounding.height/2 - window.innerHeight/2
-            let speed = posM * (ele.dataset.dist/100)
-            ele.style.transform = `translateY(-50%) translate3d(0, ${-speed}px, 0)`
-        })
-
+    projectParallax()
 
 }
 
@@ -910,8 +1112,7 @@ function clickThrough(e, ev) {
         break;
         case 1: // project page            
             qsa('.highlight').forEach((ele) => {        ele.classList.remove('highlight')     })
-            let projChosen = e.querySelector('.title').innerText.toLowerCase().replace(' ', '-');
-            linkClick.centerSweep(ev.clientY, `./projects/${projChosen}.html`)
+           linkClick.centerSweep(ev.clientY, `./projects/${e.dataset.project}.html`)
         break;
         case 2: // copy phonenumber
 

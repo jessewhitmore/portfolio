@@ -541,6 +541,7 @@ HEADER
 
 #header {
     padding-bottom: 5rem;
+    overflow:hidden;
 }
 
 #header .staticBlocksH {
@@ -692,9 +693,6 @@ ABOUT
     width:100%;
 }
 
-#about .copy span {
-    opacity:1;
-}
 
 #about h1 {
     margin:0;
@@ -728,14 +726,16 @@ ABOUT
     left:0;
     top:0;
 
+    opacity:1;
     color:rgb(var(--secondary-col));
 
-    transition: transform 0.7s;
+    transition: transform 0.7s, opacity 0.5s;
     transform:translateY(0%);
 }
 
 .about.selOff span span {
     transform:translateY(125%);
+    opacity:0;
 }
 
 
@@ -747,18 +747,44 @@ PROJECT
 
 **/
 
+
 #projects {
     display:flex;
     flex-direction: column;
     align-items: end;
     justify-content: flex-end;
 
-    padding: 0 0 10rem 0;
+    padding: 0 0 2rem 0;
 
     background: rgb(var(--primary-col));
     box-sizing: border-box;
+
 }
 
+#projects .project svg {
+    position: absolute;
+    width:100%;
+    left:0;
+    transition: all 0.5s;
+    pointer-events: none;
+}
+
+
+#projects .SVGtitle {
+    font-size: clamp(3.1rem, 6.3vw, 7rem);
+    text-transform: capitalize;
+}
+
+#projects .SVGdesc {
+    font-size: clamp(1rem, 2.1vw, 2.3rem);
+    text-transform: uppercase;
+}
+
+
+#projects.resizeOff .shade {
+    opacity:1!important;
+    background: rgb(var(--primary-col))!important;
+}
 
 #projects .project, #projects .project > div {
     width: 100%;
@@ -774,55 +800,32 @@ PROJECT
     width: 100%;
     height: 0.125rem; /* Converted from 2px to rem */
 
-    background: rgba(var(--secondary-col),0.1);
+    background: linear-gradient(90deg, rgba(var(--secondary-col),0.0) 0%, rgba(var(--secondary-col),0.1) 50%, rgba(var(--secondary-col),0.0) 100%);
+}
+
+#projects .project:last-child::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    margin-bottom: -0.125rem; /* Converted from 2px to rem */
+    bottom:2rem;
+
+    width: 100%;
+    height: 0.125rem; /* Converted from 2px to rem */
+
+    background: linear-gradient(90deg, rgba(var(--secondary-col),0.0) 0%, rgba(var(--secondary-col),0.1) 50%, rgba(var(--secondary-col),0.0) 100%);
 }
 
 #projects .project > div {
     position: absolute;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-    padding-left: clamp(2.5rem, 12vw, 15rem); /* Converted from 30px to rem */
-    box-sizing: border-box;
-
-    transition: all 500ms;
-
     pointer-events: none;
 }
 
-
-#projects .copy {
-    transform: scale(1);
-    transform-origin: center left;
-
-    transition: all 500ms;
-}
-
-#projects .title {
-    width:70%;
-
-    text-transform: capitalize;
-    font-size: clamp(2.5rem, 4.5vw, 7rem);
-    line-height:0.9em;
-}
-
-#projects .desc {
-    margin-top: 0.625rem; /* Converted from 10px to rem */
-
-    padding-left: clamp(0rem, 0.5vw, 1rem);
-
-    font-size: clamp(1rem, 1.5vw, 2rem);
-
-    text-transform: uppercase;
-}
-
 #projects .reveal {
-    clip-path: polygon(100% 0, 100% 0, 100% 100%, calc(100% + 7rem) 100%);
-
     color:rgb(var(--primary-col));
+    overflow:hidden;
 }
+
 
 #projects .reveal img {
     position:absolute;
@@ -835,38 +838,10 @@ PROJECT
     transform: translateY(-50%);
 }
 
-#projects .closed {
-    color: rgb(var(--secondary-col));
-}
-
 #projects .project .shade {
     opacity:0;
     background: linear-gradient(0deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,0) 70%, rgba(0,0,0,0.3) 100%);
 }
-
-#projects .project:hover .copy, #projects .highlight .copy {
-    transform: scale(0.9);
-}
-
-#projects .project:hover > div, #projects .highlight > div {
-    padding-left:clamp(1rem, 6vw, 6rem);
-}
-
-#projects .project:hover > .reveal, #projects .highlight .reveal {
-    clip-path: polygon(25% 0, 100% 0, 100% 100%, calc(25% + 7rem) 100%);
-    color:rgb(var(--primary-col));
-}
-
-#projects .project:hover > .closed, #projects .highlight .closed {
-    color: rgba(var(--secondary-col),0.5);
-}
-
-#projects .project:hover .shade, #projects .highlight .shade {
-    background: linear-gradient(0deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,0) 70%, rgba(0,0,0,0.3) 100%);    
-    opacity:0.2;
-}
-
-
 
 
 /**

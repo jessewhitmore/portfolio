@@ -5,13 +5,11 @@
     }
 
     #projects .reveal {
-        clip-path: polygon(100% 0, 100% 0, 100% 100%, calc(100% + 12rem) 100%);
     
         color:rgb(var(--primary-col));
     }
     
     #projects .project:hover > .reveal, #projects .highlight .reveal {
-        clip-path: polygon(45% 0, 100% 0, 100% 100%, calc(45% + 12rem) 100%);
         color:rgb(var(--primary-col));
     }
 
@@ -28,6 +26,8 @@
 
 
 
+
+    
 
 
 
