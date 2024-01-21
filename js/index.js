@@ -7,6 +7,31 @@
  * 
  */
 
+// projects manifest -- used to geneterate projects on index only currently
+const projectManifest = [
+    {
+        title: 'hi cerese',
+        desc: 'PROJECT - TYPE - CODE' 
+    }, 
+    {
+        title: 'test title',
+        desc: 'PROJECT - TYPE - CODE' 
+    }, 
+    {
+        title: 'test title',
+        desc: 'PROJECT - TYPE - CODE' 
+    }, 
+    {
+        title: 'test title',
+        desc: 'PROJECT - TYPE - CODE' 
+    }, 
+    {
+        title: 'test title',
+        desc: 'PROJECT - TYPE - CODE' 
+    }
+]
+
+
 const staticHorizontal = new blockCanvas()
 function processCanvas() {
 
@@ -155,7 +180,11 @@ function processElements() {
     
     
     /*          Generate contact info           */
-
+    if(getCountry().toLowerCase() == props.country) {
+        let modifiedNumber = contactInfo.tel.split(' ')
+        modifiedNumber[0] = '0'
+        contactInfo.tel = modifiedNumber.join(' ').replace(' ','')
+    }
 
     let conInfo = qs('.contactInfo')
     const keys = Object.keys(contactInfo);
@@ -207,6 +236,8 @@ function processElements() {
         ele.querySelector('.screenTexture').style.background = si[siN]
     } 
 
+    animateScreen()
+
 
     /*          pushable element creation           */
     if(!props.mobile) {
@@ -248,194 +279,180 @@ function processElements() {
 
 
 
-
-
-
-
-
-
 /**
  * 
  * 
- *          ANIMATION HANDLING
- *          Velocity, parallax, any animation in more than one section
+ *          INTERSECT OBSERVERS
  * 
  * 
  */
 
-function globalAnimationSetups() {
-
-    /*          Screen related           */
-    let siG = 0, 
-    autoChangeTimeout = null,
-    firstAuto = 1000
+// intersections 
+function intersections() {
 
 
-    // -------------
-
-    // randomly flicker to new screen texture
-    function autoChange() {
-        autoChangeTimeout = setTimeout( () => {
-            changeScreen(Math.floor(qsa('.screen').length*Math.random()),'autoed');
-            firstAuto = 15000;
-            autoChange();
-        },firstAuto + 5000*Math.random());
+    function rc(en) { // delete selOff from element
+        en.target.classList.remove('selOff')
     } 
 
 
+    /*          turn on elements on coming into screen           */
+
+    function seloffIntersect(e, observer) { // the seleciton loop
+        e.forEach(entry => {
+            if (entry.isIntersecting) {
+
+                // turn on screen randomly
+                if(entry.target.classList.value.indexOf('screen') > -1) setTimeout( () => { rc(entry) }, 100+Math.random()*400)
+
+
+                // play the about section flicker
+                if(entry.target.classList.value.indexOf('text') > -1) {
+                    rc(entry)
+                    timeline.play()
+                }
+
+                // about copy determine which span is on what line and fade in 
+                if(entry.target.classList.value.indexOf('about') > -1) {
+                    let spanLine = 0, spanOffset = 0;
+                    for(let c = 0; c < entry.target.children.length; c++) {
+                        if(spanOffset !== entry.target.children[c].offsetTop) { 
+                            spanOffset = entry.target.children[c].offsetTop; 
+                            spanLine++;
+                        }
+                        entry.target.children[c].children[0].style.transitionDelay = `${0.1*spanLine}s`
+                    }
+                    rc(entry)
+                }
+                
+                // kill observer
+                observer.unobserve(entry.target);
+            }
+        });   
+    }    
+
+
     // -------------
 
-    // change screen semi-randomly flowing out from clicked screen
-    function changeScreen(i) {
-        if(siLock) return;
-        siLock = true;
-        if(push.target !== undefined) if(push.target.classList.contains('screenTexture')) qs('#mousePointer').classList = null
-        clearTimeout(autoChangeTimeout)
-        autoChange()
-        siG++;
-    
-        qsa('.screen').forEach((ele, index) => {
-    
-            let siN = 0 || ele.dataset.si,
-            intN = Math.floor(4*exponentialDecayWithMax(Math.random() * 100, 100, decayRate)/100),
-            delay = Math.abs(index - i) * 200 * Math.random();
-    
-            if(index !== i) {
+    /*          velocity animation on intersection with viewport           */
 
-                for(let n = 0; n <= intN; n++) {
-                    setTimeout(() => {
-                        ele.querySelector('.screenTexture').style.background = si[((parseInt(siN)+siG) % si.length) - (n % 2)]
-                    }, delay);
-                    delay += 100 + 200 * Math.random()
+    function velIntersect(e, observer) {
+        e.forEach(entry => {
+            if (entry.isIntersecting) {
+                if(viewportVel.indexOf(entry.target) === -1) viewportVel.push(entry.target);
+            } else {
+                let tempIndex = viewportVel.indexOf(entry.target)
+                if(tempIndex !== -1) { 
+                    viewportVel.splice(tempIndex, 1); gsap.set(entry.target, { y:0 }); }
+            }
+        });
+    }
+
+
+    // -------------
+
+    /*          Project middle mobile interaction           */
+    function projectIntersect(entries, observer) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                projectDraw(entry.target)
+            } 
+        });
+    }
+
+
+    // -------------
+
+    /*          floating element           */
+    
+    function floatIntersect(e, observer) {
+        e.forEach(entry => {
+            const matchingIndex = float.findIndex((obj) => obj.target === entry.target);
+
+            if (entry.isIntersecting) {
+                float[matchingIndex].onScreen = true
+            } else {
+                float[matchingIndex].onScreen = false
+            }
+        });
+    }
+
+
+    // -------------
+
+    /*          Pushable elements           */
+    
+    function pushableIntersect(e, observer) {
+        e.forEach(entry => {
+            const matchingIndex = pushable.findIndex((obj) => obj.target === entry.target);
+
+            if (entry.isIntersecting) {
+                if(matchingIndex === -1) {
+                    let tempObj = {
+                        target: entry.target,
+                        xy:[0,0],
+                    }
+                    pushable.push(tempObj)
                 }
             } else {
-
-                ele.querySelector('.screenTexture').style.background = si[(parseInt(siN)+siG) % si.length]
+                if(matchingIndex !== -1) pushable.splice(matchingIndex,1)
             }
-            setTimeout(() => {
-                ele.querySelector('.screenTexture').style.background = si[(parseInt(siN)+siG) % si.length]
-            }, 1000);
-        })
-        setTimeout(() => { siLock = false; if(push.target !== undefined)  if(push.target.classList.contains('screenTexture')) qs('#mousePointer').classList = 'react-play'; },1500)
+        });
     }
 
-    autoChange()
 
-    // add event listerner to all screen to changeScreen on click
-    qsa('.screen').forEach((ele, index) => {
-        ele.addEventListener('click', () => changeScreen(index));
+    // -------------
+
+    /*          canvas           */
+    
+    function canvasStaticHorizontalIntersect(e, observer) {
+        if(!props.performanceHandling.staticCanvas) return;
+        let obvObjRunning = false;
+        e.forEach(entry => {
+            const matchingIndex = staticHorizontal.eles.findIndex((obj) => obj.canvas === entry.target);
+            if (entry.isIntersecting) {
+                obvObjRunning = true
+                staticHorizontal.eles[matchingIndex].running = true
+                staticHorizontal.running = obvObjRunning       
+                staticHorizontal.animate()
+            } else {
+                staticHorizontal.eles[matchingIndex].running = false
+            }
+        });
+        staticHorizontal.running = obvObjRunning
+    }
+    
+
+    
+    // -------------
+
+    // setup observers with function, element and options 
+    observerConstructor(seloffIntersect, '.selOff', {
+        rootMargin: '-3% 0% -3% 0%'
+    })
+    
+    observerConstructor(velIntersect, '.vel', {
+        rootMargin: '20% 0% 20% 0%'
     })
 
-    // -------------
+    if(props.mobile) observerConstructor(projectIntersect, '.project',  {
+        rootMargin: '-50% 0% -50% 0%'
+    })
 
-    /*          random movement         */
-
-    setInterval(()=>{
-
-        if(!scrollVals.refreshing) {        
-            float.forEach((mt) => {
-                if(mt.onScreen) {
-                    mt.x += bobControls.movement*mt.movementDirectionX
-                    mt.y += bobControls.movement*mt.movementDirectionY
-
-                    if(Math.abs(mt.x) > bobControls.xMax) mt.movementDirectionX *= -1
-                    if(Math.abs(mt.y) > bobControls.yMax) mt.movementDirectionY *= -1
-                    gsap.to(mt.target, {x: mt.x, y: mt.y, duration: bobControls.dur})
-                }
-            })
-
-            pushable.forEach((mt) => {
-                gsap.to(mt.target, {x: mt.xy[0], y: mt.xy[1], duration: push.dur})
-            })
-        }
-    },500)
-
-} 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/**
- * 
- * 
- *          DATE TIME
- * 
- * 
- */
-
-function dateTimeContact() {
-
-    let location = 'Sydney'
-    let GMT = 11
-    let lastSecond = new Date().getSeconds()-1
-
-
-    // -------------
-
-    function setDateWithOffset(gmtOffset) {    
-        // Get the current local time
-        const localDate = new Date();
-        const timezoneDiff = localDate.getTimezoneOffset() / 60
+    observerConstructor(floatIntersect, '.float', {
+        rootMargin: '0% 0% 0% 0%'
+    })
     
-        // Calculate the UTC time based on the GMT offset
-        const utcTime = localDate.getTime()
-    
-        // Apply the desired GMT offset
-        const targetTime = utcTime + ((gmtOffset + timezoneDiff) * 3600000); // 1 hour = 3600000 milliseconds
-    
-        // Create a new Date object with the adjusted time
-        targetDate = new Date(targetTime)
-        lastSecond = targetDate.getSeconds()
-        targetDate = `${pad(targetDate.getHours(),2)}:${pad(targetDate.getMinutes(),2)}:${pad(targetDate.getSeconds(),2)}${(Math.sign(gmtOffset) === 1) ? '+' : ''}${gmtOffset}GMT`
-        
-        return targetDate
-    }
+    if(!props.mobile) observerConstructor(pushableIntersect, '.push', {
+        rootMargin:'0% 0% 0% 0%'
+    })
 
-
-    // -------------
-
-    setInterval(()=> {
-        if(new Date().getSeconds() !== lastSecond) qs('#localTime').innerText = setDateWithOffset(GMT);
-    },200)    
-    qs('#location').innerText = location
-    qs('#local').style.opacity = 1
-
+    observerConstructor(canvasStaticHorizontalIntersect, '.staticBlocksH', {
+        rootMargin:'0% 0% 0% 0%'
+    })
+  
 }
+
 
 
 
@@ -574,11 +591,11 @@ function aboutSetup() {
     timeline.timeScale(ts)
 }
 
-function customDuringResizer() {
+function uDuringResizer() {
     qs('#projects').classList.add('resizeOff')
 }
 
-function customResizer() {
+function uResizer() {
         // Get the parent and child elements
         const parent = qs('#text');
         const child = qsa('#text span');
@@ -676,13 +693,14 @@ function customResizer() {
  * 
  * 
  */
+
 props.performanceCount = 0;
 function projectSVGshape() {
 
 
     const parent = qs('#projects svg').parentElement
-    const w = qs('#wrapper').offsetWidth
-    const h = parent.offsetHeight
+    const w = wrapper.offsetWidth
+    const h = parent.offsetHeight + 1
     const remOffset = (window.innerWidth / window.innerHeight > 4/3) ? 12 * props.rem : 7 * props.rem
 
 
@@ -716,7 +734,7 @@ function projectSVGshape() {
     projectDraw()
 }
 function projectParallax() {
-
+    if(!props.performanceHandling.projectParallax) return;
     if(props.projectAnimatable) {
         const cTime = parseInt(Date.now())
         let propjectAnimatable = false;
@@ -791,215 +809,13 @@ function projectDraw(target) {
     })
 }
 
-function customMouse() {
-    if(qs('.highlight') !== null && !push.target.classList.contains('project')) { 
+function uMouse() {
+    const pm = props.mouse
+    if(qs('.highlight') !== null && !pm.target.classList.contains('project')) { 
         projectDraw()
     }
-    if(!push.target.classList.contains('project') || push.target.classList.contains('highlight')) return;
-    projectDraw(push.target)
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/**
- * 
- * 
- *          INTERSECT OBSERVERS
- * 
- * 
- */
-
-// intersections 
-function intersections() {
-
-
-    function rc(en) { // delete selOff from element
-        en.target.classList.remove('selOff')
-    } 
-
-
-    /*          turn on elements on coming into screen           */
-
-    function seloffIntersect(e, observer) { // the seleciton loop
-        e.forEach(entry => {
-            if (entry.isIntersecting) {
-
-                // turn on screen randomly
-                if(entry.target.classList.value.indexOf('screen') > -1) setTimeout( () => { rc(entry) }, 100+Math.random()*400)
-
-
-                // play the about section flicker
-                if(entry.target.classList.value.indexOf('text') > -1) {
-                    rc(entry)
-                    timeline.play()
-                }
-
-                // about copy determine which span is on what line and fade in 
-                if(entry.target.classList.value.indexOf('about') > -1) {
-                    let spanLine = 0, spanOffset = 0;
-                    for(let c = 0; c < entry.target.children.length; c++) {
-                        if(spanOffset !== entry.target.children[c].offsetTop) { 
-                            spanOffset = entry.target.children[c].offsetTop; 
-                            spanLine++;
-                        }
-                        entry.target.children[c].children[0].style.transitionDelay = `${0.1*spanLine}s`
-                    }
-                    rc(entry)
-                }
-                
-                // kill observer
-                observer.unobserve(entry.target);
-            }
-        });   
-    }    
-
-
-    // -------------
-
-    /*          velocity animation on intersection with viewport           */
-
-    function velIntersect(e, observer) {
-        e.forEach(entry => {
-            if (entry.isIntersecting) {
-                if(viewportVel.indexOf(entry.target) === -1) viewportVel.push(entry.target);
-            } else {
-                let tempIndex = viewportVel.indexOf(entry.target)
-                if(tempIndex !== -1) { viewportVel.splice(tempIndex, 1); gsap.set(entry.target, { y:0 }); }
-            }
-        });
-    }
-
-
-    // -------------
-
-    /*          Project middle mobile interaction           */
-    function projectIntersect(entries, observer) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                projectDraw(entry.target)
-            } 
-        });
-    }
-
-
-    // -------------
-
-    /*          floating element           */
-    
-    function floatIntersect(e, observer) {
-        e.forEach(entry => {
-            const matchingIndex = float.findIndex((obj) => obj.target === entry.target);
-
-            if (entry.isIntersecting) {
-                float[matchingIndex].onScreen = true
-            } else {
-                float[matchingIndex].onScreen = false
-            }
-        });
-    }
-
-
-    // -------------
-
-    /*          Pushable elements           */
-    
-    function pushableIntersect(e, observer) {
-        e.forEach(entry => {
-            const matchingIndex = pushable.findIndex((obj) => obj.target === entry.target);
-
-            if (entry.isIntersecting) {
-                if(matchingIndex === -1) {
-                    let tempObj = {
-                        target: entry.target,
-                        xy:[0,0],
-                    }
-                    pushable.push(tempObj)
-                }
-            } else {
-                if(matchingIndex !== -1) pushable.splice(matchingIndex,1)
-            }
-        });
-    }
-
-
-    // -------------
-
-    /*          canvas           */
-    
-    function canvasStaticHorizontalIntersect(e, observer) {
-        let obvObjRunning = false;
-        e.forEach(entry => {
-            const matchingIndex = staticHorizontal.eles.findIndex((obj) => obj.canvas === entry.target);
-            if (entry.isIntersecting) {
-                obvObjRunning = true
-                staticHorizontal.eles[matchingIndex].running = true
-                staticHorizontal.running = obvObjRunning       
-                staticHorizontal.animate()
-            } else {
-                staticHorizontal.eles[matchingIndex].running = false
-            }
-        });
-        staticHorizontal.running = obvObjRunning
-    }
-    
-
-    
-    // -------------
-
-    // setup observers with function, element and options 
-    observerConstructor(seloffIntersect, '.selOff', {
-        rootMargin: '-3% 0% -3% 0%'
-    })
-    
-    observerConstructor(velIntersect, '.vel', {
-        rootMargin: '20% 0% 20% 0%'
-    })
-
-    if(props.mobile) observerConstructor(projectIntersect, '.project',  {
-        rootMargin: '-50% 0% -50% 0%'
-    })
-
-    observerConstructor(floatIntersect, '.float', {
-        rootMargin: '0% 0% 0% 0%'
-    })
-    
-    if(!props.mobile) observerConstructor(pushableIntersect, '.push', {
-        rootMargin:'0% 0% 0% 0%'
-    })
-
-    observerConstructor(canvasStaticHorizontalIntersect, '.staticBlocksH', {
-        rootMargin:'0% 0% 0% 0%'
-    })
-  
+    if(!pm.target.classList.contains('project') || pm.target.classList.contains('highlight')) return;
+    projectDraw(pm.target)
 }
 
 
@@ -1048,7 +864,7 @@ function intersections() {
  * 
  */
 
-function customScroll() {
+function uScroll() {
         /*      highlight parallax           */
 
     projectParallax()
@@ -1215,9 +1031,9 @@ function userInteractions() {
     })
 
     // handle page clicks
-    qsa('#about .button, .project, #buttonText div, #nav span').forEach((ele) => {
+    qsa('#about .button, .project, #buttonText div, #nav .copy span').forEach((ele) => {
         ele.addEventListener('click', (event) => clickThrough(ele, event))    
-    })    
+    })
 
     qs('#contactPlate').addEventListener('click', (event) => {
         if(event.target.id === 'contactPlate') {
@@ -1283,7 +1099,6 @@ processElements()
 processCanvas()
 intersections()
 
-globalAnimationSetups()
 aboutSetup()
 
 userInteractions()
@@ -1293,16 +1108,3 @@ scrollObservation()
 
 
 
-// add the react class to everything
-function recursiveChildLoop(element, matchingClass) {
-    Array.from(element.children).forEach(child => {
-        child.classList.add(matchingClass)
-        recursiveChildLoop(child, matchingClass);
-    });
-}
-
-qsa(`[class*="react"]`).forEach(ele => {
-    const classList = Array.from(ele.classList);
-    const matchingClass = classList.find(className => className.includes('react'));
-    recursiveChildLoop(ele, matchingClass)
-})

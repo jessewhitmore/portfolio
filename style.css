@@ -59,13 +59,23 @@ body {
     margin: 0;
     padding: 0;
 
+    overflow-x: hidden;
+
     background: rgb(var(--void-col));
 
     font-family: Arial, Helvetica, sans-serif;
     color: rgb(var(--secondary-col));
 
     cursor: crosshair;
-}
+
+    -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+       -khtml-user-select: none; /* Konqueror HTML */
+         -moz-user-select: none; /* Old versions of Firefox */
+          -ms-user-select: none; /* Internet Explorer/Edge */
+              user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome, Edge, Opera and Firefox */
+  }
 
 #wrapper {
     position: relative;
@@ -74,6 +84,7 @@ body {
 
     margin: auto;
     overflow: hidden;
+    
 }
 
 
@@ -244,7 +255,7 @@ canvas, .screen {
     border-radius: 100%;
 
     opacity: 0.2;
-    display: none;
+    display:block;
 
     transform: translate(-2rem, -2rem);
     
@@ -325,7 +336,7 @@ GLOBAL - HOME PAGE
     left:0;
 
     width:100%;
-    height:auto;
+    height:50%;
 } 
 
 
@@ -484,9 +495,6 @@ MENU
     transition-delay: 0.7s;
 }
 
-#nav .copy span {
-}
-
 /* ani */ #nav .copy span:hover {
     color: rgb(var(--accent-col));
     transition: color 0.3s;
@@ -501,23 +509,64 @@ MENU
     position: fixed;
     top:1rem;
     right: 1rem;
+
+    height:1rem;
     width:auto;
     padding: 1rem;
     
 
-    display: none;
+    display: flex;
     flex-direction: row;
     justify-content: center;
-
-
-    background:red;
 }
 
-#menuDesktop span {
+.menuScreen {
+    position:fixed;
+    top:0.75rem;
+    width:3rem;
+    height:3rem;
+    transform:scaleY(0);
+}
+
+#menuDesktop span, .techMenu span {
     display: block;
     padding: 0rem 1rem;
+    z-index:2;
 }
 
+#menuDesktop span:hover {
+    color: rgb(var(--primary-col));
+}
+
+#wrapper .techMenu {
+    position: fixed;
+    bottom:1rem;
+    right: 1rem;
+
+    height:1rem;
+    width:auto;
+    padding: 1rem;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    
+}
+
+#nav .techMenu {
+    position: fixed;
+    bottom:1rem;
+    right: 0rem;
+
+    height:1rem;
+    width:100%;
+    padding: 1rem;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    
+}
 
 /* canvas related */
 
@@ -874,8 +923,6 @@ CONTACT
     max-width: 25em;
 }
 
-
-/* Contact Copy */
 #contact .copy {
     position: absolute;
     padding: 0em 2em;
@@ -1070,31 +1117,48 @@ CONTACT
     height: auto;
     max-width: 20em;
 
+    padding: 2em 2.5em;
+
+    background: rgba(var(--primary-col), 0.7);
+
     display:flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
-
-    padding: 2em 2.5em;
-
-    background: rgb(var(--primary-col));
+    border-radius: 0.75em;
 
     transform: translateY(calc(50vh + 50%));
+
+    backdrop-filter: blur(8px);    
+    box-shadow: 0rem 0.5rem 1.5rem rgb(var(--secondary-col), 0.5);
 }
 
 .contactInfo span {
-    padding: 0.5em 0;
+    width:100%;
+    padding: 0.5em 0.25em;
+
+    text-align: center;
 }
 
+.contactInfo span:first-child {
+    font-size: 1.3em;
+}
+
+.contactInfo span.highlightHover:hover {
+    mask-image: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 30%, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
+    background: linear-gradient(90deg, rgba(var(--accent-col),0) 0%, rgba(var(--accent-col),0.2) 50%, rgba(var(--accent-col),0) 100%);
+}
 
 .contactInfo div {
     height:3px;
     width:100%;
-
     margin:0;
     background:linear-gradient(90deg, rgba(var(--secondary-col),0) 0%, rgba(var(--secondary-col),0.2) 50%, rgba(var(--secondary-col),0) 100%)
 }
+
+
+
 
 #contact .screen:nth-of-type(1) {
     position: absolute;

@@ -6,6 +6,15 @@
  * 
  */
 
+// clean up JS further
+// dynamically generate everything that should be on a page (this includes nav)
+// group everything by section regardless of it's type unless universal
+// group all event listeners together
+// grain control setup - off / on
+// detech if framefrate has dropped and turn off qualities indicate where to turn it back on 
+// universal request animation frame with page specific.
+// Rename "custom" to "page" +++
+//
 
 
 // determine CSS per page
@@ -13,24 +22,17 @@
 
 /*          MAJOR EDITABLE VARIABLES           */
 
-// textures for screens
-const si = [ 
-    'red',
-    'lightGreen',
-    'blue',
-    'yellow',
-    'pink'
-]
-
-let contactInfo = {
+// key contact info
+const contactInfo = {
     name: 'Jesse Whitmore',
-    tel: '+614 21 907 903',
+    tel: '+61 421 907 903',
     email: 'j.whitmore.mail@gmail.com',
     linkdin: 'https://www.linkedin.com/in/jesse-whitmore-998a18133/',
     CV: './contact/cv.pdf'
 }
 
-let contactTreatment = {
+// how those values will be treated
+const contactTreatment = {
     name: {type: 'text' },
     tel: {type: 'link', hover:'react-copy', func: ()=> {window.open(`tel:${contactInfo.tel.replace(' ','')}`,'_self')} },
     email: {type: 'link', hover:'react-copy', func: ()=> sendEmail() },
@@ -38,58 +40,56 @@ let contactTreatment = {
     CV: {type: 'link', hover:'react-open', text: 'CV' }
 }
 
-let bobControls = {
+// any property I want universal
+const props = { 
+    rem: 16,
+    city: 'Sydney',
+    country: 'Australia',
+    GMT: 11
+}
+
+
+
+/*          GLOBALS           */
+
+// textures for screens
+const si = [ 
+    'red',
+    'lightGreen',
+    'blue',
+    'orange',
+    'pink'
+]
+
+
+// how stuff floats
+const bobControls = {
     xMax: 4,
     yMax: 10,
     movement: 1,
     dur: 5
 }
+// dom ele array
+const float = []
 
-let push = {
+// elements that will be pushed by mouse pointer - only valid on desktop
+const push = {
     amount: 40,
     from: 400,
     deadzone: 50,
-    dur: 3,
-    x:0,
-    y:0
+    dur: 3
 }
+// dom ele array
+const pushable = []
 
-
-/*          GLOBALS           */
-
-let props = { 
-    rem: 16
+// Initialize variables to store current and target positions
+const scrollVals = {
+    lastScrollTop: window.scrollY || window.pageYOffset,
+    lastTimestamp: Date.now(),
+    lastScroll:0,
+    scrollVelocity: 0,
+    refreshing: false
 }
-
- let projectManifest = [
-    {
-        title: 'test title',
-        desc: 'PROJECT - TYPE - CODE' 
-    }, 
-    {
-        title: 'test title',
-        desc: 'PROJECT - TYPE - CODE' 
-    }, 
-    {
-        title: 'test title',
-        desc: 'PROJECT - TYPE - CODE' 
-    }, 
-    {
-        title: 'test title',
-        desc: 'PROJECT - TYPE - CODE' 
-    }, 
-    {
-        title: 'test title',
-        desc: 'PROJECT - TYPE - CODE' 
-    }
-]
-
-let pushable = []
-let float = []
-
-let clickables = []
-
-const internalRedirect = document.referrer.includes(window.location.origin)
 
 /*          ORPHANED VARIABLES           */
 
@@ -100,15 +100,145 @@ let timeline = gsap.timeline({paused: true})
 let viewportVel = [];
 let siLock = false;
 
-
 // expo decay 
 const targetValue = 1,   // Target value to approach
 decayRate = 0.9;   // Decay rate, adjust to control the rate of decrease
-let scrollVelocity = 0
+
+/*          REDUNDANT CODE          */
+let clickables = []
+function scrollObservation() {}
 
 
-/*          FUNCTIONS           */
 
+
+
+
+
+
+
+
+/**
+ * 
+ * 
+ *          UNIVERSAL HELPER FUNCTIONS
+ * 
+ * 
+ */
+
+Number.prototype.pad = function(size) { // pad number with 0s
+    let num = this.toString()
+    while (num.length < size) num = "0" + num
+    return num
+}
+
+Number.prototype.clamp = function(min, max) {
+    return Math.min(Math.max(this, min), max)
+}
+
+function qs(ele) { // query selector
+    return document.querySelector(ele)
+}
+
+function qsa(ele) { // query selector all
+    return document.querySelectorAll(ele)
+}
+
+function randomChance(chancePercentage) { // set chance probability
+    const validPercentage = Math.max(0, Math.min(chancePercentage, 100))
+    const randomValue = Math.random() * 100
+    const result = randomValue < validPercentage
+    return result
+}
+
+function attributeSetup(elements, attributes) { // setup attribute tags from class name. props: elements  to loop through text, array of classes to turn to attr
+    for(let ele of qsa(elements)) {
+        let defaultVals = Array(attributes.length).fill(0)
+
+        for(val of ele.classList) {
+            for(let i = 0; i < attributes.length; i++) {
+                if(val.indexOf(attributes[i]) > -1) defaultVals[i] = val.replace(/\D/g,'')
+                ele.setAttribute(`data-${attributes[i]}`, defaultVals[i])
+            }
+        }
+    }
+}
+
+// quickly generate 
+function wrapContent(outer, name, element) {
+    element = element || 'div'
+    let inner = document.createElement(element)
+    if(name !== null) inner.classList.add(name)
+    while (outer.firstChild) {
+        inner.appendChild(outer.firstChild);
+      }      
+    outer.appendChild(inner)
+}
+
+function sendEmail() {
+    let subject = `let's work together!`;
+    let emailBody = `I was on your portfolio and I'd just like to say...`;
+    document.location = "mailto:"+contactInfo.email+"?subject="+subject+"&body="+emailBody;
+}
+
+function toClipboard(val) {
+    // Copy the text inside the text field
+    navigator.clipboard.writeText(val);
+}
+
+// add the react class to everything
+function recursiveChildLoop(element, matchingClass) {
+    Array.from(element.children).forEach(child => {
+        child.classList.add(matchingClass)
+        recursiveChildLoop(child, matchingClass);
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * 
+ * 
+ *          ORPHANED FUNCTIONS
+ * 
+ * 
+ */
+
+// used in scroll
+function exponentialDecayWithMax(currentValue, targetValue, decayRate) { // bigger numbers at beggining but not end
+    // If currentValue is above targetValue, set it to targetValue
+    if (currentValue > targetValue) { return targetValue;
+    } else if (currentValue < -targetValue) { return -targetValue; }
+    // Calculate the decayed value
+    return currentValue + (0 - currentValue) * Math.exp(-decayRate);
+}
+
+
+
+
+
+
+
+
+
+/**
+ * 
+ * 
+ *          ONLOAD ELEMENTS
+ * 
+ * 
+ */
+
+// get CSS root styles and add to props for use
 const rootStyles = getComputedStyle(document.documentElement);
 const root = Array.from(document.styleSheets)
   .filter(
@@ -135,7 +265,6 @@ const root = Array.from(document.styleSheets)
       ]),
     []
   );
-
 root.forEach((i)=>{
     iSplit = i.split('-')
     iSplit.splice(0,2)
@@ -145,6 +274,10 @@ root.forEach((i)=>{
     props[iSplit.join('')] = rootStyles.getPropertyValue(i)
 })
 
+// determine if the user navigated here from within the site for wipe effect
+const internalRedirect = document.referrer.includes(window.location.origin)
+
+// determine mobile or desktop for feature used
 window.mobileAndTabletCheck = function() { // is mobile or tablet
     let check = false;
     (function(a){if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino|android|ipad|playbook|silk/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4))) check = true;})(navigator.userAgent||navigator.vendor||window.opera);
@@ -152,456 +285,171 @@ window.mobileAndTabletCheck = function() { // is mobile or tablet
 };
 props.mobile = window.mobileAndTabletCheck()
 
-function pad(num, size) { // pad number with 0s
-    num = num.toString()
-    while (num.length < size) num = "0" + num
-    return num
-}
 
-function qs(ele) { // query selector
-    return document.querySelector(ele)
-}
+/*      element setup on launch         */
 
-function qsa(ele) { // query selector all
-    return document.querySelectorAll(ele)
-}
+// vars for later use
+let mouseEle
 
-function randomChance(chancePercentage) { // set chance probability
-    const validPercentage = Math.max(0, Math.min(chancePercentage, 100));  
-    const randomValue = Math.random() * 100;  
-    const result = randomValue < validPercentage;  
-    return result;
-}
+// element attachments
+const wrapper = qs('#wrapper'), 
+blocker = qs('#blocker')
 
-function attributeSetup(elements, attributes) { // setup attribute tags from class name. props: elements  to loop through text, array of classes to turn to attr
-    for(let ele of qsa(elements)) {
-        let defaultVals = Array(attributes.length).fill(0)
+// elements creation
+const menuEle = document.createElement('div'), 
+techMenuEle = document.createElement('div')
 
-        for(val of ele.classList) {
-            for(let i = 0; i < attributes.length; i++) {
-                if(val.indexOf(attributes[i]) > -1) defaultVals[i] = val.replace(/\D/g,'')
-                ele.setAttribute(`data-${attributes[i]}`, defaultVals[i])
-            }
-        }
-    }
-}
+// default setting
+techMenuEle.classList.add('techMenu')
+techMenuEle.innerHTML = '<span id = "quality" class = "react-play">X</span>'
 
-function exponentialDecayWithMax(currentValue, targetValue, decayRate) { // bigger numbers at beggining but not end
-    // If currentValue is above targetValue, set it to targetValue
-    if (currentValue > targetValue) { return targetValue;
-    } else if (currentValue < -targetValue) { return -targetValue; }
-    // Calculate the decayed value
-    return currentValue + (0 - currentValue) * Math.exp(-decayRate);
-}
+if(props.mobile) {
 
-Number.prototype.clamp = function(min, max) {
-    return Math.min(Math.max(this, min), max);
-};
-
-function wrapContent(outer, name) {
-    let inner = document.createElement('div')
-    if(name !== null) inner.classList.add(name)
-    while (outer.firstChild) {
-        inner.appendChild(outer.firstChild);
-      }      
-    outer.appendChild(inner)
-}
-
-function sendEmail() {
-    let subject = `let's work together!`;
-    let emailBody = `I was on your portfolio and I'd just like to say...`;
-    document.location = "mailto:"+contactInfo.email+"?subject="+subject+"&body="+emailBody;
-}
-
-class blockCanvas { // canvas builder
-	constructor() {
-		this.running = false
-		this.intervals = []
-		this.squares = []
-        this.staticOn = false
-	}
-    setup(canvas, colour) {
-
-        this.factor = Math.min(1.3,Math.max(0.8, document.querySelector('#wrapper').offsetWidth/800))            
-        this.width = document.querySelector(canvas).offsetWidth
-        this.height = document.querySelector(canvas).offsetHeight
-        this.colour = colour
-        this.eles = []
-        document.querySelectorAll(canvas).forEach((ele) => {
-            ele.width = document.querySelector(canvas).offsetWidth
-            ele.height = document.querySelector(canvas).offsetHeight
-            let tempObj = {
-                canvas: ele,
-                ctx: ele.getContext('2d'),
-                running: true
-            }
-            this.eles.push(tempObj)
-        })
-
-        this.resizeTimer = null
-        if(!props.mobile) {
-            window.addEventListener('resize', () => {
-                clearTimeout(this.resizeTimer)
-                if (!this.resizeTimer) {
-                    this.onResizeStart()
-                }
-                this.resizeTimer = setTimeout(() => {
-                    this.resizeTimer = null
-                    this.onResizeEnd()
-                }, 100)
-            })
-        }
-    }  
-
-    onResizeStart() {
-        this.clear()
-    }
+    // set-up mobile menu
+    menuEle.classList.add('vel','float','dur1000','dist20')
+    menuEle.id = 'menu'
+    menuEle.innerText = "|||"
+    wrapper.appendChild(menuEle)
+    qs('#nav').appendChild(techMenuEle)
     
-    onResizeEnd() {
-        this.factor = Math.min(1.3,Math.max(0.8, document.querySelector('#wrapper').offsetWidth/800))            
-        this.eles.forEach((co) => {
-            co.canvas.width = co.canvas.offsetWidth
-            co.canvas.height = co.canvas.offsetHeight
-            this.width = co.canvas.offsetWidth
-            this.height = co.canvas.offsetHeight
-            co.ctx = co.canvas.getContext('2d')
-        })
-        if(this.staticOn) this.static()
-        this.animate()
-    }
-	randomBetween(min, max) {
-		return Math.random() * (max - min) + min;
-	}
-	randomChance(chancePercentage) { // set chance probability
-		const validPercentage = Math.max(0, Math.min(chancePercentage, 100));
-		const randomValue = Math.random() * 100;
-		const result = randomValue < validPercentage;
-		return result;
-	}
-	drawRec(x, y, w, h, fadeDuration, globalAlpha, movementSpeed, driftDir) {
-		let drift = driftDir || [0, 1]
-		this.squares.push({
-			x,
-			y,
-			w,
-			h,
-			fadeDuration,
-			globalAlpha,
-			movementSpeed,
-			drift,
-			startTime: performance.now()
-		});
-	}
-    generateEdge(coverage, dir, baseline, custFade, driftDir) {
-        
-        let order = {};
-        let fade = custFade || [2000, 3000]
-        let fadeDuration = this.randomBetween(fade[0], fade[1])
-        let cover = -20 * this.factor
-        while (cover < coverage) {
-            const block = this.randomBetween(15, 40) * this.factor
-            let sizeH = (this.randomChance(60)) ? Math.max(1, 0.3 + Math.random()) : Math.max(1.5, 1.2 + Math.random())
-            sizeH = block * sizeH.toFixed(2) * 1.5
-            if (dir === "v") {
-                order.x = baseline - (sizeH / 2)
-                order.y = cover
-                order.xs = sizeH
-                order.ys = block
-            } else {
-                order.x = cover
-                order.y = baseline - (sizeH / 2)
-                order.xs = block
-                order.ys = sizeH
-            }
-            this.drawRec(order.x, order.y, order.xs, order.ys, fadeDuration, 1.0, 0)
-            cover += block;
-        }
-    }
-    generateDecay(coverage, dir, baseline, custFade, addFade, driftDir) {
-        let order = {}
-        let fade = custFade || [1000, 5000]
-        let fade2 = addFade || 2000
-        let cover = this.randomBetween(0, 20) * this.factor;
-        while (cover < coverage) {
-            const size = this.randomBetween(10, 25) * this.factor
-            const offset = baseline + this.randomBetween(-50, 50) * this.factor
-            const fadeDuration = this.randomBetween(fade[0], fade[1])
-            const globalAlpha = this.randomBetween(0.5, 1.0);
-            if (dir === "v") {
-                order.x = offset
-                order.y = cover
-                order.xs = size
-                order.ys = size
-            } else {
-                order.x = cover
-                order.y = offset
-                order.xs = size
-                order.ys = size
-            }
-            const moveSpeed = 3 * Math.random() / 10 * this.factor
-            this.drawRec(order.x, order.y, order.xs, order.ys, fadeDuration, globalAlpha, Math.max(0.05, moveSpeed), driftDir)
-            const gap = this.randomBetween(10, 80) * this.factor
-            cover += size + gap
-        }
-        cover = this.randomBetween(0, 20) * this.factor;
-        while (cover < coverage) {
-            const size = this.randomBetween(5, 15) * this.factor
-            const offset = baseline + this.randomBetween(-100, 100) * this.factor
-            const fadeDuration = this.randomBetween(fade[0] + fade2, fade[1] + fade2)
-            const globalAlpha = this.randomBetween(0.3, 0.7);
-            if (dir === "v") {
-                order.x = offset
-                order.y = cover
-                order.xs = size
-                order.ys = size
-            } else {
-                order.x = cover
-                order.y = offset
-                order.xs = size
-                order.ys = size
-            }
-            const moveSpeed = 5 * Math.random() / 10 * this.factor
-            this.drawRec(order.x, order.y, order.xs, order.ys, fadeDuration, globalAlpha, Math.max(0.3, moveSpeed), driftDir)
-            const gap = this.randomBetween(50, 120) * this.factor
-            cover += size + gap
-        }
-        // clear old
-        for (let i = 1; i < this.squares.length; i++) {
-            const square = this.squares[i];
-            const currentTime = performance.now();
-            const elapsed = currentTime - square.startTime;
-            const progress = elapsed / square.fadeDuration;
-            const opacity = Math.max(1 - progress, 0);
-            if (opacity <= 0) {
-                this.squares.splice(i, 1);
-            }
-        }
-    }
-    static(coverage, dir, baseline, intervalArray, edgeObj, decayObj) {
-
-        let cov = coverage || this.width;
-        let base = baseline || 0;
-        this.staticOn = true
-
-        if (decayObj === undefined) {
-            decayObj = {
-                custFade: 0,
-                addFade: 0,
-                driftDir: 0
-            }
-        }
-        if (edgeObj === undefined) {
-            edgeObj = {
-                custFade: 0,
-                addFade: 0,
-                driftDir: 0
-            }
-        }
-        let intervalSet = intervalArray || [1000, 400]
-        this.generateEdge(cov, dir, base, edgeObj.custFade, edgeObj.addFade, edgeObj.driftDir)
-        let edge = setInterval(() => {
-            this.generateEdge(cov, dir, base, edgeObj.custFade, edgeObj.addFade, edgeObj.driftDir)
-        }, intervalSet[1])
-        this.generateDecay(cov, dir, base, decayObj.custFade, decayObj.addFade, decayObj.driftDir)
-        let decay = setInterval(() => {
-            this.generateDecay(cov, dir, base, decayObj.custFade, decayObj.addFade, decayObj.driftDir)
-        }, intervalSet[0])
-        this.intervals.push(edge, decay)
-        this.running = true
-    }
-    start() {
-        if (!this.running) {
-            this.running = true
-            this.animate()
-        }
-    }
-    stop() {
-        for (const intervalId of this.intervals) {
-            clearInterval(intervalId);
-        }
-    }
-    clear() {
-        this.stop()
-        this.squares = []
-    }
-    animate() {
-        const squares = this.squares
-        this.eles.forEach((co) => {
-            if (co.running) co.ctx.clearRect(0, 0, co.canvas.width, co.canvas.height);
-            if (typeof this.preDraw === 'function') {
-                this.preDraw(co.canvas, co.ctx)
-            }
-        })
-        for (let i = squares.length - 1; i >= 0; i--) {
-            const square = squares[i];
-            const currentTime = performance.now();
-            const elapsed = currentTime - square.startTime;
-            const progress = elapsed / square.fadeDuration;
-            const opacity = Math.max(1 - progress, 0);
-            if (opacity <= 0) {
-                // Remove the square from the array if opacity is zero
-                squares.splice(i, 1);
-            } else {
-                let driftSpeed = (elapsed / 1000 * square.movementSpeed * 150)
-                let opacityScale = (driftSpeed > 0) ? 1 / (1 + Math.exp(-(opacity * 5 - 2.5)))  : 1
-                this.eles.forEach((co) => {
-                    // Draw the square with updated opacity
-                    if (co.running) {
-                        co.ctx.globalAlpha = square.globalAlpha * opacity;
-                        // const pattern = (textureLoaded) ? ctx.createPattern(textureImage, 'repeat') : 
-                        const pattern = this.colour
-                        co.ctx.fillStyle = pattern
-                        
-                        co.ctx.fillRect(square.x + driftSpeed * square.drift[0], square.y + driftSpeed * square.drift[1], square.w * opacityScale, square.h * opacityScale);
-                    }
-                })
-            }
-        }
-        this.eles.forEach((co) => {
-            if (co.running) {
-                co.ctx.globalAlpha = 1; // Reset globalAlpha
-                if(typeof this.postDraw === 'function') this.postDraw(co.canvas, co.ctx)
-            }
-        })
-        if (squares.length === 0) this.running = false
-        if (this.running) requestAnimationFrame(() => this.animate());
-    }
-   
-}
-
-
-/**
- * 
- * 
- *          SCROLL RELATED
- * 
- * 
- */
-
-// Initialize variables to store current and target positions
-const scrollVals = {
-    lastScrollTop: window.scrollY || window.pageYOffset,
-    lastTimestamp: Date.now(),
-    lastScroll:0,
-    scrollVelocity: 0,
-    refreshing: false
-}
-
-function scrollObservation() {
-
-
-    /*          Animation on refresh rate       */
-
-    function updateNavPosition() {
-
-
-        /*          Velocity calculation and animation          */
-
-        scrollVals.refreshing = true;
-        const currentScrollTop = window.scrollY || window.pageYOffset,
-        currentTimestamp = Date.now(),
-        decayFactor = 0.90; // Adjust to control the decay rate
-
-        // -------------
-
-        // calculate velocity and handle the animation
-        setTimeout(() => {
-            const deltaTime = currentTimestamp - scrollVals.lastTimestamp;
-            const deltaScroll = currentScrollTop - scrollVals.lastScrollTop;
-        
-            // Calculate velocity (pixels per millisecond)
-            scrollVelocity = deltaScroll / deltaTime;
-            scrollVelocity *= decayFactor;
-
-            // ensure real numbers only possible
-            if(!isNaN(scrollVelocity)) scrollVals.scrollVelocity = scrollVelocity;
-
-            // Simulate the exponential decay with maximum
-            let result = exponentialDecayWithMax(scrollVals.scrollVelocity, targetValue, decayRate);
-            result = result.toFixed(2);
-            handleVel(result)
-
-            // Update the last scroll position and timestamp
-            scrollVals.lastScrollTop = currentScrollTop;
-            scrollVals.lastTimestamp = currentTimestamp;
-        },100)
-
-
-        // -------------
-
-        /*  Custom function for all pages */
-
-        if (typeof customScroll === 'function') customScroll()
-
-        // -------------
-
-        //reset elements to standard pos when scrolling stops else rerun
-        if(scrollVals.scrollVelocity === 0) {
-            scrollVals.scrollVelocity = 0
-            setTimeout(()=>{
-                handleVel(0)
-            },200)
-
-            scrollVals.refreshing = false
-        } else {
-            requestAnimationFrame(updateNavPosition)
-        }
-
     
-    }  
+} else {
+    // set-up mouse
+    mouseEle = document.createElement('div')
+    mouseEle.id = 'mousePointer'
+    wrapper.insertAdjacentElement('afterend', mouseEle);
+
+    // set-up desktop menu
+    menuEle.id = 'menuDesktop'
+    menuEle.innerHTML = '<div class = "menuScreen screen vel float dur1000 dist20"></div><span  class = "react-play">HOME</span><span  class = "react-play">ABOUT</span><span  class = "react-play">PROJECTS</span><span  class = "react-play">CONTACT</span>'
+    wrapper.appendChild(menuEle)
+    wrapper.appendChild(techMenuEle)    
+}
+
+qsa(`[class*="react"]`).forEach(ele => {
+    const classList = Array.from(ele.classList);
+    const matchingClass = classList.find(className => className.includes('react'));
+    recursiveChildLoop(ele, matchingClass)
+})
+
+function animateScreen() {
+    /*          Screen related           */
+    let siG = 0, 
+    autoChangeTimeout = null,
+    firstAuto = 1000
 
 
     // -------------
 
-    // Function to be called when the user scrolls
-    function handleScroll() {
+    // randomly flicker to new screen texture
+    function autoChange() {
+        autoChangeTimeout = setTimeout( () => {
+            changeScreen(Math.floor(qsa('.screen').length*Math.random()),'autoed');
+            firstAuto = 15000;
+            autoChange();
+        },firstAuto + 5000*Math.random());
+    } 
 
-        if(!scrollVals.refreshing) updateNavPosition();
+
+    // -------------
+
+    // change screen semi-randomly flowing out from clicked screen
+    function changeScreen(i) {
+        if(siLock) return;
+        siLock = true;
+        if(push.target !== undefined) if(push.target.classList.contains('screenTexture')) qs('#mousePointer').classList = null
+        clearTimeout(autoChangeTimeout)
+        autoChange()
+        siG++;
+    
+        qsa('.screen').forEach((ele, index) => {
+    
+            let siN = 0 || ele.dataset.si,
+            intN = Math.floor(4*exponentialDecayWithMax(Math.random() * 100, 100, decayRate)/100),
+            delay = Math.abs(index - i) * 200 * Math.random();
+    
+            if(index !== i) {
+
+                for(let n = 0; n <= intN; n++) {
+                    setTimeout(() => {
+                        ele.querySelector('.screenTexture').style.background = si[((parseInt(siN)+siG) % si.length) - (n % 2)]
+                    }, delay);
+                    delay += 100 + 200 * Math.random()
+                }
+            } else {
+
+                ele.querySelector('.screenTexture').style.background = si[(parseInt(siN)+siG) % si.length]
+            }
+            setTimeout(() => {
+                ele.querySelector('.screenTexture').style.background = si[(parseInt(siN)+siG) % si.length]
+            }, 1000);
+        })
+        setTimeout(() => { siLock = false; if(push.target !== undefined)  if(push.target.classList.contains('screenTexture')) qs('#mousePointer').classList = 'react-play'; },1500)
     }
-    document.addEventListener('scroll', handleScroll); 
+
+    autoChange()
+
+    // add event listerner to all screen to changeScreen on click
+    qsa('.screen').forEach((ele, index) => {
+        ele.addEventListener('click', () => changeScreen(index));
+    })
+}
+
+
+/*          Resize listener to kill transitions         */
+let resizeTimer;
+function onResizeStart() {
+    document.body.classList.add('no-transition')
+    if(typeof uDuringResizer === 'function') uDuringResizer()
+}
+
+function onResizeEnd() {
+    if(typeof uResizer === 'function') uResizer()
+    document.body.classList.remove('no-transition')
+}
+
+window.onload = function() {
+
+    const url = new URL(window.location.href);
+
+    // Get the search parameters
+    const searchParams = url.searchParams;
+    searchParams.forEach((v,k) => {
+        switch(k) {
+            case 'msg':
+                jumpTo(v,'instant')
+            break;
+        }
+    })
+
+    if(typeof uResizer === 'function') uResizer()
+    
+    document.querySelector('#blocker').style.background = "none"
+    if(internalRedirect) (props.mobile) ? linkClick.fromClicked('r') : linkClick.fromClicked('t')
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /**
  * 
  * 
- *          INTERSECT OBSERVERS
+ *          GRAIN SETUP
  * 
  * 
  */
-
-// default observer construct
-function observerConstructor(fc, ele, opt) {
-    // Create an Intersection Observer with the callback function and options
-    const observer = new IntersectionObserver(fc, opt);
-      
-    // Start observing each element
-    qsa(ele).forEach((element,i) => {
-      observer.observe(element);
-    });        
-}
-
-
-/**
- * 
- * 
- *          ANIMATION HANDLING
- *          Velocity, parallax, any animation in more than one section
- * 
- * 
- */
-
-function handleVel(result) {
-    viewportVel.forEach(v => {
-        let dur = parseInt(v.dataset.dur) || 0
-        let dist = (dur === 0) ? 0 : parseInt(v.dataset.dist) || 0
-        gsap.to(v, {y: dist*-result, duration: dur/1000})
-    });
-
-}
-
-
 
 let lightGrain = document.createElement('div')
 lightGrain.id = 'lightGrain'
@@ -615,7 +463,6 @@ heavyGrain.classList.add('fullScreen')
 heavyGrain.style.opacity = 0.0
 heavyGrain.style.mixBlendMode = 'hard-light'  
 
-let blocker = qs('#blocker')
 blocker.insertAdjacentElement('afterend', heavyGrain);
 blocker.insertAdjacentElement('afterend', lightGrain);
 
@@ -640,32 +487,91 @@ grained('#heavyGrain', {
   "grainHeight": 3.28
 })
 
-// grain fade and animation
-setInterval(()=> {
-  let state = randomChance(90)
-  gsap.to(lightGrain, {
-      opacity: (state) ? Math.max(0.05,0.15 * Math.random()) : Math.max(0.15,0.3 * Math.random()) ,
-      duration:0.6
-  })
-  gsap.to(heavyGrain, {
-      scaleY: 0.2 * Math.random(),
-      opacity: (state) ? 0 : Math.max(0.1,0.2 * Math.random()),
-      duration:0.3
-  })
 
-  if(!state) gsap.to(heavyGrain, {
-      y: (heavyGrain.offsetHeight) * Math.random() - heavyGrain.offsetHeight/2,
-      duration:6
-  })    
+function grainTexture(chance) {
+    chance = chance || 90
+    let state = randomChance(chance)    
 
-},300)    
+    gsap.to(lightGrain, {
+        autoAlpha: (state) ? Math.max(0.05,0.15 * Math.random()) : Math.max(0.15,0.3 * Math.random()) ,
+        duration:0.6
+    })
+
+    if(props.performanceHandling.heavyGrain) {    
+        gsap.to(heavyGrain, {
+            scaleY: 0.2 * Math.random(),
+            autoAlpha: (state) ? 0 : Math.max(0.1,0.2 * Math.random()),
+            duration:0.3
+        })
+    }
+  
+    if(!state && props.performanceHandling.heavyGrain) gsap.to(heavyGrain, {
+        y: (heavyGrain.offsetHeight) * Math.random() - heavyGrain.offsetHeight/2,
+        duration:6
+    })        
+}
+
+
+
+
+
 
 
 
 /**
  * 
  * 
- *          UNIVERSAL CANVAS
+ *          DATE TIME
+ * 
+ * 
+ */
+
+function dateTimeContact() {
+
+    let lastSecond = new Date().getSeconds()-1
+
+    // -------------
+
+    function setDateWithOffset(gmtOffset) {
+        // Get the current local time
+        const localDate = new Date();
+        const timezoneDiff = localDate.getTimezoneOffset() / 60
+    
+        // Calculate the UTC time based on the GMT offset
+        const utcTime = localDate.getTime()
+    
+        // Apply the desired GMT offset
+        const targetTime = utcTime + ((gmtOffset + timezoneDiff) * 3600000); // 1 hour = 3600000 milliseconds
+    
+        // Create a new Date object with the adjusted time
+        targetDate = new Date(targetTime)
+        lastSecond = targetDate.getSeconds()
+        targetDate = `${targetDate.getHours().pad(2)}:${targetDate.getMinutes().pad(2)}:${targetDate.getSeconds().pad(2)}${(Math.sign(gmtOffset) === 1) ? '+' : ''}${gmtOffset}GMT`
+        
+        return targetDate
+    }
+
+    // -------------
+
+    setInterval(()=> {
+        if(new Date().getSeconds() !== lastSecond) qs('#localTime').innerText = setDateWithOffset(props.GMT);
+    },200)    
+    qs('#location').innerText = props.city
+    qs('#local').style.opacity = 1
+
+}
+
+
+
+
+
+
+
+
+/**
+ * 
+ * 
+ *          UNIVERSAL CANVAS' SETUP
  * 
  * 
  */
@@ -818,7 +724,9 @@ linkClick.fromClicked = function(dir, dur) {
     } 
 }
 
+
 // -------------------------------------------------------
+
 let menuWipe;
 if(props.mobile) {
     menuWipe = new blockCanvas()
@@ -861,182 +769,115 @@ if(props.mobile) {
 }
 
 
-window.onload = function() {
 
 
-    const url = new URL(window.location.href);
 
-    // Get the search parameters
-    const searchParams = url.searchParams;
-    searchParams.forEach((v,k) => {
-        switch(k) {
-            case 'msg':
-                jumpTo(v,'instant')
-            break;
-        }
-    })
 
-    if(typeof customResizer === 'function') customResizer()
-    
-    document.querySelector('#blocker').style.background = "none"
-    if(internalRedirect) (props.mobile) ? linkClick.fromClicked('r') : linkClick.fromClicked('t')
 
-    
-}
+
+
 
 
 /**
  * 
  * 
- *          UNIVERSAL INTERACTS
+ *          ANIMATION HANDLE
  * 
  * 
  */
 
-function mouseOver(ev) {
-    
-    /*          mouse follower          */
-    const mouseX = ev.clientX;
-    const mouseY = ev.clientY;
+function floatAnimation(mt) {
+    if(mt.onScreen) {
+        mt.x += bobControls.movement*mt.movementDirectionX
+        mt.y += bobControls.movement*mt.movementDirectionY
 
-    setTimeout(()=>{
-        qs('#mousePointer').style.display = 'block';
-
-        let mOffset = 150
-
-        const mouseYoffset = mouseY + window.scrollY
-
-        let dX = mouseX - push.x;
-        let dY = mouseYoffset - push.y;
-
-        // Calculate the distance between the mouse and the element
-        const dist = Math.sqrt(dX ** 2 + dY ** 2);
-
-        if(dist >= mOffset) {
-            push.x = mouseX
-            push.y = mouseYoffset
-        }
-
-    },300)
-
-    /*          mouse push          */
-    pushable.forEach((val) => {
-
-            // Calculate the distance from the mouse to the target element
-            const rect = val.target.getBoundingClientRect();
-            const elementX = rect.left + rect.width / 2;
-            const elementY = rect.top + rect.height / 2;
-            const deltaX = mouseX - elementX;
-            const deltaY = mouseY - elementY;
-
-            // Calculate the distance between the mouse and the element
-            const distance = Math.sqrt(deltaX ** 2 + deltaY ** 2);
-            if(distance <= push.deadzone) {
-                val.xy = [0,0]
-                return;
-            }
-
-            // Calculate the scaling factor based on the distance
-            const scalingFactor = 1 - Math.min(distance / push.from, 1);
-
-            // Calculate the capped distance
-            const cappedDistance = scalingFactor * push.amount;
-
-            // Calculate the angle between the mouse and the element
-            const angle = Math.atan2(deltaY, deltaX);
-
-            // Calculate the new position with the capped distance
-            const newX = elementX - cappedDistance * Math.cos(angle);
-            const newY = elementY - cappedDistance * Math.sin(angle);
-          
-            // Update the element's position
-            val.xy = [newX-elementX, newY-elementY]
-    })
-
-    let interactable = Array.from(ev.target.classList).some(className => className.includes('react'))
-
-    if(interactable && !(ev.target.classList.contains('screenTexture') && siLock)) {
-        const classList = Array.from(ev.target.classList)
-        const matchingClass = classList.find(className => className.includes('react'))
-        qs('#mousePointer').classList = matchingClass
-    } else {
-        qs('#mousePointer').classList = null
-    }
-
-    let hlh = qsa('.highlightHover')
-    if(interactable) {
-        if(push.target !== ev.target) {
-            hlh.forEach((ele) => {
-                ele.classList.remove('highlightHover')
-            })
-
-            if(ev.target.parentNode.classList.contains('buttonCells')) { 
-                qs('#buttonText').classList.add('highlightHover')
-                ev.target.classList.add('highlightHover')
-            } else if(ev.target.parentNode.id === "buttonText") {
-                ev.target.parentNode.classList.add('highlightHover')
-                if(!ev.target.classList.contains('defaultState')) {
-                    qs(`#${Array.from(ev.target.classList).find(className => className !== 'highlightHover')}`).classList.add('highlightHover')
-                }
-            } else {
-                ev.target.classList.add('highlightHover')
-            }
-            
-        }
-    } else if(hlh.length > 0) {
-        hlh.forEach((ele) => {
-            ele.classList.remove('highlightHover')
-        })
-    }   
-
-    qsa('.buttonCells div').forEach((ele) => {
-        if(ele === ev.target) {
-            changeContact(ev.target, 69, Array.from(ev.target.parentNode.children))
-        }
-    })
-
-    push.target = ev.target
-    if(typeof customMouse === 'function') customMouse()
-}
-
-// menu open
-function menuToggle() {
-    if(!scrollVals.autoScrolling) {
-        document.body.classList.toggle('menuOpen')
-        qs('#nav').classList.toggle('menuOpen')
-        qs('#navCanvas').classList.toggle('menuOpen')
-
-        qs('#menu').classList.add('highlightHover')
-        setTimeout(()=>{
-            qs('#menu').classList.remove('highlightHover')
-        },300)
-
-        menuWipe.init()
+        if(Math.abs(mt.x) > bobControls.xMax) mt.movementDirectionX *= -1
+        if(Math.abs(mt.y) > bobControls.yMax) mt.movementDirectionY *= -1
+        gsap.to(mt.target, {x: mt.x, y: mt.y, duration: bobControls.dur})
     }
 }
 
-if(!props.mobile) {
-    function mousePointer() {
-        gsap.to('#mousePointer', {x: push.x, y:push.y, duration: 0.1, ease: "power2.inOut" })
-        requestAnimationFrame(mousePointer)
-    } 
-    mousePointer()
-    document.addEventListener('mousemove', (event) => mouseOver(event))
+
+
+
+
+
+
+
+
+
+
+/**
+ * 
+ * 
+ *          INTERSECT OBSERVERS
+ * 
+ * 
+ */
+
+// default observer construct
+function observerConstructor(fc, ele, opt) {
+    // Create an Intersection Observer with the callback function and options
+    const observer = new IntersectionObserver(fc, opt);
+      
+    // Start observing each element
+    qsa(ele).forEach((element,i) => {
+      observer.observe(element);
+    });        
 }
 
-// click to open menu
-if(props.mobile) {
 
-    qs('#menu').addEventListener('click', () => {
-        menuToggle()
+
+
+
+
+
+
+/**
+ * 
+ * 
+ *          SCROLL RELATED
+ * 
+ * 
+ */
+
+function handleVel(result) {
+    viewportVel.forEach(v => {
+        let dur = parseInt(v.dataset.dur) || 0
+        let dist = (dur === 0) ? 0 : parseInt(v.dataset.dist) || 0
+        gsap.to(v, {y: dist*-result, duration: dur/1000})
     });
-} else {
-    qs('#menu').style.display = 'none'
-    qs('#menuDesktop').style.display = 'flex'
-    qs('#menuDesktop').addEventListener('click', (ev) => {
-        if(ev.target.id !== 'menuDesktop') jumpTo(ev.target.innerText)
-    });    
+
 }
+
+
+function scrollVelocity(PN, rf) {
+    if (typeof uScroll === 'function') uScroll()
+
+    if(!props.performanceHandling.velocity) return
+
+    const SY = window.scrollY 
+    const deltaY = SY - (rf.lastSY || 0) // or used for if rf.lastSY yet to be declared
+     // store largest value to remove scroll sub-pixel jitter
+    if(Math.abs(rf.deltaY) < Math.abs(deltaY)) rf.deltaY = deltaY
+    rf.lastSY = SY
+
+    // run every 100ms to only use largest value and limit gsap.to requests
+    if(every(100,PN,'velocityCount')) { // 100 could be set to a variable as performance control
+
+        // animate
+        let result = exponentialDecayWithMax(rf.deltaY, targetValue, decayRate);
+        result = result.toFixed(2);
+        handleVel(result)
+
+        // set false if there no movement in 100ms
+        if(rf.deltaY === 0) props.scrolling = false
+        rf.deltaY = 0 // reset for next tests
+
+    }
+    // unique page scroll function
+}
+
 
 function jumpTo(pos, behavior) {
     let posEle = (pos.toLowerCase() === 'home') ? qs('#header') : qs(`#${pos.toLowerCase()}`)
@@ -1044,10 +885,10 @@ function jumpTo(pos, behavior) {
         pos = pos.toLowerCase()
         switch(pos) {
             case 'about':
-                linkClick.click((props.mobile) ? 'r' : 't', `${window.location.origin}/about.html`)
+                linkClick.click((props.mobile) ? 'r' : 't', `${window.location.origin}/portfolio/about.html`)
             break;
             default:
-                linkClick.click((props.mobile) ? 'r' : 't', `${window.location.origin}/index.html?msg=${pos}`)
+                linkClick.click((props.mobile) ? 'r' : 't', `${window.location.origin}/portfolio/index.html?msg=${pos}`)
         }
         return
     }
@@ -1075,284 +916,303 @@ function jumpTo(pos, behavior) {
 }
 
 
-function toClipboard(val) {
-    // Copy the text inside the text field
-    navigator.clipboard.writeText(val);
-}
+
+
+
+
+
+
+
 
 /**
  * 
  * 
- *          GALLERY
+ *          UNIVERSAL INTERACTS
  * 
  * 
  */
 
-class gallery {
-	constructor() {
-		this.running = false
-		this.intervals = null
-		this.imgs = []
-        this.index = 0
-        this.actioning = false
-        this.zoomable = false
-	}
+// mouse follower distance
+function calculateNewPosition(mouseX, mouseY, lastX, lastY) {
+    const distance = 150;
+  
+    // Calculate angle from the current position to the mouse position
+    const angle = Math.atan2(mouseY - lastY, mouseX - lastX);
+  
+    // Calculate new x and y positions
+    const newX = mouseX - distance * Math.cos(angle);
+    const newY = mouseY - distance * Math.sin(angle);
+  
+    // Update lastX and lastY for the next calculation
+    props.mouse.offX = newX;
+    props.mouse.offY = newY;
+  
+    return { x: newX, y: newY };
+}
+
+
+
+// calculate pushing element
+function pushCalc(ele, x, y, pushFrom, amount, dz) {
+
+    // Calculate the distance from the mouse to the target element
+    const rect = ele.getBoundingClientRect();
+
+    const ex = rect.left + rect.width / 2;
+    const ey = rect.top + rect.height / 2;
     
-    setup(imgs, target, zoomable, intv) {
-        intv = intv || 8000
-        this.zoomable = zoomable || false
+    const deltaX = x - ex;
+    const deltaY = y - ey;
 
-        target.classList.add('gallery')
+    // Calculate the distance between the mouse and the element
+    const distance = Math.sqrt(deltaX ** 2 + deltaY ** 2);
 
-        let left = {
-            autoAlpha: 1,
-            x: '-40%',
-            z: 0,
-            scale:0.6,
-        }
-
-        let middle = {
-            autoAlpha: 1,
-            x: '0%',
-            z: 1,
-            scale:1,
-        }
-
-
-        let right = {
-            autoAlpha: 1,
-            x: '40%',
-            z: 0,
-            scale:0.6,
-        }
-         
-        let other = {
-            autoAlpha: 0,
-            x: '0%',
-            z: -2,
-            scale:0,
-        }
-
-        let wayfinder = document.createElement('div')
-        wayfinder.classList.add('gallery-nav')
-
-        imgs.forEach((im, i) => {
-            let img = new Image()
-            img.src = im
-            img.classList.add('vel')
-            img.setAttribute('data-gallerypos', i)
-            img.addEventListener('click', (event)=> this.clicked(event))
-
-
-            let div = document.createElement('div')
-            div.classList.add('gallery-img')
-
-            target.appendChild(div).appendChild(img)
-
-            let wayNav = document.createElement('div')
-            wayNav.setAttribute('data-gallerypos', i)
-            wayNav.addEventListener('click', (event)=> this.navClicked(event))
-            wayfinder.appendChild(wayNav)
-
-            if(i === imgs.length-1) {
-                gsap.set(div, left)
-                gsap.set(img, {'mask-image': 'linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1))'})
-                img.classList.add('dist25', 'dur1600')
-            } else if(i === 0) {
-                gsap.set(div, middle)
-                gsap.set(img, {'mask-image': 'linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 1))'})
-                img.classList.add('dist50', 'dur1600')
-                if(this.zoomable) img.classList.add('zoomable')
-                wayNav.classList.add('gallery-navOn')
-            } else if(i === 1) {
-                gsap.set(div, right)
-                gsap.set(img, {'mask-image': 'linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0))'})
-                img.classList.add('dist25', 'dur1600')
-            } else {
-                gsap.set(div, other)
-                gsap.set(img, {'mask-image': 'linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))'})
-                img.classList.add('dist0', 'dur1600')
-            }
-
-        })
-
-        target.appendChild(wayfinder)
-
-        this.interval = intv
-        this.imgs = imgs
-        this.target = target
-
-        this.moveInterval = setTimeout(()=>{
-            this.move(1)
-        },intv)
-
+    if(distance <= dz) {
+        return { x:0, y:0 }  
     }
 
-    move(dir,speed) {
+    // Calculate the scaling factor based on the distance
+    const scalingFactor = 1 - Math.min(distance / pushFrom, 1);
 
-        clearTimeout(this.moveInterval)
-        speed = speed || 0.5;
+    // Calculate the capped distance
+    const cappedDistance = scalingFactor * amount;
 
-        let imgs = this.imgs
-        let target = this.target
+    // Calculate the angle between the mouse and the element
+    const angle = Math.atan2(deltaY, deltaX);
 
-        let left = {
-            autoAlpha: 1,
-            x: '-40%',
-            z: 0,
-            scale:0.6,
-        }
-
-        let middle = {
-            autoAlpha: 1,
-            x: '0%',
-            z: 1,
-            scale:1,
-        }
+    // Calculate the new position with the capped distance
+    const newX = ex - cappedDistance * Math.cos(angle);
+    const newY = ey - cappedDistance * Math.sin(angle);
+  
+    // Update the element's position
+    return { x: (newX-ex), y: (newY-ey) }    
+}
 
 
-        let right = {
-            autoAlpha: 1,
-            x: '40%',
-            z: 0,
-            scale:0.6,
-        }
-            
-        let other = {
-            autoAlpha: 0,
-            x: '0%',
-            z: -2,
-            scale:0,
-        }
-        
-        if(document.hasFocus()) {
-            if(dir > 0) this.index++; else this.index--;
-            if (this.index < 0) this.index = imgs.length - 1;
-            if (this.index > imgs.length - 1) this.index = 0;
+function mouse(PN, rf) {
+    let pm = props.mouse
 
-            target.querySelectorAll('.gallery-img').forEach((div, i, l)=> {
-                let rati = (i - this.index + imgs.length) % imgs.length;
-                
-                qs(`.gallery-nav div:nth-child(${i+1})`).classList.remove('gallery-navOn')
-                if(this.zoomable) div.querySelector('img').classList.remove('zoomable')
-                if(rati === imgs.length-1) {
-                    gsap.to(div, {...left, duration:speed })
-                    gsap.to(div.querySelector('img'), {'mask-image': 'linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1))', duration:Math.max(0.3, speed) })
-                    gsap.to(div.querySelector('img').dataset, {dist:25, dur:1600, duration: speed })
-                } else if(rati === 0) {
-                    gsap.to(div, {...middle, duration: speed })
-                    gsap.to(div.querySelector('img'), {'mask-image': 'linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 1))', duration:Math.max(0.3, speed*0.5) })
-                    gsap.to(div.querySelector('img').dataset, {dist:50, dur:1600, duration: speed, onComplete: () => {
-                        if(this.zoomable) div.querySelector('img').classList.add('zoomable')
-                    } })
-                    qs(`.gallery-nav div:nth-child(${i+1})`).classList.add('gallery-navOn')
-                } else if(rati === 1) {
-                    gsap.to(div, {...right, duration: speed })
-                    gsap.to(div.querySelector('img'), {'mask-image': 'linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0))', duration:Math.max(0.3, speed) })
-                    gsap.to(div.querySelector('img').dataset, {dist:25, dur:1600, duration: speed })
+    // forever update the mouse
+    gsap.to(mouseEle, {x: pm.offX, y: pm.offY, duration: 0.1, ease: "power2.inOut" })
+
+    // exit if no mouse
+    if(!pm.valid ) return;
+
+    // push elements
+    if(every(500, PN, 'push') && props.performanceHandling.pushable) {
+        pushable.forEach(val => {
+            // get the x y for the element
+            let xy = pushCalc(val.target, pm.ev.clientX, pm.ev.clientY, push.from, push.amount, push.deadzone)
+            // animate the push
+            gsap.to(val.target, { ...xy, duration: push.dur})
+        })
+    }
+
+    // follow mouse at distance
+    if(every(100, PN, 'mouse')) calculateNewPosition(pm.x, pm.y, pm.offX, pm.offY)
+
+    // interactable over mousePointer
+    let classList = pm.target.classList
+    let arrayClassList = Array.from(classList)
+    let interactable = arrayClassList.some(className => className.includes('react'))
+
+    // mousePointer indicator change
+    if(interactable && !(classList.contains('screenTexture') && siLock)) {
+        const matchingClass = arrayClassList.find(className => className.includes('react'))
+        mouseEle.classList = matchingClass
+    } else {
+        mouseEle.classList = null
+    }
+
+    if(props.performanceHandling.highlightEffect) {
+
+        // do highlight on elements    
+        let hlh = qsa('.highlightHover')
+        if(interactable) {
+            // check if this has been run before
+            if(pm.lastTarget !== pm.target) {
+                hlh.forEach((ele) => {
+                    ele.classList.remove('highlightHover')
+                })
+
+                // do a check over contact bar
+                if(pm.target.parentNode.classList.contains('buttonCells')) { 
+                    qs('#buttonText').classList.add('highlightHover')
+                    classList.add('highlightHover')
+                } else if(pm.target.parentNode.id === "buttonText") {
+                    pm.target.parentNode.classList.add('highlightHover')
+                    if(!classList.contains('defaultState')) {
+                        qs(`#${arrayClassList.find(className => className !== 'highlightHover')}`).classList.add('highlightHover')
+                    }
                 } else {
-                    gsap.to(div, {...other, duration: speed })
-                    gsap.to(div.querySelector('img'), {'mask-image': 'linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))', duration:Math.max(0.3, speed) })
-                    gsap.to(div.querySelector('img').dataset, {dist:0, dur:1600, duration: speed })
+                    classList.add('highlightHover')
                 }
+            }
+        // clear all hlh lights if no interactable
+        } else if(hlh.length > 0) {
+            hlh.forEach((ele) => {
+                ele.classList.remove('highlightHover')
             })
         }
 
-        this.moveInterval = setTimeout(()=>{
-            this.move(1)
-        },this.interval)
-
     }
 
-    clicked(event) {
-        if(this.actioning) return;
-        let imGalPos = event.target.dataset.gallerypos
-        if(imGalPos == this.index) return;
-
-        clearInterval(this.moveRapid)
-
-        if(this.index == this.imgs.length-1) {
-            if(imGalPos == 0) this.move(1); else if(imGalPos < this.index) this.move(-1); else this.move(1)
-        } else if(this.index === 0) {
-            if(imGalPos == this.imgs.length-1) this.move(-1); else if(imGalPos < this.index) this.move(-1); else this.move(1)
-        } else {
-            if(imGalPos < this.index) this.move(-1); else this.move(1)
+    // handle contact click as a hover when on pc
+    qsa('.buttonCells div').forEach((ele) => {
+        if(ele === pm.target) {
+            changeContact(pm.target, 69, Array.from(pm.target.parentNode.children))
         }
+    })    
 
-    }
-    
-    navClicked(event) {
-        if(this.actioning) return;
-        let imGalPos = event.target.dataset.gallerypos
-        if(imGalPos == this.index) return;
-        this.actioning = true;
-        let diff = imGalPos - this.index
-        let speed = Math.min(0.5, (0.75 / Math.abs(diff))
-)
-        let iter = 0;
-        this.moveRapid = setInterval(()=>{
-            if(diff < 0) {
-                this.move(-1,speed)
-            } else {
-                this.move(1,speed)
+
+    // check if span and menuDesktop id then apply the movement 
+    if(pm.target.nodeName === 'SPAN') {
+        if(pm.target.parentElement.id === 'menuDesktop') {
+
+            clearTimeout(props.menuHoverTimeout)
+            props.menuHoverTimeout = setTimeout(()=>{
+                gsap.to('.menuScreen', {
+                    scaleY: 0,
+                    ease: "back.in(1.7)",
+                    duration: 0.2
+                })
+                props.menuHover = null
+            },1500)
+
+            if(props.menuHover !== pm.target.innerText) {
+                props.menuHover = pm.target.innerText
+
+                const bound = pm.target.getBoundingClientRect()
+                gsap.to('.menuScreen', {
+                    scaleY: 1,
+                    ease: "back.out(1.7)",
+                    duration: 0.2
+                })
+                gsap.to('.menuScreen', {
+                    left: bound.x,
+                    width: bound.width,
+                    ease: "back.out(1.4)"
+                })
             }
-
-            iter++;
-            if(iter === Math.abs(diff)) { 
-                clearInterval(this.moveRapid)
-                this.actioning = false;
-            }
-
-        },speed + 100)
-
-
-
+        }
     }    
+
+    // unique mouse 
+    if(typeof uMouse === 'function') uMouse()
+
+    // set-up for next loop
+    pm.lastTarget = pm.target
+    pm.valid = false;
 }
 
 
-function generateScreen(parent, col) {
 
-    let div = document.createElement('div')
-    div.classList.add('screen','selOff','float','vel','dur800','dist50','pushable')
-    let text = document.createElement('span')
-    text.innerText = parent.innerText
-    parent.innerText = ''
 
-    col = col || props.primaryCol
-    gsap.set(text, {
-        position:'relative',
-        textShadow: `0 0 4px rgba(${col}, 0.6)`
 
-    })
 
-    parent.appendChild(div)
-    parent.appendChild(text)
 
-    let leftOffset = randomChance(70) ? 1 * props.rem * Math.random() : 3 * props.rem * Math.random();
-    gsap.set(div, {
-        width:`clamp(${6 + 1 * Math.random()}rem, 10vw, ${10 + 3 * Math.random()}rem)`,
-        marginBottom: 'clamp(1rem, 4vw, 2.5rem)',
-        left: -2 * props.rem + leftOffset,
-        bottom:2.5 * props.rem * Math.random(),
-        aspectRatio: 1.8 + 0.3 * Math.random() 
-    })
-    
+
+
+/**
+ * 
+ * 
+ *          PERFORMANCE HANDLING
+ * 
+ * 
+ */
+
+props.performanceHandling = {
+    dropAmount: 0,
+
+    heavyGrain: true,
+    grain: true,
+    highlightEffect: true,
+    pushable: true,
+    projectParallax: true,
+    staticCanvas: true,
+    velocity: true
+}
+function performanceHandling(controls) {
+    switch(controls.dropAmount) {
+        case 20:
+            console.log('downgrading: removing heavy grain')
+            controls.heavyGrain = false
+            heavyGrain.style.display = 'none'
+        break;
+        case 40:
+            console.log('downgrading: removing light grain')
+            controls.grain = false;
+            lightGrain.style.display = 'none'
+        break;
+        case 60:
+            console.log('downgrading: removing highlight hover')
+            controls.highlightEffect = false
+        break;
+        case 80:
+            console.log('downgrading: removing pushable')
+            controls.pushable = false
+        break;
+        case 100:
+            console.log('downgrading: removing parallax')
+            controls.projectParallax = false
+            for (const [key, obj] of Object.entries(props.projectIMG)) {
+                obj.im.style.transform = `translateY(0px)`
+            }
+        break;
+        case 120:
+            console.log('downgrading: removing static canvas')
+            controls.staticCanvas = false;
+            staticHorizontal.clear()
+        break
+        case 140:
+            console.log('downgrading: removing velocity')
+            controls.velocity = false;
+        break;
+    }
 }
 
-/*          Resize listener to kill transitions         */
-let resizeTimer;
-function onResizeStart() {
-    document.body.classList.add('no-transition')
-    if(typeof customDuringResizer === 'function') customDuringResizer()
-}
 
-function onResizeEnd() {
-    if(typeof customResizer === 'function') customResizer()
-    document.body.classList.remove('no-transition')
-}
 
-if(!props.mobile) {
+
+
+
+
+
+
+
+
+/**
+ * 
+ * 
+ *          EVENTS & UNIVERSAL LOOPS
+ * 
+ * 
+ */
+
+if(props.mobile) {
+    // mobile menu
+    menuEle.addEventListener('click', () => {
+        menuToggle()
+    }); 
+
+    // menu open
+    function menuToggle() {
+        if(!scrollVals.autoScrolling) {
+            document.body.classList.toggle('menuOpen')
+            qs('#nav').classList.toggle('menuOpen')
+            qs('#navCanvas').classList.toggle('menuOpen')
+
+            menuEle.classList.add('highlightHover')
+            setTimeout(()=>{
+                menuEle.classList.remove('highlightHover')
+            },300)
+
+            menuWipe.init()
+        }
+    }
+
+} else {
+    // resize listener on desktop
     window.addEventListener('resize', function() {
         clearTimeout(resizeTimer)
         if (!resizeTimer) {
@@ -1363,7 +1223,104 @@ if(!props.mobile) {
             onResizeEnd()
         }, 200)
     })
+
+    // desktop menu
+    menuEle.addEventListener('click', (ev) => {
+        if(ev.target.id !== 'menuDesktop') jumpTo(ev.target.innerText)
+    })
+
+    
+
+    // mouse based events - desktop
+    props.mouse = {
+        x: 0,
+        y: 0,
+        offX: 0,
+        offY: 0
+    }
+    document.addEventListener('mousemove', event => {
+        props.mouse = {
+            ...props.mouse,
+            ev: event,
+            x: event.clientX,
+            y: event.clientY + window.scrollY,
+            target: event.target,
+            valid: true
+        }
+    })    
 }
+
+
+// handle scroll animations
+document.addEventListener('scroll', event => {
+    props.scrolling = true;
+}); 
+
+
+// setup tech related
+techMenuEle.addEventListener('click', (ev) => {
+    if(ev.target !== techMenuEle) console.log('here')
+})
+
+
+
+// simplify if statements in requestFrame function to only run every x milliseconds with ease
+function every(milli, PN, label) {
+    label = label+milli || `milli${milli}`
+    if(props.requestFrame[label] === undefined) props.requestFrame[label] = 0
+    if((PN - props.requestFrame.launchTime) / milli - props.requestFrame[label] > 1) {
+        props.requestFrame[label] = Math.floor((PN - props.requestFrame.launchTime) / milli)
+        return true;
+    } else {
+        return false;
+    }
+}
+
+// launch time
+props.requestFrame = {}
+props.requestFrame.launchTime = performance.now()
+
+function drawFrame() {
+    const F1 = performance.now()
+    const rf = props.requestFrame
+    const ph = props.performanceHandling
+    // ------------------------------------------------------
+
+    if(!props.mobile) mouse(F1, rf)
+    
+    // set to true when scrolling
+    if(props.scrolling) scrollVelocity(F1, rf)
+
+    // run ever 300 milliseconds
+    if(every(300,F1) && ph.grain) grainTexture()
+
+    // run float animation
+    if(every(500,F1) && !props.scrolling) float.forEach(mt => floatAnimation(mt))
+
+    if(typeof uDrawFrame === 'function') uDrawFrame(F1, rf)
+
+
+    // ------------------------------------------------------
+    const F2 = performance.now()
+    const mil = Math.round(F2 - F1) || 1
+    const frames = Math.round(1/(mil/1000))
+    // if frames below 100 log them
+    if(frames < 100) {
+        console.log('frame rate: ', frames)
+        ph.dropAmount++
+        performanceHandling(props.performanceHandling)
+    }
+
+    requestAnimationFrame(drawFrame)
+} drawFrame()
+
+
+
+
+
+
+
+
 
 
 
@@ -1460,6 +1417,64 @@ function preloadImages() {
 
 // Call the function to preload images
 preloadImages();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // const scrollY = window.scrollY;
+    // // Calculate the velocity of scroll
+    // let deltaY = scrollY - zlastScrollY
+    // if (Math.abs(deltaY) < 3) deltaY = 0;
+    // zvelocity = 0.9 * (deltaY || props.deltaY); // Apply a decay factor
+    // props.deltaY = deltaY
+    // // Update last scroll position
+    // zlastScrollY = scrollY
+    // console.log('Velocity:', zvelocity, '| delta', deltaY)
+    
+
+
+    // // If the velocity is not close to zero, continue the animation
+    // if (Math.abs(zvelocity) > 0.1) {
+    //     // Your custom logic using velocity
+    // } else {
+    // } 
+    
+    //   // Calculate the velocity of scroll
+    //   const scrollY = window.scrollY;
+    //   const deltaY = scrollY - lastScrollY;
+    
+    //   // Apply a decay factor with weight based on deltaY
+    //   if (Math.abs(deltaY) < Math.abs(velocity)) {
+    //     // Apply stronger decay if deltaY is less than velocity
+    //     velocity = 0.8 * velocity;
+    //   } else {
+    //     // Apply regular decay if deltaY is greater than velocity
+    //     velocity = 0.9 * deltaY;
+    //   }
+    
+    //   // Set velocity to zero if it's below the threshold
+    //   if (Math.abs(velocity) < minVelocityThreshold) {
+    //     velocity = 0;
+    //   }
+    
+    //   // Your custom logic using velocity
+    //   console.log('Velocity:', velocity);
+    
+    //   // Update last scroll position
+    //   lastScrollY = scrollY;
+
 
 
 */
