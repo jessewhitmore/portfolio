@@ -7,35 +7,6 @@
  * 
  */
 
-const staticHorizontal = new blockCanvas()
-function processCanvas() {
-
-
-    // -------------------------------------
-
-    staticHorizontal.setup('.staticBlocksH',`rgba(${props.primaryCol
-    },1)`)
-    staticHorizontal.postDraw = function(c, ctx) {
-        let col = this.colour
-        let h = 50
-        const grd = ctx.createLinearGradient(0, h, 0, 0);
-        let alpha0 = col.split(',')
-        alpha0[3] = '0)'
-        alpha0.join(',')
-        grd.addColorStop(0, alpha0);
-        grd.addColorStop(1, col);
-        
-        // Fill with gradient
-        ctx.fillStyle = grd;
-        ctx.fillRect(0, 0, this.width, h);
-    }
-    staticHorizontal.static()
-    staticHorizontal.animate()
-
-
-} 
-
-
 
 
 // -------------------------------------
@@ -44,10 +15,15 @@ function processElements() {
     
     const gal = new gallery()    
     let imz = ['../img/test.jpg', '../img/test.jpg', '../img/test.jpg', '../img/test.jpg', '../img/test.jpg', '../img/test.jpg', '../img/test.jpg', '../img/test.jpg', '../img/test.jpg', '../img/test.jpg']
-    gal.setup(imz, qs('#gal'), true)
+//    gal.setup(imz, qs('#gal'), true)
 
     /*          sizing issues           */
     qs('#buttonText').style.width = qs('#buttonText .defaultState').clientWidth+'px'
+
+
+    /*          generateScreens to titles           */
+
+//    generateScreen(qs('.secHeader'))
 
 
     /*          populate float           */
@@ -65,47 +41,8 @@ function processElements() {
     });    
     
 
-    /*          Generate contact info           */
-
-
-    let conInfo = qs('.contactInfo')
-    const keys = Object.keys(contactInfo);
-    keys.forEach((key, index) => {
-
-        let infoSpan = document.createElement('span')
-        switch(contactTreatment[key].type) {
-            case 'link':
-                infoSpan.innerText = (contactTreatment[key].text) ? contactTreatment[key].text : contactInfo[key]
-                infoSpan.setAttribute('data-cikey', key)               
-            break;
-            default:
-                infoSpan.innerText = contactInfo[key]
-        }
-        
-        conInfo.appendChild(infoSpan)
-
-    });    
-    qsa('.contactInfo span').forEach((ele) => {
-        
-        ele.addEventListener('click', (ev)=> {
-            let key = ev.target.dataset.cikey
-            if(key === undefined) return
-            if(contactTreatment[key].trans) {
-                linkClick.click((props.mobile) ? 'r' : 't', contactInfo[key]);
-            } else {
-                if(contactTreatment[key].linkType) contactTreatment[key].linkType(); else window.open(contactInfo[key], '_self')
-            }
-        })
-    })
-
-
-
     /*          Velocity and parallax setup attribute setup           */
 
-    attributeSetup('.vel',['dur','dist'])
-    attributeSetup('.para',['dist'])
-    attributeSetup('.screen',['si'])
-    attributeSetup('.pushable',['amt'])
 
 
     /*          screen texture allocation and sub div creation           */
@@ -118,234 +55,12 @@ function processElements() {
 
 
     /*          pushable element creation           */
+
     if(!props.mobile) {
         for(let ele of qsa('.pushable')) {
             wrapContent(ele, 'push')
         }
     }
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/**
- * 
- * 
- *          ANIMATION HANDLING
- *          Velocity, parallax, any animation in more than one section
- * 
- * 
- */
-
-function globalAnimationSetups() {
-
-
-    // -------------
-
-    /*          Screen related           */
-    let siG = 0, 
-    autoChangeTimeout = null,
-    firstAuto = 1000
-
-
-    // -------------
-
-    // randomly flicker to new screen texture
-    function autoChange() {
-        autoChangeTimeout = setTimeout( () => {
-            changeScreen(Math.floor(qsa('.screen').length*Math.random()),'autoed');
-            firstAuto = 15000;
-            autoChange();
-        },firstAuto + 5000*Math.random());
-    } 
-
-
-    // -------------
-
-    // change screen semi-randomly flowing out from clicked screen
-    function changeScreen(i) {
-        if(siLock) return;
-        siLock = true;
-        if(push.target !== undefined) if(push.target.classList.contains('screenTexture')) qs('#mousePointer').classList = null
-        clearTimeout(autoChangeTimeout)
-        autoChange()
-        siG++;
-    
-        qsa('.screen').forEach((ele, index) => {
-    
-            let siN = 0 || ele.dataset.si,
-            intN = Math.floor(4*exponentialDecayWithMax(Math.random() * 100, 100, decayRate)/100),
-            delay = Math.abs(index - i) * 200 * Math.random();
-    
-            if(index !== i) {
-
-                for(let n = 0; n <= intN; n++) {
-                    setTimeout(() => {
-                        ele.querySelector('.screenTexture').style.background = si[((parseInt(siN)+siG) % si.length) - (n % 2)]
-                    }, delay);
-                    delay += 100 + 200 * Math.random()
-                }
-            } else {
-
-                ele.querySelector('.screenTexture').style.background = si[(parseInt(siN)+siG) % si.length]
-            }
-            setTimeout(() => {
-                ele.querySelector('.screenTexture').style.background = si[(parseInt(siN)+siG) % si.length]
-            }, 1000);
-        })
-        setTimeout(() => { siLock = false; if(push.target !== undefined)  if(push.target.classList.contains('screenTexture')) qs('#mousePointer').classList = 'play'; },1500)
-    }
-
-    autoChange()
-
-    // add event listerner to all screen to changeScreen on click
-    qsa('.screen').forEach((ele, index) => {
-        ele.addEventListener('click', () => changeScreen(index));
-    })
-
-    // -------------
-
-    /*          random movement         */
-
-    setInterval(()=>{
-
-        if(!scrollVals.refreshing) {        
-            float.forEach((mt) => {
-                if(mt.onScreen) {
-                    mt.x += bobControls.movement*mt.movementDirectionX
-                    mt.y += bobControls.movement*mt.movementDirectionY
-
-                    if(Math.abs(mt.x) > bobControls.xMax) mt.movementDirectionX *= -1
-                    if(Math.abs(mt.y) > bobControls.yMax) mt.movementDirectionY *= -1
-                    gsap.to(mt.target, {x: mt.x, y: mt.y, duration: bobControls.dur})
-                }
-            })
-
-            pushable.forEach((mt) => {
-                gsap.to(mt.target, {x: mt.xy[0], y: mt.xy[1], duration: push.dur})
-            })
-        }
-    },500)
-
-} 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/**
- * 
- * 
- *          DATE TIME
- * 
- * 
- */
-
-function dateTimeContact() {
-
-    let location = 'Sydney'
-    let GMT = 11
-    let lastSecond = new Date().getSeconds()-1
-
-
-    // -------------
-
-    function setDateWithOffset(gmtOffset) {    
-        // Get the current local time
-        const localDate = new Date();
-        const timezoneDiff = localDate.getTimezoneOffset() / 60
-    
-        // Calculate the UTC time based on the GMT offset
-        const utcTime = localDate.getTime()
-    
-        // Apply the desired GMT offset
-        const targetTime = utcTime + ((gmtOffset + timezoneDiff) * 3600000); // 1 hour = 3600000 milliseconds
-    
-        // Create a new Date object with the adjusted time
-        targetDate = new Date(targetTime)
-        lastSecond = targetDate.getSeconds()
-        targetDate = `${pad(targetDate.getHours(),2)}:${pad(targetDate.getMinutes(),2)}:${pad(targetDate.getSeconds(),2)}${(Math.sign(gmtOffset) === 1) ? '+' : ''}${gmtOffset}GMT`
-        
-        return targetDate
-    }
-
-
-    // -------------
-
-    setInterval(()=> {
-        if(new Date().getSeconds() !== lastSecond) qs('#localTime').innerText = setDateWithOffset(GMT);
-    },200)    
-    qs('#location').innerText = location
-    qs('#local').style.opacity = 1
 
 }
 
@@ -455,21 +170,6 @@ function intersections() {
         });
     }
 
-
-    // -------------
-
-    /*          Project middle mobile interaction           */
-    function projectIntersect(entries, observer) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('highlight');
-            } else {
-                entry.target.classList.remove('highlight');
-            }
-        });
-    }
-
-
     // -------------
 
     /*          floating element           */
@@ -543,10 +243,6 @@ function intersections() {
         rootMargin: '20% 0% 20% 0%'
     })
 
-    if(props.mobile) observerConstructor(projectIntersect, '.project',  {
-        rootMargin: '-50% 0% -50% 0%'
-    })
-
     observerConstructor(floatIntersect, '.float', {
         rootMargin: '0% 0% 0% 0%'
     })
@@ -606,22 +302,6 @@ function intersections() {
  * 
  * 
  */
-
-function custScrollAnimation() {
-        /*      highlight parallax           */
-
-        qsa('#project img').forEach((ele)=> {
-            let eleBounding = ele.getBoundingClientRect()
-            let posM = eleBounding.top + eleBounding.height/2 - window.innerHeight/2
-            let speed = posM * (ele.dataset.dist/100)
-            ele.style.transform = `translateY(-50%) translate3d(0, ${-speed}px, 0)`
-        })
-
-
-}
-
-generateScreen(qs('.secHeader'))
-
 
 
 
@@ -845,15 +525,11 @@ function userInteractions() {
 /*          Trigger relevant functions          */
 
 processElements()
-processCanvas()
 intersections()
 
-globalAnimationSetups()
 
 userInteractions()
-dateTimeContact()
-scrollObservation()
-
+contactSetup()
 
 
 

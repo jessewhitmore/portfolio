@@ -10,77 +10,56 @@
 // projects manifest -- used to geneterate projects on index only currently
 const projectManifest = [
     {
-        title: 'hi cerese',
+        title: 'DOG System',
         desc: 'PROJECT - TYPE - CODE' 
     }, 
     {
-        title: 'test title',
+        title: '2021 Roadmap',
         desc: 'PROJECT - TYPE - CODE' 
     }, 
     {
-        title: 'test title',
+        title: 'New Format: Velocity',
         desc: 'PROJECT - TYPE - CODE' 
     }, 
     {
-        title: 'test title',
+        title: 'Studio Sliders',
+        desc: 'PROJECT - TYPE - CODE' 
+    },    
+    {
+        title: 'Self-Serve Templates',
         desc: 'PROJECT - TYPE - CODE' 
     }, 
     {
-        title: 'test title',
+        title: 'Client Work Playground',
         desc: 'PROJECT - TYPE - CODE' 
-    }
+    },
+    {
+        title: 'Amazon Black Friday',
+        desc: 'PROJECT - TYPE - CODE' 
+    },
+    {
+        title: 'Uber',
+        desc: 'PROJECT - TYPE - CODE' 
+    },
+    {
+        title: 'Heineken',
+        desc: 'PROJECT - TYPE - CODE' 
+    },    
+    {
+        title: 'Kong Skull Island',
+        desc: 'PROJECT - TYPE - CODE' 
+    },    
+    {
+        title: 'Design for Fun',
+        desc: 'PROJECT - TYPE - CODE' 
+    },    
 ]
-
-
-const staticHorizontal = new blockCanvas()
-function processCanvas() {
-
-
-    // -------------------------------------
-
-    staticHorizontal.setup('.staticBlocksH',`rgba(${props.primaryCol
-    },1)`)
-    staticHorizontal.postDraw = function(c, ctx) {
-        let col = this.colour
-        let h = 50
-        const grd = ctx.createLinearGradient(0, h, 0, 0);
-        let alpha0 = col.split(',')
-        alpha0[3] = '0)'
-        alpha0.join(',')
-        grd.addColorStop(0, alpha0);
-        grd.addColorStop(1, col);
-        
-        // Fill with gradient
-        ctx.fillStyle = grd;
-        ctx.fillRect(0, 0, this.width, h);
-    }
-    staticHorizontal.static()
-
-} 
 
 
 // -------------------------------------
 // -------------------------------------
 
 function processElements() {
-
-    /*          sizing issues           */
-
-
-    /*          populate float           */
-
-    qsa('.float').forEach((ele) => {
-        let tempObj = {
-            target: ele,
-            movementDirectionX: (Math.random() < 0.5) ? -1 : 1,
-            movementDirectionY: (Math.random() < 0.5) ? -1 : 1,
-            x: Math.round(Math.random()*bobControls.xMax*2)-bobControls.xMax,
-            y: Math.round(Math.random()*bobControls.yMax*2)-bobControls.yMax,
-            onScreen: false
-        }
-        float.push(tempObj)
-    });
-
 
     /*          Gen projects            */
 
@@ -91,7 +70,7 @@ function processElements() {
         let project = document.createElement('div')
         project.classList.add('project', 'react-open')
         project.setAttribute('data-linkRef',1)
-        project.setAttribute('data-project', v.title.toLowerCase().replace(' ','-'))
+        project.setAttribute('data-project', v.title.toLowerCase().replaceAll(' ','-'))
 
 
         // create, tag, img setup & attach copy to - reveal
@@ -102,7 +81,7 @@ function processElements() {
         img.onerror = function() {
             this.src = './img/test.jpg'
         }
-        img.src = `./projects/title-${v.title.toLowerCase().replace(' ','-')}.jpg`;
+        img.src = `./projects/title-${v.title.toLowerCase().replaceAll(' ','-')}.jpg`;
         img.setAttribute('data-projectIndex', i+1)
         reveal.appendChild(img)
 
@@ -132,41 +111,41 @@ function processElements() {
         const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         group.setAttribute('clip-path', `url('#${clip.id}')`)
 
-        const titleTxt = document.createElementNS('http://www.w3.org/2000/svg', 'text')
-        titleTxt.classList.add('SVGtitle')
-        titleTxt.setAttribute('y','50%')
-        titleTxt.setAttribute('transform-origin', '0% 29%')
-        titleTxt.setAttribute('fill',`rgb(${props.secondaryCol})`)
-        
-        const titleTxtNode = document.createTextNode(v.title);
-        titleTxt.appendChild(titleTxtNode)
+        var FO = document.createElementNS('http://www.w3.org/2000/svg',"foreignObject")
+        let FOele = document.createElement('div')
+        batchSet(FOele, 'style', {
+            height:'100%', 
+            width:'100%', 
+            display:'flex', 
+            'flex-direction':'column',
+            'justify-content':'center',
+            'padding-left': 'clamp(2rem, 6.3vw, 7rem)',
+            'box-sizing':'border-box'
+        })
+        let titleNode = document.createElement('span')
+        titleNode.classList.add('SVGtitle')
+        titleNode.innerText = v.title
 
-        const backTitleTxt = titleTxt.cloneNode(true)
-        backTitleTxt.setAttribute('fill',`rgb(${props.primaryCol})`)
+        let descNode = document.createElement('span')
+        descNode.classList.add('SVGdesc')
+        descNode.innerText = v.desc
 
+        FOele.appendChild(titleNode)
+        FOele.appendChild(descNode)
 
-        const descTxt = document.createElementNS('http://www.w3.org/2000/svg', 'text')
-        descTxt.classList.add('SVGdesc')
-        descTxt.setAttribute('y','67%')
-        descTxt.setAttribute('transform-origin', '0% -6%')
-        descTxt.setAttribute('fill',`rgb(${props.secondaryCol})`)
+        FO.appendChild(FOele)        
+        let FOback = FO.cloneNode(true)
 
-        const descTxtNode = document.createTextNode(v.desc);
-        descTxt.appendChild(descTxtNode)        
+        FO.style.color = `rgb(${props.secondaryCol})`
+        FOback.style.color = `rgb(${props.primaryCol})`
+        FOback.style.textShadow = `0px 0px 9px rgba(${props.secondaryCol},0.6)`
 
-        const backDescTxt = descTxt.cloneNode(true)
-        backDescTxt.setAttribute('fill',`rgb(${props.primaryCol})`)
-
-
-        svg.appendChild(backTitleTxt)
-        svg.appendChild(backDescTxt)
+        svg.appendChild(FOback)
 
         svg.appendChild(path)
 
-        group.appendChild(titleTxt)
-        group.appendChild(descTxt)
+        group.appendChild(FO)
         svg.appendChild(group)
-
 
         // finalise elements and attach to .project node
         project.appendChild(reveal)
@@ -178,73 +157,13 @@ function processElements() {
     })
     projectSVGshape()
     
-    
-    /*          Generate contact info           */
-    if(getCountry().toLowerCase() == props.country) {
-        let modifiedNumber = contactInfo.tel.split(' ')
-        modifiedNumber[0] = '0'
-        contactInfo.tel = modifiedNumber.join(' ').replace(' ','')
-    }
-
-    let conInfo = qs('.contactInfo')
-    const keys = Object.keys(contactInfo);
-    keys.forEach((key,i) => {
-        let infoSpan = document.createElement('span')
-        if(contactTreatment[key].hover !== undefined) infoSpan.classList.add((contactTreatment[key].hover))
-        
-        switch(contactTreatment[key].type) {
-            case 'link':
-                infoSpan.innerText = (contactTreatment[key].text) ? contactTreatment[key].text : contactInfo[key]
-                infoSpan.setAttribute('data-cikey', key)               
-            break;
-            default:
-                infoSpan.innerText = contactInfo[key]
-        }
-        
-        if(i > 0) { let hr = document.createElement('div'); conInfo.appendChild(hr) }
-        conInfo.appendChild(infoSpan)
-
-    });    
-    qsa('.contactInfo span').forEach((ele) => {
-        
-        ele.addEventListener('click', (ev)=> {
-            let key = ev.target.dataset.cikey
-            if(key === undefined) return
-            if(contactTreatment[key].trans) {
-                linkClick.click((props.mobile) ? 'r' : 't', contactInfo[key]);
-            } else {
-                if(contactTreatment[key].func) contactTreatment[key].func(); else window.open(contactInfo[key], '_self')
-            }
-        })
-    })
 
 
+    /*          parallax setup attribute setup           */
 
-    /*          Velocity and parallax setup attribute setup           */
-
-    attributeSetup('.vel',['dur','dist'])
     attributeSetup('.para',['dist'])
-    attributeSetup('.screen',['si'])
-    attributeSetup('.pushable',['amt'])
 
-
-    /*          screen texture allocation and sub div creation           */
-
-    for(let ele of qsa('.screen')) {
-        let siN = 0 || ele.dataset.si;
-        wrapContent(ele, 'screenTexture')
-        ele.querySelector('.screenTexture').style.background = si[siN]
-    } 
-
-    animateScreen()
-
-
-    /*          pushable element creation           */
-    if(!props.mobile) {
-        for(let ele of qsa('.pushable')) {
-            wrapContent(ele, 'push')
-        }
-    }
+    wrapProcessing()
 
 }
 
@@ -352,6 +271,7 @@ function intersections() {
     // -------------
 
     /*          Project middle mobile interaction           */
+
     function projectIntersect(entries, observer) {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -591,10 +511,12 @@ function aboutSetup() {
     timeline.timeScale(ts)
 }
 
+// kill the project section  
 function uDuringResizer() {
     qs('#projects').classList.add('resizeOff')
 }
 
+// do resizing for the about sections then run SVG stuff
 function uResizer() {
         // Get the parent and child elements
         const parent = qs('#text');
@@ -694,9 +616,9 @@ function uResizer() {
  * 
  */
 
+// resize project on resize
 props.performanceCount = 0;
 function projectSVGshape() {
-
 
     const parent = qs('#projects svg').parentElement
     const w = wrapper.offsetWidth
@@ -710,11 +632,9 @@ function projectSVGshape() {
         ele.querySelectorAll('path').forEach(path => {
             path.setAttribute('d',`M 0 0 H ${ w } L ${ w + remOffset } ${ h } H 0 z`)
         })
-        ele.querySelectorAll('.SVGtitle').forEach(title => {
-            title.setAttribute('x', (w * 0.12).clamp(2.5 * props.rem, 15 * props.rem))
-        })
-        ele.querySelectorAll('.SVGdesc').forEach(title => {
-            title.setAttribute('x', (w * 0.12).clamp(3.1 * props.rem, 15.4 * props.rem))
+
+        ele.querySelectorAll('foreignObject').forEach(FO => {
+            batchSet(FO, 'setAttribute', {width: w*0.93, height:h})
         })
 
     })
@@ -733,6 +653,7 @@ function projectSVGshape() {
     gsap.set(qsa('.highlight .SVGtitle, .highlight .SVGdesc'), { x: 0, scale:1 })    
     projectDraw()
 }
+
 function projectParallax() {
     if(!props.performanceHandling.projectParallax) return;
     if(props.projectAnimatable) {
@@ -765,8 +686,8 @@ function projectDraw(target) {
                 x: xOffset
             })
 
-            gsap.to(ele.querySelectorAll('.SVGtitle, .SVGdesc'), {
-                x: -(0.04*window.innerWidth).clamp(1.5*props.rem, 7.5*props.rem),
+            gsap.to(ele.querySelectorAll('foreignObject div'), {
+                x: -(0.08*window.innerWidth).clamp(2.4*props.rem, 17*props.rem),
                 scale: 0.85                
             })
 
@@ -785,7 +706,7 @@ function projectDraw(target) {
             gsap.to(ele.querySelectorAll('.SVGblocker, .SVGclip'), {
                 x: '0vw'
             })
-            gsap.to(ele.querySelectorAll('.SVGtitle, .SVGdesc'), {
+            gsap.to(ele.querySelectorAll('foreignObject div'), {
                 x: 0,
                 scale:1
             })
@@ -808,8 +729,7 @@ function projectDraw(target) {
 
     })
 }
-
-function uMouse() {
+function uMouse() { // draw and animate the projects
     const pm = props.mouse
     if(qs('.highlight') !== null && !pm.target.classList.contains('project')) { 
         projectDraw()
@@ -931,13 +851,11 @@ function clickThrough(e, ev) {
            linkClick.centerSweep(ev.clientY, `./projects/${e.dataset.project}.html`)
         break;
         case 2: // copy phonenumber
-
             if(props.mobile) {
                 window.open(`tel:${contactInfo.tel.replace(' ','')}`,'_self')
             } else {
                 toClipboard(contactInfo.tel) 
             }
-            
         break;
         case 3: // copy email & open email client
             toClipboard(contactInfo.email);
@@ -957,98 +875,6 @@ function clickThrough(e, ev) {
         break;
     }
 }
-
-    
-// --------------------------------------------------------------
-
-gsap.set(qs('#buttonText'), {width:'unset'})
-
-function changeContact(e, i, p) {
-    if(props.contactLock === undefined) props.contactLock = false
-    if(i !== 69) {
-        props.contactLock = true;
-        setTimeout(()=> {
-            props.contactLock = false;
-        },700)
-    } else if(i === 69 && props.contactLock ) return;
-
-    switch(i) {
-        case 0: // telephone
-            toClipboard(contactInfo.tel) 
-        break;
-        case 1: // email
-            toClipboard(contactInfo.email);
-        break;
-        case 2: // linkedin
-            linkClick.click((props.mobile) ? 'r' : 't', contactInfo.linkdin)
-        break;
-    }
-
-    if(props.conButton == undefined) props.conButton = qs('#buttonText')
-    if(props.conLastState == undefined) props.conLastState = qs('#buttonText .defaultState')
-    let chosenFace = qs(`#buttonText .${e.id}`)
-
-    gsap.fromTo(props.conButton, {width: props.conLastState.clientWidth }, {width: chosenFace.clientWidth, duration:0.2, onComplete: ()=>{
-        props.conButton.style.width = 'unset'
-    }})
-    props.conLastState = chosenFace
-
-    props.conButton.classList.remove('default-state')
-    p.forEach((ele) => {
-        if(e === ele) {
-            ele.classList.add('onElement')
-        } else {
-            ele.classList.remove('onElement')
-        }
-        props.conButton.classList.remove(ele.id+'-state')
-    });
-
-
-    props.conButton.classList.add(e.id+'-state')
-
-    clearTimeout(props.contactReturn)
-    props.contactReturn = setTimeout(()=> {
-        let chosenFace = qs('#buttonText .defaultState')
-        gsap.fromTo(props.conButton, {width: props.conLastState.clientWidth }, {width: chosenFace.clientWidth, duration:0.2, onComplete: ()=>{
-            props.conButton.style.width = 'unset'
-        }})
-        props.conLastState = chosenFace        
-        p.forEach((ele) => {
-            props.conButton.classList.remove(ele.id+'-state')
-        })
-
-        props.conButton.classList.add('default-state')
-
-    },4000)
-
-} 
-
-function userInteractions() {
-
-    // handle contact hover clicks
-    qsa('.buttonCells div').forEach((ele, index, parent) => {
-        ele.addEventListener('click', () => changeContact(ele, index, parent))
-    })
-
-    // handle page clicks
-    qsa('#about .button, .project, #buttonText div, #nav .copy span').forEach((ele) => {
-        ele.addEventListener('click', (event) => clickThrough(ele, event))    
-    })
-
-    qs('#contactPlate').addEventListener('click', (event) => {
-        if(event.target.id === 'contactPlate') {
-            gsap.killTweensOf('.contactInfo')
-            gsap.to('.contactInfo', {y:window.innerHeight/2 + qs('.contactInfo').offsetHeight/2, duration: 0.3, ease: "back.in(1.4)", onComplete: ()=>{
-                qs('.contactInfo').style.transform = 'translateY(calc(50vh + 50%))'
-            } })
-            qsa('#contactPlate, .contactInfo').forEach((ele) => {                
-                ele.classList.remove('contactOpen')
-            })
-        }
-    })
-
-}
-
 
 
 
@@ -1096,15 +922,9 @@ function userInteractions() {
 /*          Trigger relevant functions          */
 
 processElements()
-processCanvas()
 intersections()
-
 aboutSetup()
-
-userInteractions()
-dateTimeContact()
-scrollObservation()
-
+contactSetup()
 
 
 

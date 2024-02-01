@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>HTML 5 Boilerplate</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../mobile.css">
+    <link rel="stylesheet" href="../desktop.css">
+
+    <link rel="stylesheet" href="projects.css">
+
+    <script src="https://assets.playground.xyz/kristjanfreelance/d89b7c52_gsap.min.js"></script>
+    <script src="https://assets.playground.xyz/kristjanfreelance/4c934217_Draggable.min.js"></script>
+    <script src="https://assets.playground.xyz/kristjanfreelance/89d3b4dc_InertiaPlugin.min.js"></script>    
+  </head>
+  <body>
+
+    <div id="wrapper">
+
+      <div id="subpageHeader" class = "sectionAuto">
+        <div id="headerImage" class="section50">  </div>
+        <div class="copy">
+          <div class = "HEADER">Design Optimisation & Growth System</div>
+
+          <div class = "SUBHEADER">Role</div>
+          <p>Solo project</p>
+
+          <div class = "SUBHEADER">Technical Terminology</div>
+          <p>List of terms used within this case study that are not layman's terms parlance
+          </br><span class = "boldText">Jira:</span> A widely used project management tool.
+          </br><span class = "boldText">UI:</span> User Interface - The point of interaction between a user and a digital device or product.
+          </br><span class = "boldText">UX:</span> User Experience - The overall satisfaction and usability a user experiences with a product or service.
+          </br><span class = "boldText">SLA:</span> Service Level Agreement - A formal commitment outlining agreed-upon service levels between a provider and a customer.
+          </br><span class = "boldText">CTA:</span> Call to Action - An instruction prompting users to take a specific action.
+          </br><span class = "boldText">QA:</span> Quality Assurance - The systematic process ensuring a product or service meets quality standards.</p>
+
+          <div class = "SUBHEADER">The Problem</div>
+          <p>The use of Jira within the design team posed significant challenges, resulting in points of contention and hindering designer output. Designers frequently missed crucial details, and a prevalent explanation for this was the constrained turnaround time imposed by internal expectations, limiting their ability to fully engage with a Jira Card as intended. I was given the task of investigating what a better solution could look like.</p>
+
+          <div class = "SUBHEADER">The Investigation</div>
+          <p>Combining personal experience, an analysis of common team challenges when using Jira, and insights from user interviews confirmed Jira multi-month purpose did not align with tools needed. I developed a vision for the ideal UI tailored to the team's needs. I also recognised the crucial role of the card creator, extensively used by our sales team for formatting and generating Jira Board cards and added that as additional possible scope to develop. The key areas identified were workflow management, team task view, at-a-glance card passing, card clarity improvements, and the aforementioned bonus scope of card creator. I’ll go into these key areas and their subsection below:</p>
+          
+          <div class = "SUBPOINT">Workflow management</div>
+          <p>The current Jira page view suits project and product management but falls short for Creative Technologists handling multiple cards daily. Improving their workflow involves minimising unnecessary information, condensing card size, and providing an at-a-glance view. I believe this can be done while not compromising workforce management. Cards in Jira when opened typically try to draw you in so other tasks do not distract you. This is not a boon for the type of work done by the team so an always-on approach is crucial to facilitate the fluid workload influenced by sales and client requests. This always-on approach is why minimisation of information is crucial to not overwhelm the Technologist. Minimisation can also be done by smart prioritisation of what information is displayed. Another minimisation is to separate Quality Assurance into its own distinct state which represents the break from typical workflow associated with this process which was often lost when working with Jira.</p>
+          
+          <div class = "SUBPOINT">Team task view</div>
+          <p>Recognising the inherently isolated nature of the Creative Technologist role, work often tends to foster a solo operating mentality, limiting collaboration and fostering independence. The nature of the work, even when being collaborative, often leans toward a 'divide and conquer' approach, with Technologists working on separate builds due to time constraints. To address these challenges, the proposed solution involves utilising the at-a-glance workflow column to visualise the required tasks and their respective assignees. This approach facilitates workforce planning at a glance, providing an efficient and non-time-consuming way for designers to collaborate and assist one another. More evenly sharing the load gives more chance of the workload not being overwhelming and by virtue minimising overlooking or missing details.</p>
+          
+          <div class = "SUBPOINT">At-a-glance card passing</div>
+          <p>To enhance the usability of the card view for Creative Technologists, the prioritisation should align with their specific needs, a feature currently lacking in Jira, which tends to prioritise planning over technical work. The cards should be condensed to preserve screen real estate and should establish a clear hierarchy of importance, incorporating icons that, once familiarised, offer a quick and efficient means of ingesting essential card information. This particular feature holds the potential for a high skill ceiling, and mastering it would reward Technologist with increased screen real estate, providing benefits for power users.</p>
+          
+          <div class = "SUBPOINT">Card Clarity</div>
+          <p>Creating an at-a-glance workflow management is a great improvement, but often, time-pressed Technologists overlook vital information within the card body as well. This can be addressed through improved spacing, thoughtful design, effective colour-coding, and appropriate font size heirarchy. Prioritising legibility and intuitive readability through well-crafted design can be a straightforward yet powerful solution to this challenge.</p>
+          
+          <div class = "SUBPOINT">Bonus content new Card Creator</div>
+          <p>While ideating and researching, it became evident that technologists often miss details due to the inconsistent nature of raised cards and the sheer volume of requests. The sales team typically initiated requests because they struggled to locate previous builds similar to their requirements, exacerbated by poor guidance in the existing card creator on what information was needed. As an additional idea, I delved into envisioning what a new card creator might look like if the scope was expanded to address it as well.</p>
+
+          <div class = "SUBHEADER">Development and Solution</div>
+          <p>Development saw the creation of the wireframe and rationale behind the proposed new platform for showing the teams task list and how it would solve existing pain points to minimise inaccuracy and stress among the team, I will address each key area and it’s subarea improvements below:</p>
+          
+          <div class = "SUBPOINT">Workflow management</div>
+          <p><span class = "boldText">Card Presentation:</span> Implementing improvements involves transforming cards into condensed bars, allowing for an organised view of the various stages of work. Excessive cards are hidden below a fold, ensuring an at-a-glance visibility of all stages, visible at the same time.  This means all stages are considered at any given time with the ability to devel below the fold if needed. This would reduce administrative overhead while facilitating easy way to drill down on any particular stage when required.</p>
+          <p><span class = "boldText">Task Sorting:</span> Tasks would be presorted for the Creative Technologist based on priority, those being management prioritised, assignments, closest to SLA breach, and card appointed deadline, respectively. This smart sorting means that the most pressing cards should always be visible to the Technologist, without need to devel below the fold, helping with prioritisation.</p>
+          <p><span class = "boldText">Quality Assurance Optimisation:</span> Quality Assurance is moved to its own togglable state, providing a clear distinction and separation of tasks. This minimises clutter, prevents tasks from being overlooked, and ensures a focused approach to Quality Assurance and Ad creation respectively.</p>
+          <p><span class = "boldText">Workflow Column Customisation:</span> The workflow column is designed to be modifiable according to the user's preference. Its compact nature encourages the Creative Technologist to keep it always on screen without compromising their workspace, enhancing overall efficiency and awareness something difficult to maintain through Jira.</p>
+          
+          <div class = "SUBPOINT">Team task view</div>
+          <p><span class = "boldText">Team Collaboration Widget:</span> Emphasise collaboration and assistance by prominently placing the team view widget at the top of the at-a-glance column.</p>
+          <p><span class = "boldText">Integrated Information:</span> Enhance engagement by integrating key information (number of cards, builds, markets, and progress status) into the team view widget, ensuring easy access to vital data. This encourages and social engineers a greater awareness of other workloads.</p>
+          <p><span class = "boldText">Streamlined Information Presentation:</span> The team view widget has distinct columns (Ready to Go, Work in Progress, Change Request, Ready for Quality Check, and Done) to clearly segment the stage of different cards to help the team estimate how busy any given person is.</p>
+          <p><span class = "boldText">Visual Representation:</span> Use the designer icon and task count in the columns to visually represent task distribution, aiding in identifying individuals which may be in need of assistance.</p>
+          <p><span class = "boldText">"Done" Column:</span> Introduce a "Done" column to hold builds pending sign-off, providing visibility into pending work and potential revisions in the form of change requests.</p>
+          <p><span class = "boldText">Real-time Awareness:</span> With an emphasis on workforce planning and collaboration, the solution seeks to create an environment where Technologists are not only aware of their individual tasks but also have visibility into the overall team's workload in real-time with no excessive admin required to foster a more collaborative team.</p>
+          
+          <div class = "SUBPOINT">At-a-glance card passing</div>
+          <p><span class = "boldText">Campaign Name:</span> Half of the card space is allocated to the campaign name, emphasising the human element in design. This although not significant to the work performed is important for legibility and comprehension of the card, as campaigns are commonly referred to by name across the business.</p>
+          <p><span class = "boldText">Lifespan Band:</span> Positioned on the far left, the lifespan band indicates the card's age, transitioning from green to black to signify its proximity to SLA breach. Using the campaign name as a separator helps underscore the importance of the SLA in an easily passable format.</p>
+          <p><span class = "boldText">Type of Request and Market:</span> Displayed first in the rightmost block, the type of request and market (which is colour-coded for quick recognition). This provides immediate insights into the flexibility or work required for the card and what the deadline means in terms of market working hours.</p>
+          <p><span class = "boldText">Days Until Delivery:</span> Represented with an icon and number, this section dynamically changes colour and starts flashing as the deadline approaches, creating urgency and drawing attention within the at-a-glance system.</p>
+          <p><span class = "boldText">Number of Builds:</span> Indicates the amount of work required within the card, offering valuable insights into the workload associated with each card something that would only be gleamed by opening the card previously.</p>
+          <p><span class = "boldText">Sales Assigned Rating:</span> Conveys the card’s importance to the sales team, allowing the Technologist to assess the intersection of effort required based on work type, deadline, and requested builds.</p>
+          <p><span class = "boldText">Format Requested Band:</span> Provides a visual representation of the format requested, offering the Technologist an idea of the creative specifications they will be working within.</p>
+          <p><span class = "boldText">Learning Icons:</span> Facilitated by mouse hover, icons are replaced with specific information, aiding both new and experienced users. Detailing more comprehensive information without the need to open the card which helps, enhancing the learning experience of the icons.</p>
+          <p><span class = "boldText">Power User Recognition:</span> Inspired by military medal banding, power users can recognize key information even when reducing column size below legibility. Colour-coded bands represent the market, pips indicate the due date, difficulty colour-coded pips signify the builds, and star pips represent the sales rating and format banding remaining the same, would replace the typical iconificaiton of the build. This rewards the power user by freeing up precious screen space.</p>
+          <p><span class = "boldText">Summary:</span> Each indicator's positioning is purposeful, providing Technologists with comprehensive insights into a task before opening it, facilitating efficient task assessment and decision-making.</p>
+          
+          <div class = "SUBPOINT">Card Clarity</div>
+          <p><span class = "boldText">Clear Separation:</span> Implemented a distinct separation between the tasks logistics and body copy of the card, utilising colour and padding to create a card within a card allowing the reader to easily flow between both equally as important sets of information.</p>
+          <p><span class = "boldText">First card segment for logistics:</span> Introduced a top bar for logistics, minimising visual impact with a faded copy colour. Includes key metadata such as star rating, market/type, order number, and job number. A none essential but useful information to have visible when investigating a task more thoroughly.</p>
+          <p><span class = "boldText">Logistic Information Hierarchy:</span> Organised logistic information with a clear hierarchy, placing campaign name, brand name, and vertical, raised by, and due date on the left side with its current progress to the right. This allows the technologist to see all the important logistical information in the most logical flow needed for decision-making.</p>
+          <p><span class = "boldText">Card information segment and top widgets:</span> In refining the card layout, segmentation has been used with each segment having sufficient room to breathe, achieved through improved and considered padding, horizontal line sectioning, and deliberate font size and weights for better visual organisation and passing.</p>
+          <p>Furthermore, the top of the card contains widgets that have been introduced to collect all useful tools in one place. Placing all information not written by the card raiser at the top of the card's body, these widgets adopt a distinct format from the written content. The goal is to create a clear separation between essential information and additional tools.</p>
+          <p>Within these centralised widgets, tools such as a countdown to delivery, the assignee, and the format management widget have been strategically placed. This design approach enhances the overall card layout, promoting improved readability, organisation, and efficient access to essential tools.</p>
+          <p><span class = "boldText">Format Widget:</span> To enhance clarity, accessibility and remove user error. Format posting has been strategically moved from the comment section to its own widget. This deliberate move addressed challenges faced, where builds were buried within Jira comments, leading to potential errors and missed builds by those external to the team retrieving them.</p>
+          <p>The new format widget is designed with clear elements, including the format colour block and initials, the build requested, the assignee’s icon. Additional features incorporated include the difficulty rating, the build URL name, its version and the Quality Assurance status. Quick click boxes to copy the URL or open the build have also been introduced to create consistent use of the URLs.</p>
+          <p>These enhancements serve to establish clear ownership, minimise the risk of incorrect build usage, provide clear status of Quality Assurance, and streamline the process of moving builds from design to other departments. This thoughtful redesign significantly optimises the process of dealing with completed builds while also taking up a small footprint on the card.</p>
+          <p><span class = "boldText">Background Info Segment:</span> Introduced a background info segment as the first segment that is not a widget. This section offers card raisers the opportunity to provide essential information that is not creative direction. Notably, this segment coming first comes from the removal of auto-generated fields that were frequently misused enhances clarity and encourages detailed, purposeful input.</p>
+          <p><span class = "boldText">Creative Direction Segment:</span> In the Creative Direction segment, a clear separation has been implemented for general and format-specific directions. Utilising format colouring and initials ensures a distinct differentiation, addressing past issues of inconsistency when between communicating general and format-specific requests as there was no consistency in how this was done. This enhancement promotes clarity and facilitates a more organised and streamlined communication approach in the creative direction minimising confusion.</p>
+          <p><span class = "boldText">Copywrite and CTA Segment:</span> The Copywrite and CTA segment has been relocated to the last user-written segment, with the same ability to further separate by format as in the Creative direction segment. This strategic placement, after the Creative Direction and Background Info, ensures a more intuitive flow. The user considers Copywrite and CTA after understanding the request and absorbing the design direction, contributing to a more logical and effective order in processing information.</p>
+          <p><span class = "boldText">Asset Drive Location:</span> Maintained the Asset Drive location at the bottom, consistent with the original Jira placement, as it did not require improvement.</p>
+          <p><span class = "boldText">Revisions Rework:</span> Revisions were traditionally handled through comments, much like build posting. As mentioned earlier, this approach can become messy and prone to mistakes due to the ad hoc nature of communication. A more organised solution is to conduct revisions through the format widget, accessible via a pop-out panel. This separation works as a revision is normally isolated from the initial request and this pop-out nature helps reinforce that. Similar to creative direction, the ability to provide both general and specific feedback on particular builds is crucial. These are distinguished by the same format initials and reference the build’s URL name so it’s clear what is being spoken about. The assignee has the option to limit feedback visibility to themselves or everyone, ensuring immediate access to the most important information for efficient workflow.</p>
+
+          <div class = "SUBPOINT">Card Creator</div>
+          <p><span class = "boldText">Mascot Guidance:</span> Introduce a card creator mascot at the top of the card setup process to provide playful advice. The mascot would offer hints on hover of elements or if the user spent too much time on a particular section, similar to the guidance in classic click-and-point adventure games or load screens. This approach also allows for a vehicle for ongoing updates based on data or feedback to better communicate to the user.</p>
+          <p><span class = "boldText">Smart Adaptive Playlist Preview:</span> Implement a smart adaptive playlist feature from the beginning of the card creation process. Display examples of builds already done, initially random with the only filtering done to prioristise popular builds. As the user progresses through the card setup, the system refines the displayed builds using information gathered from the request. It is important to prioritise the collection easy-to-input fields first so to most effectively get a resolution before too much time is spent on card creation. Key information used for refinement would be on build type, format, vertical, and brand.</p>
+          <p><span class = "boldText">Live Calendar Indicator:</span> Integrate a live calendar with colour-coding to indicate the design team’s current workload for the days of the month. This feature helps the team raising the request assess the likelihood of getting the requested work in their proposed deadline. If the team is busy for the date selected a prompt would warn and encourage a more thorough exploration of existing builds before committing to creating a new card. This proactive approach encourages the reuse of existing work, limits disappointed on the work created for the raiser, and reduces stress on an overloaded team.</p>          
+          <p><span class = "boldText">Sectional card setup:</span> revise the card setup process by organising each section into its own step page, departing from the current card creator’s single form approach. This forces the raiser to consider each section deliberately. The mascot, dummy placeholder text, and additional information can be strategically provided in greater detail through this seperate to guide the raiser through each step without overwhelming them. This should create a more thought out consistent card for the technologist to work with.</p>          
+          <p><span class = "boldText">Final preview Section:</span> introduce a final preview section, allowing the raiser to review the entire card setup before submission. This preview provides an opportunity to ensure clarity and view the card in the format that the technologist will see, facilitating a last-minute check before finalising the request for submission.</p>
+          
+          <div class = "SUBHEADER">Conclusion</div>
+          <p>The comprehensive changes proposed were meticulously crafted as a system to significantly enhance the legibility of the task queue and individual cards, ultimately minimising overlooked details. This proposed solution, designed to alleviate the challenges of excessive overwhelming admin, was presented to the Head of Product as an ideal resolution. While my departure from the company preceded the initiation of development, the idea was sadly shelfed due to the potential need for adjustments due to subsequent requirements following the companies acquisition. Nonetheless, I take pride in this project, showcasing my UX/UI thinking and illustrating how effective design can bring about tangible improvements in workforce efficiency when the time is taken to consider the mindset of all parties involved.</p>
+          
+        </div>
+      </div>
+
+      <div id="contact" class = "section void">
+        <canvas class = "staticBlocksH" width = "800" height="400" ></canvas>
+
+        <div class="contactMax">
+
+          <div class="screen selOff float vel dur800 dist50 pushable react-play"> </div>
+          <div class="screen selOff float vel dur800 dist30 pushable react-play"> </div>
+          <div class="screen selOff float vel dur800 dist90 pushable react-play"> </div>
+          <div class="screen selOff float vel dur800 dist50 pushable react-play"> </div>
+          <div class="screen selOff float vel dur800 dist30 pushable react-play"> </div>
+
+        <div class="copy">
+  
+          <div class="heading">
+            Like what</br>
+            you see?
+            <hr>
+          </div>
+          <div class="buttonPlate vel dur800 dist120 pushable">
+            <div class="button">
+              <div id = "buttonText" class = "default-state ">
+                <div class = "telButton react-copy" data-linkRef = "2">(+61) 4 21 907 903</div>
+                <div class = "emailButton react-copy" data-linkRef = "3">j.whitmore.mail</br>@gmail.com</div>
+                <div class = "socialsButton react-open" data-linkRef = "4">@jwhitmore</div>
+                <div class="defaultState react-play" data-linkRef = "5">contact</div>
+              </div>
+              <div class="buttonCells">
+                <div id = "telButton" class = "react-copy">T</div>
+                <div id = "emailButton" class = "react-copy">E</div>
+                <div id = "socialsButton" class = "react-open">in</div>
+              </div>
+            </div>
+            <div id = "local">
+              Local Time: <span id = "localTime">x</span></br>
+              Location: <span id = "location">x</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+        <div id="contactPlate">
+          <div class="contactInfo">
+          </div>
+        </div>
+    </div>
+
+      <div id = "nav" >
+        <div class = "screen float pushable"></div>
+        <div class = "screen float pushable"></div>        
+        <div class = "screen float pushable"></div>        
+
+        <div class="copy">
+          <span data-linkRef="6">HOME</span>
+          <span data-linkRef="6">ABOUT</span>
+          <span data-linkRef="6">PROJECTS</span>
+          <span data-linkRef="6">CONTACT</span>
+        </div>
+      </div>
+
+      <canvas class = "menuWipe"></canvas>
+
+      <div id = "navCanvas">
+      </div>
+
+
+    <div id="blocker" style = "background:rgb(38, 42, 44); width:100%; height:100%; pointer-events:none; position:fixed; top:0; left:0;"></div>
+
+    <div class="linkClick"></div>
+    <canvas class="linkClickCanvas"></canvas>
+    <script>
+
+    </script>
+  <script src="../js/grained.min.js"></script>
+  <script src="../js/locator.js"></script>
+  <script src="../js/classes.js"></script>
+  <script src="../js/base.js"></script>
+  <script src="../js/projects.js"></script>
+
+  </body>
+</html>

@@ -100,14 +100,7 @@ let timeline = gsap.timeline({paused: true})
 let viewportVel = [];
 let siLock = false;
 
-// expo decay 
-const targetValue = 1,   // Target value to approach
-decayRate = 0.9;   // Decay rate, adjust to control the rate of decrease
-
 /*          REDUNDANT CODE          */
-let clickables = []
-function scrollObservation() {}
-
 
 
 
@@ -164,15 +157,69 @@ function attributeSetup(elements, attributes) { // setup attribute tags from cla
 }
 
 // quickly generate 
-function wrapContent(outer, name, element) {
+function wrapContent(outer, name, element, id) {
     element = element || 'div'
     let inner = document.createElement(element)
-    if(name !== null) inner.classList.add(name)
+    if(name !== undefined) inner.classList.add(name)
+    if(id !== undefined) inner.id = id
     while (outer.firstChild) {
         inner.appendChild(outer.firstChild);
       }      
     outer.appendChild(inner)
 }
+
+// generate screen on text
+function generateScreen(parent, col) {
+
+    let div = document.createElement('div')
+    div.classList.add('screen','selOff','float','vel','dur800','dist20','pushable')
+    let text = document.createElement('span')
+    text.innerText = parent.innerText
+    parent.innerText = ''
+
+    col = col || props.primaryCol
+    gsap.set(text, {
+        position:'relative',
+        textShadow: `0 0 4px rgba(${col}, 0.6)`
+
+    })
+
+    parent.appendChild(div)
+    parent.appendChild(text)
+
+    let leftOffset = randomChance(70) ? 1 * props.rem * Math.random() : 3 * props.rem * Math.random();
+    gsap.set(div, {
+        width:`clamp(${6 + 1 * Math.random()}rem, 10vw, ${10 + 3 * Math.random()}rem)`,
+        marginBottom: 'clamp(1rem, 4vw, 2.5rem)',
+        left: -2 * props.rem + leftOffset,
+        bottom:2.5 * props.rem * Math.random(),
+        aspectRatio: 1.8 + 0.3 * Math.random() 
+    })
+    
+}
+
+
+function menuBuilder(content, id, parent, react, state) {
+    react = react || undefined
+    state = state || undefined
+
+    let ele = document.createElement('span')
+    ele.id = id
+    ele.innerText = content
+    let classList = ele.classList
+    const matchingChild = wrapper.querySelector(`#${id.split('-').pop()}`)
+    if(react) {
+        classList.add(react)
+    } else {
+        if(matchingChild) classList.add('react-play'); else classList.add('react-open')
+    }
+    if(state) { 
+        ele.setAttribute('data-states',state)
+        classList.add('state0')
+    }
+    parent.appendChild(ele)
+}
+
 
 function sendEmail() {
     let subject = `let's work together!`;
@@ -193,6 +240,19 @@ function recursiveChildLoop(element, matchingClass) {
     });
 }
 
+function batchSet(ele, type, obj) {
+    const entries = Object.entries(obj);
+
+    if(type = "style") {
+        entries.forEach(val => {
+            ele[type][val[0]] = val[1]
+        })
+    } else {
+        entries.forEach(val => {
+            ele[type](val[0],val[1])
+        })
+    }
+}
 
 
 
@@ -301,7 +361,16 @@ techMenuEle = document.createElement('div')
 
 // default setting
 techMenuEle.classList.add('techMenu')
-techMenuEle.innerHTML = '<span id = "quality" class = "react-play">X</span>'
+
+let techMenuContent = [
+    { content: 'V', id: 'quality-physics', react: 'react-play', state: 3 }, // Physics 1. pushable, 2. proejct para, 3. velocity
+    { content: 'C', id: 'quality-canvas', react: 'react-play', state: 1 }, // Canvas 1. turn off canvas
+    { content: 'G', id: 'quality-post', react: 'react-play', state: 3 }, // post processing 1. heavy off, 2. light off. 3. highlight effects off.
+
+]
+
+techMenuContent.forEach(v =>  menuBuilder(v.content, v.id, techMenuEle, v.react, v.state))
+
 
 if(props.mobile) {
 
@@ -321,16 +390,23 @@ if(props.mobile) {
 
     // set-up desktop menu
     menuEle.id = 'menuDesktop'
-    menuEle.innerHTML = '<div class = "menuScreen screen vel float dur1000 dist20"></div><span  class = "react-play">HOME</span><span  class = "react-play">ABOUT</span><span  class = "react-play">PROJECTS</span><span  class = "react-play">CONTACT</span>'
+
+    let hoverScreen = document.createElement('div')
+    hoverScreen.classList.add('menuScreen','screen','vel','float','dur1000','dist20')
+    menuEle.appendChild(hoverScreen)
+    let MenuContent = [
+        { content: 'HOME', id: 'menu-header' },
+        { content: 'ABOUT', id: 'menu-about' },
+        { content: 'PROJECTS', id: 'menu-projects' },
+        { content: 'CONTACT', id: 'menu-contact' }
+    ]
+    MenuContent.forEach(v =>  menuBuilder(v.content, v.id, menuEle))
+
     wrapper.appendChild(menuEle)
     wrapper.appendChild(techMenuEle)    
 }
 
-qsa(`[class*="react"]`).forEach(ele => {
-    const classList = Array.from(ele.classList);
-    const matchingClass = classList.find(className => className.includes('react'));
-    recursiveChildLoop(ele, matchingClass)
-})
+
 
 function animateScreen() {
     /*          Screen related           */
@@ -365,7 +441,7 @@ function animateScreen() {
         qsa('.screen').forEach((ele, index) => {
     
             let siN = 0 || ele.dataset.si,
-            intN = Math.floor(4*exponentialDecayWithMax(Math.random() * 100, 100, decayRate)/100),
+            intN = Math.floor(4*exponentialDecayWithMax(Math.random() * 100, 100, 0.9)/100),
             delay = Math.abs(index - i) * 200 * Math.random();
     
             if(index !== i) {
@@ -394,7 +470,6 @@ function animateScreen() {
         ele.addEventListener('click', () => changeScreen(index));
     })
 }
-
 
 /*          Resize listener to kill transitions         */
 let resizeTimer;
@@ -526,11 +601,75 @@ function grainTexture(chance) {
  * 
  */
 
-function dateTimeContact() {
+// --------------------------------------------------------------
+
+gsap.set(qs('#buttonText'), {width:'unset'})
+
+function changeContact(e, i, p) {
+    if(props.contactLock === undefined) props.contactLock = false
+    if(i !== 69) {
+        props.contactLock = true;
+        setTimeout(()=> {
+            props.contactLock = false;
+        },700)
+    } else if(i === 69 && props.contactLock ) return;
+
+    switch(i) {
+        case 0: // telephone
+            toClipboard(contactInfo.tel) 
+        break;
+        case 1: // email
+            toClipboard(contactInfo.email);
+        break;
+        case 2: // linkedin
+            linkClick.click((props.mobile) ? 'r' : 't', contactInfo.linkdin)
+        break;
+    }
+
+    if(props.conButton == undefined) props.conButton = qs('#buttonText')
+    if(props.conLastState == undefined) props.conLastState = qs('#buttonText .defaultState')
+    let chosenFace = qs(`#buttonText .${e.id}`)
+
+    gsap.fromTo(props.conButton, {width: props.conLastState.clientWidth }, {width: chosenFace.clientWidth, duration:0.2, onComplete: ()=>{
+        props.conButton.style.width = 'unset'
+    }})
+    props.conLastState = chosenFace
+
+    props.conButton.classList.remove('default-state')
+    p.forEach((ele) => {
+        if(e === ele) {
+            ele.classList.add('onElement')
+        } else {
+            ele.classList.remove('onElement')
+        }
+        props.conButton.classList.remove(ele.id+'-state')
+    });
+
+
+    props.conButton.classList.add(e.id+'-state')
+
+    clearTimeout(props.contactReturn)
+    props.contactReturn = setTimeout(()=> {
+        let chosenFace = qs('#buttonText .defaultState')
+        gsap.fromTo(props.conButton, {width: props.conLastState.clientWidth }, {width: chosenFace.clientWidth, duration:0.2, onComplete: ()=>{
+            props.conButton.style.width = 'unset'
+        }})
+        props.conLastState = chosenFace        
+        p.forEach((ele) => {
+            props.conButton.classList.remove(ele.id+'-state')
+        })
+
+        props.conButton.classList.add('default-state')
+
+    },4000)
+
+}
+
+function contactSetup() {
 
     let lastSecond = new Date().getSeconds()-1
 
-    // -------------
+    // -------------------------------------------
 
     function setDateWithOffset(gmtOffset) {
         // Get the current local time
@@ -551,7 +690,7 @@ function dateTimeContact() {
         return targetDate
     }
 
-    // -------------
+    // -------------------------------------------
 
     setInterval(()=> {
         if(new Date().getSeconds() !== lastSecond) qs('#localTime').innerText = setDateWithOffset(props.GMT);
@@ -559,6 +698,77 @@ function dateTimeContact() {
     qs('#location').innerText = props.city
     qs('#local').style.opacity = 1
 
+
+    // -------------------------------------------
+    
+    /*          Generate contact info           */
+    
+    if(qs('#contact')) {
+    
+    if(getCountry().toLowerCase() == props.country.toLowerCase()) {
+        let modifiedNumber = contactInfo.tel.split(' ')
+        modifiedNumber[0] = '0'
+        contactInfo.tel = modifiedNumber.join(' ').replace(' ','')
+    }
+
+    let conInfo = qs('.contactInfo')
+    const keys = Object.keys(contactInfo);
+    keys.forEach((key,i) => {
+        let infoSpan = document.createElement('span')
+        if(contactTreatment[key].hover !== undefined) infoSpan.classList.add((contactTreatment[key].hover))
+        
+        switch(contactTreatment[key].type) {
+            case 'link':
+                infoSpan.innerText = (contactTreatment[key].text) ? contactTreatment[key].text : contactInfo[key]
+                infoSpan.setAttribute('data-cikey', key)               
+            break;
+            default:
+                infoSpan.innerText = contactInfo[key]
+        }
+        
+        if(i > 0) { let hr = document.createElement('div'); conInfo.appendChild(hr) }
+        conInfo.appendChild(infoSpan)
+
+    });    
+    qsa('.contactInfo span').forEach((ele) => {
+        
+        ele.addEventListener('click', (ev)=> {
+            let key = ev.target.dataset.cikey
+            if(key === undefined) return
+            if(contactTreatment[key].trans) {
+                linkClick.click((props.mobile) ? 'r' : 't', contactInfo[key]);
+            } else {
+                if(contactTreatment[key].func) contactTreatment[key].func(); else window.open(contactInfo[key], '_self')
+            }
+        })
+    })
+
+
+
+    
+    // handle contact hover clicks
+    qsa('.buttonCells div').forEach((ele, index, parent) => {
+        ele.addEventListener('click', () => changeContact(ele, index, parent))
+    })
+
+    // handle page clicks
+    qsa('#about .button, .project, #buttonText div, #nav .copy span').forEach((ele) => {
+        ele.addEventListener('click', (event) => clickThrough(ele, event))    
+    })
+
+    qs('#contactPlate').addEventListener('click', (event) => {
+        if(event.target.id === 'contactPlate') {
+            gsap.killTweensOf('.contactInfo')
+            gsap.to('.contactInfo', {y:window.innerHeight/2 + qs('.contactInfo').offsetHeight/2, duration: 0.3, ease: "back.in(1.4)", onComplete: ()=>{
+                qs('.contactInfo').style.transform = 'translateY(calc(50vh + 50%))'
+            } })
+            qsa('#contactPlate, .contactInfo').forEach((ele) => {
+                ele.classList.remove('contactOpen')
+            })
+        }
+    })    
+    
+    }
 }
 
 
@@ -770,6 +980,30 @@ if(props.mobile) {
 
 
 
+// -------------------------------------
+
+const staticHorizontal = new blockCanvas()
+staticHorizontal.setup('.staticBlocksH',`rgba(${props.primaryCol
+},1)`)
+staticHorizontal.postDraw = function(c, ctx) {
+    let col = this.colour
+    let h = 50
+    const grd = ctx.createLinearGradient(0, h, 0, 0);
+    let alpha0 = col.split(',')
+    alpha0[3] = '0)'
+    alpha0.join(',')
+    grd.addColorStop(0, alpha0);
+    grd.addColorStop(1, col);
+    
+    // Fill with gradient
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, 0, this.width, h);
+}
+staticHorizontal.static()
+
+
+
+
 
 
 
@@ -866,7 +1100,7 @@ function scrollVelocity(PN, rf) {
     if(every(100,PN,'velocityCount')) { // 100 could be set to a variable as performance control
 
         // animate
-        let result = exponentialDecayWithMax(rf.deltaY, targetValue, decayRate);
+        let result = exponentialDecayWithMax(rf.deltaY, 1, 0.9);
         result = result.toFixed(2);
         handleVel(result)
 
@@ -914,6 +1148,78 @@ function jumpTo(pos, behavior) {
         window.scrollTo({top: distance, behavior});
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * 
+ * 
+ *          UNIVERSAL INTERACTS
+ * 
+ * 
+ */
+
+function wrapProcessing() {
+
+    /*          populate float           */
+
+    qsa('.float').forEach((ele) => {
+        let tempObj = {
+            target: ele,
+            movementDirectionX: (Math.random() < 0.5) ? -1 : 1,
+            movementDirectionY: (Math.random() < 0.5) ? -1 : 1,
+            x: Math.round(Math.random()*bobControls.xMax*2)-bobControls.xMax,
+            y: Math.round(Math.random()*bobControls.yMax*2)-bobControls.yMax,
+            onScreen: false
+        }
+        float.push(tempObj)
+    });    
+
+    /*          attribute set-up            */
+
+    attributeSetup('.vel',['dur','dist'])
+    attributeSetup('.screen',['si'])
+    attributeSetup('.pushable',['amt'])
+    attributeSetup('.para',['dist'])
+
+    /*          screen texture allocation and sub div creation           */
+
+    for(let ele of qsa('.screen')) {
+        let siN = 0 || ele.dataset.si;
+        wrapContent(ele, 'screenTexture')
+        ele.querySelector('.screenTexture').style.background = si[siN]
+    } 
+
+
+    /*          pushable element creation           */
+
+    if(!props.mobile) {
+        for(let ele of qsa('.pushable')) {
+            wrapContent(ele, 'push')
+        }
+    }
+
+    animateScreen()
+
+    qsa(`[class*="react"]`).forEach(ele => {
+        const classList = Array.from(ele.classList);
+        const matchingClass = classList.find(className => className.includes('react'));
+        recursiveChildLoop(ele, matchingClass)
+    })
+
+    qsa('img').forEach(ele => ele.setAttribute('draggable', false))
+
+
+}
+
 
 
 
@@ -1094,7 +1400,7 @@ function mouse(PN, rf) {
                     ease: "back.out(1.4)"
                 })
             }
-        }
+        }        
     }    
 
     // unique mouse 
@@ -1138,19 +1444,23 @@ function performanceHandling(controls) {
             console.log('downgrading: removing heavy grain')
             controls.heavyGrain = false
             heavyGrain.style.display = 'none'
+            qs('#quailty-post').classList = "react-play state1"
         break;
         case 40:
             console.log('downgrading: removing light grain')
             controls.grain = false;
             lightGrain.style.display = 'none'
+            qs('#quailty-post').classList = "react-play state2"
         break;
         case 60:
             console.log('downgrading: removing highlight hover')
             controls.highlightEffect = false
+            qs('#quailty-post').classList = "react-play state3"
         break;
         case 80:
             console.log('downgrading: removing pushable')
             controls.pushable = false
+            qs('#quailty-physics').classList = "react-play state1"
         break;
         case 100:
             console.log('downgrading: removing parallax')
@@ -1158,17 +1468,109 @@ function performanceHandling(controls) {
             for (const [key, obj] of Object.entries(props.projectIMG)) {
                 obj.im.style.transform = `translateY(0px)`
             }
+            qs('#quailty-physics').classList = "react-play state2"
         break;
         case 120:
             console.log('downgrading: removing static canvas')
             controls.staticCanvas = false;
             staticHorizontal.clear()
+            qs('#quailty-canvas').classList = "react-play state1"
         break
         case 140:
             console.log('downgrading: removing velocity')
             controls.velocity = false;
+            qs('#quailty-physics').classList = "react-play state3"
         break;
     }
+}
+
+function manualPerformance(e) {
+
+    const classList = Array.from(e.classList);
+    const matchingClass = classList.find(className => className.includes('state'));
+    let stripped = parseInt(matchingClass.replace('state',''))
+    stripped++;
+    if(stripped > parseInt(e.dataset.states)) stripped = 0;
+    e.classList.remove(matchingClass)
+    e.classList.add(`state${stripped}`)
+
+    let ph = props.performanceHandling
+
+    switch(e.id) {
+        case 'quality-post':
+            if(stripped > 2) {
+                ph.highlightEffect = false
+                ph.grain = false
+                ph.heavyGrain = false
+
+            } else if(stripped > 1) {
+                ph.highlightEffect = true
+                ph.grain = false
+                ph.heavyGrain = false
+                lightGrain.style.display = 'none'                
+            } else if(stripped > 0) {
+                ph.highlightEffect = true
+                ph.grain = true
+                ph.heavyGrain = false
+                heavyGrain.style.display = 'none'
+            } else {
+                ph.highlightEffect = true
+                ph.grain = true
+                ph.heavyGrain = true
+                heavyGrain.style.display = 'block'
+                lightGrain.style.display = 'block'
+            }
+        break;
+        case 'quality-physics':
+            if(stripped > 2) {
+                ph.velocity = false
+                ph.projectParallax = false
+                ph.pushable = false
+            } else if(stripped > 1) {
+                ph.velocity = true
+                ph.projectParallax = false
+                ph.pushable = false
+                for (const [key, obj] of Object.entries(props.projectIMG)) {
+                    obj.im.style.transform = `translateY(0px)`
+                }                
+            } else if(stripped > 0) {
+                ph.velocity = true
+                ph.projectParallax = true
+                ph.pushable = false
+            } else {
+                ph.velocity = true
+                ph.projectParallax = true
+                ph.pushable = true
+            }
+        break;
+        case 'quality-canvas':
+            if(stripped > 0) {
+                ph.staticCanvas = false
+                staticHorizontal.clear()                
+            } else {
+                ph.staticCanvas = true
+                staticHorizontal.static()
+                staticHorizontal.animate()
+
+                // Function to check if an element is on the screen
+                const isElementOnScreen = (element) => {
+                    const observer = new IntersectionObserver(([entry]) => {
+                    if (entry.isIntersecting) {
+                        if (entry.isIntersecting) {
+                            staticHorizontal.eles.forEach(co => {
+                                co.running = (co.canvas == element)
+                            })
+                        }                    
+                    }
+                    observer.disconnect()
+                    });
+                    observer.observe(element);
+                };
+                qsa('.staticBlocksH').forEach(target => isElementOnScreen(target))
+            }            
+        break;
+    }
+
 }
 
 
@@ -1259,7 +1661,7 @@ document.addEventListener('scroll', event => {
 
 // setup tech related
 techMenuEle.addEventListener('click', (ev) => {
-    if(ev.target !== techMenuEle) console.log('here')
+    if(ev.target !== techMenuEle) manualPerformance(ev.target)
 })
 
 
@@ -1283,7 +1685,7 @@ props.requestFrame.launchTime = performance.now()
 function drawFrame() {
     const F1 = performance.now()
     const rf = props.requestFrame
-    const ph = props.performanceHandling
+    let ph = props.performanceHandling
     // ------------------------------------------------------
 
     if(!props.mobile) mouse(F1, rf)

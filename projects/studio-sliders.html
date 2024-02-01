@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>HTML 5 Boilerplate</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../mobile.css">
+    <link rel="stylesheet" href="../desktop.css">
+
+    <link rel="stylesheet" href="projects.css">
+
+    <script src="https://assets.playground.xyz/kristjanfreelance/d89b7c52_gsap.min.js"></script>
+    <script src="https://assets.playground.xyz/kristjanfreelance/4c934217_Draggable.min.js"></script>
+    <script src="https://assets.playground.xyz/kristjanfreelance/89d3b4dc_InertiaPlugin.min.js"></script>    
+  </head>
+  <body>
+
+    <div id="wrapper">
+
+      <div id="projectHeader" class = "sectionAuto">
+        <div id="headerImage" class="section50">  </div>
+        <div class="copy">
+          <div class = "HEADER">Studio Sliders</div>
+          <div class = "SUBHEADER">Role</div>
+          <p>Product Manager
+          </br>UI/UX Designer</p>
+          <div class = "SUBHEADER">Technical Terminology</div>
+          List of terms used within this case study that are not layman's terms parlance 
+          </br><span class = "boldText">PSD:</span> Photoshop Document - A file format used for graphic design, allowing users to work with layers and various image adjustments in Adobe Photoshop.
+          </br><span class = "boldText">3JS:</span> Three.js - A popular JavaScript library used for creating 3D graphics and animations in web browsers.
+          </br><span class = "boldText">dat.gui:</span> A debugging tool, providing a graphical user interface for adjusting variables in real-time.
+          </br><span class = "boldText">SDK:</span> Software Development Kit - A set of tools and resources that enables the development of software for a specific platform, designed to be more flexible and adaptable.
+          </br><span class = "boldText">UX:</span> User Experience - The overall satisfaction and usability a user experiences with a product or service.
+          <div class = "SUBHEADER">The Problem</div>
+          <p>Playground (PXYZ) faced a challenge in bridging the gap for external designers who desired to create bespoke builds at the standard of what was being produced by the internal team. The system that existed which allowed the use of simplistic PSD to fill in, altering some layers to create different animation then upload as an PNG that then was processed into a dynamic Ad, did not match where the industry and the internal team had pushed the product. The studio allowed these external designers the same chance to create as the internal team however the stack was complex, front-end development of the level required was rarer external, and there was a complicated pitfall present by the complex context object redirection done by our technology. The leap proved to be daunting, leading external designers to struggle, resulting in tasks falling back onto the internal team to resolve. The internal team, already stretched for time, faced an influx of requests. This highlighted the need for a more user-friendly middle ground, accommodating both internal and external users who lacked the expertise of our Creative Technologist. The goal was to create a means that would facilitate impactful changes and generate more finely tuned build, without complex interactions. Thus reducing dependency on the internal team and allow the studio to hold more value and ease of access to the creation process of those external to the company.</p>
+          <div class = "SUBHEADER">The Investigation</div>
+          <p>In addressing the challenges, two key observations became apparent. Firstly, both internal and external users rarely modified the layers controlling animation, often unaware of their existence in existing PSD templates completely. Secondly, the level of modification permitted even if they made these changes was significantly limited and binary compared to the possibility explored by the internal team within the format and showcased to clients. To tackle this discussion with my lead developer led us to consider creating a system similar to dat.gui, a commonly employed debugging tool in 3JS development. Recognising its effectiveness in providing quick live feedback for modified values, we envisioned incorporating sliders, toggles and drop-downs to enable fine robust controls while remaining accessible to users with entry-level skills.</p>
+          <p>To maximise this tool for Creative Technologist, we aimed to make the configuration of these sliders from within the studio itself. This meant the feature would have an evergreen use case outside of simply fixing limited client facing templates. This initiative also presented an opportunity to create a soft SDK for all formats. Having implemented a wealth of helper functions and efficiencies within format during my time at Playground, this code was not locked within the SDK as they were not always applicable and having them within the format gave the Technologists more control. This had created a state where the already complicated studio JavaScript panel was even more difficult to interact with to those uninitiated. The soft SDK concept aimed to streamline this by concealing unnecessary details unless voluntarily revealed and creating a scope in which context objects were redeclared (document and jquery’s $ for example) to work as an external user would expect without specific domain knowledge about how our ads work.</p>
+          <div class = "SUBHEADER">The Development</div>
+          <p>With Key features and desired UI/UX mapped out, we embarked on developing a new tool and additional upgrades to enhance accessibility of our studio platform. I feel it was pivot to include the soft SDK, with it ending up being probably nearly as important as the actual implementation of Sliders themselves, when creating accessibility to new users. Concealing the majority of the format made for an extremely clean, space-saving panel which removed all domain issues and was near unbreakable for the general public, while not removing any features or control from the internal team. We also made the interface buildable from within the Javascript panel meaning that the sliders updated the values within the javascript, but the object coded within the javascript created the interface to then alter. This allowed a dynamic customisable option that empowered technologists to craft their own sliders. This meant bespoke could more easily transfer into client facing templates, something that was a complicated process til now.</p>
+          <p>User testing played a crucial role in the development phase, involving key internal users with expertise levels akin to external users. The goal was to secure buy-in from this user group, recognising their potential to be significant adopters and influencers. The testing phase not only generated excitement and visibility for the project but also provided valuable insights, leading to refinements for the optimal UX.</p>
+          <div class = "SUBHEADER">The Conclusion</div>
+          <p>The introduction of sliders for Technologists marked a significant leap in streamlining the development and revision cycles of their builds. Technologists gained early access to sliders, facilitating a faster iteration process for them. This empowerment enabled designers to integrate sliders into their workflow, allowing external users to directly modify their work allowing for less guess work in revisions requests. Moreover, technologists could swiftly test various values on animation, enhancing their efficiency. Notably, technologists now had the flexibility to modify a single value – the timeline speed – without needing to individually adjust all values this alone was a huge time saver with only relative pacing verus global pacing now a concern.</p>
+          <p>The time-saving benefits extended to existing templates, prompting a re-evaluation and modification to incorporate sliders. This development laid the groundwork for the subsequent project, “self-serve templates” which is listed on this site.</p>
+          <p>Overall the Javascript Panel became cleaner, more approachable, idiot-proof for the advanced user, and more a more comprehensive in studio modification means were given to the average user.</p>          
+        </div>
+      </div>
+
+      <div id="contact" class = "section void">
+        <canvas class = "staticBlocksH" width = "800" height="400" ></canvas>
+
+        <div class="contactMax">
+
+          <div class="screen selOff float vel dur800 dist50 pushable react-play"> </div>
+          <div class="screen selOff float vel dur800 dist30 pushable react-play"> </div>
+          <div class="screen selOff float vel dur800 dist90 pushable react-play"> </div>
+          <div class="screen selOff float vel dur800 dist50 pushable react-play"> </div>
+          <div class="screen selOff float vel dur800 dist30 pushable react-play"> </div>
+
+        <div class="copy">
+  
+          <div class="heading">
+            Like what</br>
+            you see?
+            <hr>
+          </div>
+          <div class="buttonPlate vel dur800 dist120 pushable">
+            <div class="button">
+              <div id = "buttonText" class = "default-state ">
+                <div class = "telButton react-copy" data-linkRef = "2">(+61) 4 21 907 903</div>
+                <div class = "emailButton react-copy" data-linkRef = "3">j.whitmore.mail</br>@gmail.com</div>
+                <div class = "socialsButton react-open" data-linkRef = "4">@jwhitmore</div>
+                <div class="defaultState react-play" data-linkRef = "5">contact</div>
+              </div>
+              <div class="buttonCells">
+                <div id = "telButton" class = "react-copy">T</div>
+                <div id = "emailButton" class = "react-copy">E</div>
+                <div id = "socialsButton" class = "react-open">in</div>
+              </div>
+            </div>
+            <div id = "local">
+              Local Time: <span id = "localTime">x</span></br>
+              Location: <span id = "location">x</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+        <div id="contactPlate">
+          <div class="contactInfo">
+          </div>
+        </div>
+    </div>
+
+      <div id = "nav" >
+        <div class = "screen float pushable"></div>
+        <div class = "screen float pushable"></div>        
+        <div class = "screen float pushable"></div>        
+
+        <div class="copy">
+          <span data-linkRef="6">HOME</span>
+          <span data-linkRef="6">ABOUT</span>
+          <span data-linkRef="6">PROJECTS</span>
+          <span data-linkRef="6">CONTACT</span>
+        </div>
+      </div>
+
+      <canvas class = "menuWipe"></canvas>
+
+      <div id = "navCanvas">
+      </div>
+
+
+    <div id="blocker" style = "background:rgb(38, 42, 44); width:100%; height:100%; pointer-events:none; position:fixed; top:0; left:0;"></div>
+
+    <div class="linkClick"></div>
+    <canvas class="linkClickCanvas"></canvas>
+    <script>
+
+    </script>
+  <script src="../js/grained.min.js"></script>
+  <script src="../js/locator.js"></script>
+  <script src="../js/classes.js"></script>
+  <script src="../js/base.js"></script>
+  <script src="../js/projects.js"></script>
+
+  </body>
+</html>

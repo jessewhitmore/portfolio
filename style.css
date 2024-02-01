@@ -90,40 +90,38 @@ body {
 
 /* Section */
 
-.section {
+.section, .sectionAuto, .section75, .section50 {
     position: relative;
 
-    min-height: 100vh;
     width: 100%;
 
-    padding: 0rem 2rem clamp(4rem, 15vw, 6rem);
+    padding: clamp(4rem, 15vw, 6rem) 2rem;
     box-sizing: border-box;
     
     background: rgb(var(--primary-col));
     color: rgb(var(--secondary-col));
 }
 
-.section.void {
+.section {
+    min-height: 100vh;
+}
+
+.section.void, .sectionAuto.void, .section50.void, .section75.void {
     background: transparent;
 
     color: rgb(var(--primary-col));
 }
 
-.sectionAuto {
-    position: relative;
-    width: 100%;
-}
-
 .section75 {
-    position: relative;
     min-height: 75vh;
-    width: 100%;
 }
 
 .section50 {
-    position: relative;
     min-height: 50vh;
-    width: 100%;
+}
+
+#subpageHeader {
+    padding-top:0;
 }
 
 .col { /* column */
@@ -133,14 +131,14 @@ body {
     display:flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: space-around;
+    justify-content: space-evenly;
     align-items: stretch;
 }
 
 .row {
     display:flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-evenly;
     align-items: stretch;    
 }
 
@@ -149,17 +147,29 @@ body {
 
     padding-bottom: clamp(1.5rem, 4vw, 2.5rem);
 
+    font-weight: bolder;
     text-transform: uppercase;    
     font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.pointHeader {
+    position:relative;
+
+    margin-top: clamp(0.8rem, 2vw, 1rem);
+    padding-bottom: clamp(0.4rem, 2vw, 0.6rem);
+
+    font-weight: bold;
+    text-transform: capitalize;
+    font-size: clamp(1.1rem, 2vw, 1.3rem);
 }
 
 .subHeader {
     position:relative;
 
+    font-weight: bolder;
     padding-bottom: clamp(0.6rem, 2vw, 0.8rem);
-
-    text-transform: uppercase;
-    font-size: clamp(1.5rem, 2vw, 1.95rem);
+    text-transform: capitalize;
+    font-size: clamp(1.4rem, 2vw, 1.8rem);
 }
 
 .copy p {
@@ -179,7 +189,7 @@ body {
 }
 
 .padT {
-    padding-top: clamp(5rem, 15vw, 10rem);
+    padding-top: clamp(4rem, 15vw, 6rem);
 }
 
 @media (orientation:landscape) {
@@ -189,6 +199,27 @@ body {
     }
 
 }
+
+.sectionShadeT:before {
+    content:'';
+    position:absolute;
+    top:0;
+
+    width:100%;
+    height:50px;
+    background:linear-gradient(180deg, rgba(var(--secondary-col),0.3) 0%, rgba(var(--secondary-col),0.0) 100%);
+}
+
+.sectionShadeB:after {
+    content:'';
+    position:absolute;
+    bottom:0;
+
+    width:100%;
+    height:50px;
+    background:linear-gradient(0deg, rgba(var(--secondary-col),0.3) 0%, rgba(var(--secondary-col),0.0) 100%);
+}
+
 
 .sectionShade:before {
     content:'';
@@ -208,6 +239,13 @@ body {
     width:100%;
     height:50px;
     background:linear-gradient(0deg, rgba(var(--secondary-col),0.3) 0%, rgba(var(--secondary-col),0.0) 100%);
+}
+
+.pop {
+    margin-top:-50px;
+    color: rgb(var(--primary-col));
+    background-color: rgb(var(--accent-col));
+    box-shadow: 0rem 0rem 3rem rgba(var(--secondary-col), 0.2);
 }
 
 /* details */
@@ -288,6 +326,13 @@ canvas, .screen {
 .highlightHover {
     -webkit-filter: brightness(1.5) saturate(2);
     filter: brightness(1.5) saturate(2);
+
+    transition: filter 0.5s;
+ }
+
+ .highlightHover.noLight {
+    -webkit-filter: brightness(1) saturate(1);
+    filter: brightness(1) saturate(1);
 
     transition: filter 0.5s;
  }
@@ -579,8 +624,48 @@ MENU
     height:100%;
 }
 
+.menuScreen, .menuScreen * {
+    pointer-events: none!important;
+}
 
+#quality-physics.state0 {
+} /* 3 */
 
+#quality-physics.state1 {
+    background-color: red;
+}
+
+#quality-physics.state2 {
+    background-color: blue;
+}
+
+#quality-physics.state3 {
+    background-color: green;
+}
+
+#quality-canvas.state0 {
+    
+} /* 1 */
+
+#quality-canvas.state1 {
+    
+}
+
+#quality-post.state0 {
+
+} /* 3 */
+
+#quality-post.state1 {
+
+}
+
+#quality-post.state2 {
+
+}
+
+#quality-post.state3 {
+
+}
 
 /**
 
@@ -822,11 +907,13 @@ PROJECT
 #projects .SVGtitle {
     font-size: clamp(3.1rem, 6.3vw, 7rem);
     text-transform: capitalize;
+    line-height: 90%;
 }
 
 #projects .SVGdesc {
     font-size: clamp(1rem, 2.1vw, 2.3rem);
     text-transform: uppercase;
+    padding: 10px 0px;
 }
 
 
@@ -891,7 +978,6 @@ PROJECT
     opacity:0;
     background: linear-gradient(0deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,0) 70%, rgba(0,0,0,0.3) 100%);
 }
-
 
 /**
 

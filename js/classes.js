@@ -250,8 +250,8 @@ class blockCanvas { // canvas builder
                         // const pattern = (textureLoaded) ? ctx.createPattern(textureImage, 'repeat') : 
                         const pattern = this.colour
                         co.ctx.fillStyle = pattern
-                        
-                        co.ctx.fillRect(square.x + driftSpeed * square.drift[0], square.y + driftSpeed * square.drift[1], square.w * opacityScale, square.h * opacityScale);
+
+                        co.ctx.fillRect(square.x + driftSpeed * square.drift[0] + (square.w - square.w * opacityScale)/4, square.y + driftSpeed * square.drift[1] - (square.h - square.h * opacityScale)/4, square.w * opacityScale, square.h * opacityScale);
                     }
                 })
             }
@@ -284,6 +284,8 @@ class gallery {
         this.index = 0
         this.actioning = false
         this.zoomable = false
+        this.touchStartX = 0
+        this.touchEndX = 0        
 	}
     
     setup(imgs, target, zoomable, intv) {
@@ -337,6 +339,7 @@ class gallery {
             target.appendChild(div).appendChild(img)
 
             let wayNav = document.createElement('div')
+            wayNav.classList.add('react-play')
             wayNav.setAttribute('data-gallerypos', i)
             wayNav.addEventListener('click', (event)=> this.navClicked(event))
             wayfinder.appendChild(wayNav)
@@ -345,6 +348,7 @@ class gallery {
                 gsap.set(div, left)
                 gsap.set(img, {'mask-image': 'linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1))'})
                 img.classList.add('dist25', 'dur1600')
+                img.classList.add('react-play','noLight')
             } else if(i === 0) {
                 gsap.set(div, middle)
                 gsap.set(img, {'mask-image': 'linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 1))'})
@@ -355,6 +359,7 @@ class gallery {
                 gsap.set(div, right)
                 gsap.set(img, {'mask-image': 'linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0))'})
                 img.classList.add('dist25', 'dur1600')
+                img.classList.add('react-play','noLight')
             } else {
                 gsap.set(div, other)
                 gsap.set(img, {'mask-image': 'linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))'})
@@ -362,6 +367,20 @@ class gallery {
             }
 
         })
+
+
+      
+        target.addEventListener('touchstart', (e) => {
+            this.touchStartX = e.touches[0].clientX;
+          });
+        
+        target.addEventListener('touchmove', (e) => {
+            this.touchEndX = e.touches[0].clientX;
+          });
+        
+        target.addEventListener('touchend', () => {
+            this.handleSwipe();
+        });        
 
         target.appendChild(wayfinder)
 
@@ -418,29 +437,32 @@ class gallery {
             if (this.index > imgs.length - 1) this.index = 0;
 
             target.querySelectorAll('.gallery-img').forEach((div, i, l)=> {
-                let rati = (i - this.index + imgs.length) % imgs.length;
-                
+                const rati = (i - this.index + imgs.length) % imgs.length;
+                const img = div.querySelector('img')
                 qs(`.gallery-nav div:nth-child(${i+1})`).classList.remove('gallery-navOn')
                 if(this.zoomable) div.querySelector('img').classList.remove('zoomable')
                 if(rati === imgs.length-1) {
                     gsap.to(div, {...left, duration:speed })
-                    gsap.to(div.querySelector('img'), {'mask-image': 'linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1))', duration:Math.max(0.3, speed) })
-                    gsap.to(div.querySelector('img').dataset, {dist:25, dur:1600, duration: speed })
+                    gsap.to(img, {'mask-image': 'linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1))', duration:Math.max(0.3, speed) })
+                    gsap.to(img.dataset, {dist:25, dur:1600, duration: speed })
+                    img.classList.add('react-play','noLight')
                 } else if(rati === 0) {
                     gsap.to(div, {...middle, duration: speed })
-                    gsap.to(div.querySelector('img'), {'mask-image': 'linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 1))', duration:Math.max(0.3, speed*0.5) })
-                    gsap.to(div.querySelector('img').dataset, {dist:50, dur:1600, duration: speed, onComplete: () => {
-                        if(this.zoomable) div.querySelector('img').classList.add('zoomable')
+                    gsap.to(img, {'mask-image': 'linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 1))', duration:Math.max(0.3, speed*0.5) })
+                    gsap.to(img.dataset, {dist:50, dur:1600, duration: speed, onComplete: () => {
+                        if(this.zoomable) img.classList.add('zoomable')
+                        img.classList.remove('react-play')
                     } })
                     qs(`.gallery-nav div:nth-child(${i+1})`).classList.add('gallery-navOn')
                 } else if(rati === 1) {
                     gsap.to(div, {...right, duration: speed })
-                    gsap.to(div.querySelector('img'), {'mask-image': 'linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0))', duration:Math.max(0.3, speed) })
-                    gsap.to(div.querySelector('img').dataset, {dist:25, dur:1600, duration: speed })
+                    gsap.to(img, {'mask-image': 'linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0))', duration:Math.max(0.3, speed) })
+                    gsap.to(img.dataset, {dist:25, dur:1600, duration: speed })
+                    img.classList.add('react-play','noLight')
                 } else {
                     gsap.to(div, {...other, duration: speed })
-                    gsap.to(div.querySelector('img'), {'mask-image': 'linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))', duration:Math.max(0.3, speed) })
-                    gsap.to(div.querySelector('img').dataset, {dist:0, dur:1600, duration: speed })
+                    gsap.to(img, {'mask-image': 'linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))', duration:Math.max(0.3, speed) })
+                    gsap.to(img.dataset, {dist:0, dur:1600, duration: speed })
                 }
             })
         }
@@ -466,6 +488,17 @@ class gallery {
             if(imGalPos < this.index) this.move(-1); else this.move(1)
         }
 
+    }
+
+    handleSwipe() {
+  
+        const swipeDistance = this.touchEndX - this.touchStartX;
+        if (swipeDistance > 50) {
+            this.move(-1)
+        } else if (swipeDistance < -50) {
+            this.move(1)
+        }
+      
     }
     
     navClicked(event) {
