@@ -66,11 +66,11 @@ function processElements() {
     props.projectIMG = []
     projectManifest.forEach((v,i) => {
 
+        let titleDashed = v.title.toLowerCase().replaceAll(' ','-')
+
         // create and tag - project
         let project = document.createElement('div')
         project.classList.add('project', 'react-open')
-        project.setAttribute('data-linkRef',1)
-        project.setAttribute('data-project', v.title.toLowerCase().replaceAll(' ','-'))
 
 
         // create, tag, img setup & attach copy to - reveal
@@ -81,7 +81,7 @@ function processElements() {
         img.onerror = function() {
             this.src = './img/test.jpg'
         }
-        img.src = `./projects/title-${v.title.toLowerCase().replaceAll(' ','-')}.jpg`;
+        img.src = `./projects/title-${titleDashed}.jpg`;
         img.setAttribute('data-projectIndex', i+1)
         reveal.appendChild(img)
 
@@ -112,6 +112,8 @@ function processElements() {
         group.setAttribute('clip-path', `url('#${clip.id}')`)
 
         var FO = document.createElementNS('http://www.w3.org/2000/svg',"foreignObject")
+        FO.setAttribute('transform-origin','0 50%')
+
         let FOele = document.createElement('div')
         batchSet(FOele, 'style', {
             height:'100%', 
@@ -119,8 +121,9 @@ function processElements() {
             display:'flex', 
             'flex-direction':'column',
             'justify-content':'center',
-            'padding-left': 'clamp(2rem, 6.3vw, 7rem)',
-            'box-sizing':'border-box'
+            'padding-left':'clamp(2rem, 6.3vw, 7rem)',
+            'box-sizing':'border-box',
+            'font-size':'clamp(1rem, 6.3vw, 3.5rem)'
         })
         let titleNode = document.createElement('span')
         titleNode.classList.add('SVGtitle')
@@ -152,16 +155,18 @@ function processElements() {
         project.appendChild(svg)
         project.appendChild(shade)
 
+        // attach event
+        project.addEventListener('click', ev => {
+            linkClick.centerSweep(ev.clientY, `./projects/${titleDashed}.html`)
+        })
+
         // finalise and attach
         qs('#projects').appendChild(project)
     })
     projectSVGshape()
     
 
-
-    /*          parallax setup attribute setup           */
-
-    attributeSetup('.para',['dist'])
+    /*          typical wrapping and setups           */
 
     wrapProcessing()
 
@@ -423,7 +428,6 @@ function intersections() {
 
 function aboutSetup() {
 
-
     /*          split about title           */
 
     let aboutTitleSplit = qs('#text').innerText.split('')
@@ -509,6 +513,17 @@ function aboutSetup() {
 
     // set a scale 
     timeline.timeScale(ts)
+
+
+
+    // -------------
+
+    /*          about click handler           */
+
+    qs('#about .button').addEventListener('click', ev => {
+        linkClick.click((props.mobile) ? 'r' : 't', `${window.location.origin}/about.html`)        
+    })
+
 }
 
 // kill the project section  
@@ -685,9 +700,8 @@ function projectDraw(target) {
             gsap.to(ele.querySelectorAll('.SVGblocker, .SVGclip'), {
                 x: xOffset
             })
-
-            gsap.to(ele.querySelectorAll('foreignObject div'), {
-                x: -(0.08*window.innerWidth).clamp(2.4*props.rem, 17*props.rem),
+            gsap.to(ele.querySelectorAll('foreignObject'), {
+                x: (-0.025*window.innerWidth).clamp(-2.5*props.rem, -0.1*props.rem),
                 scale: 0.85                
             })
 
@@ -706,7 +720,7 @@ function projectDraw(target) {
             gsap.to(ele.querySelectorAll('.SVGblocker, .SVGclip'), {
                 x: '0vw'
             })
-            gsap.to(ele.querySelectorAll('foreignObject div'), {
+            gsap.to(ele.querySelectorAll('foreignObject'), {
                 x: 0,
                 scale:1
             })
@@ -837,45 +851,6 @@ function uScroll() {
  * 
  * 
  */
-  
-function clickThrough(e, ev) {
-
-    let mobSwitch = (props.mobile) ? 'r' : 't', link;
-    switch(parseInt(e.dataset.linkref)) {
-        case 0: // about page
-            link = './about.html'
-            linkClick.click(mobSwitch, link)
-        break;
-        case 1: // project page            
-            qsa('.highlight').forEach((ele) => {        ele.classList.remove('highlight')     })
-           linkClick.centerSweep(ev.clientY, `./projects/${e.dataset.project}.html`)
-        break;
-        case 2: // copy phonenumber
-            if(props.mobile) {
-                window.open(`tel:${contactInfo.tel.replace(' ','')}`,'_self')
-            } else {
-                toClipboard(contactInfo.tel) 
-            }
-        break;
-        case 3: // copy email & open email client
-            toClipboard(contactInfo.email);
-            sendEmail()
-        break;
-        case 4: // open linkedin URL
-            linkClick.click(mobSwitch, contactInfo.linkdin)
-        break;
-        case 5: // open contact page
-            gsap.to('.contactInfo', {y:0, duration: 1, ease: "elastic.out(1,0.5)" })
-            qsa('#contactPlate, .contactInfo').forEach((ele) => {
-                ele.classList.add('contactOpen')
-            })            
-        break;
-        default: // within nav 
-        if(!scrollVals.autoScrolling) jumpTo(e.innerText)
-        break;
-    }
-}
-
 
 
 

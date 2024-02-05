@@ -639,3 +639,7 @@ container.addEventListener('click', function(event) {
 });
 
 */
+
+let DGtracking = new dynamicGallery()
+DGtracking.setup(qs('.galleryTest'), '.DGhook1')
+

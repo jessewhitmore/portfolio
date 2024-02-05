@@ -83,8 +83,6 @@ body {
     width: 100%;
 
     margin: auto;
-    overflow: hidden;
-    
 }
 
 
@@ -127,58 +125,67 @@ body {
 .col { /* column */
 
     column-gap: 2rem;
+    width:100%; 
 
     display:flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: space-evenly;
-    align-items: stretch;
+    padding-bottom: 1.2em;
+
 }
 
 .row {
     display:flex;
     flex-direction: row;
     justify-content: space-evenly;
-    align-items: stretch;    
+    align-items: stretch;
 }
 
 .secHeader {
     position:relative;
+    width:65%; 
 
-    padding-bottom: clamp(1.5rem, 4vw, 2.5rem);
+    padding-bottom: 1.5em;
 
     font-weight: bolder;
     text-transform: uppercase;    
-    font-size: clamp(2rem, 4vw, 3rem);
-}
-
-.pointHeader {
-    position:relative;
-
-    margin-top: clamp(0.8rem, 2vw, 1rem);
-    padding-bottom: clamp(0.4rem, 2vw, 0.6rem);
-
-    font-weight: bold;
-    text-transform: capitalize;
-    font-size: clamp(1.1rem, 2vw, 1.3rem);
+    font-size: 2.2em;
 }
 
 .subHeader {
     position:relative;
 
     font-weight: bolder;
-    padding-bottom: clamp(0.6rem, 2vw, 0.8rem);
+    padding-bottom: 0.3em;
     text-transform: capitalize;
-    font-size: clamp(1.4rem, 2vw, 1.8rem);
+    font-size: 1.5em;
+}
+
+p + .subHeader {
+    padding: 1.5em 0 0.3em;
+}
+
+.pointHeader {
+    position:relative;
+
+    padding-top: 1em;
+    padding-bottom: 0.2em;
+
+    font-weight: bold;
+    text-transform: capitalize;
+    font-size: 1.1em;
+}
+
+.copy .boldText {
+    font-weight:bold;
 }
 
 .copy p {
     position:relative;
     margin-top:0;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.2em;
 
-    font-size: clamp(1rem, 1vw, 1.3rem);
-    line-height: 1.5;
+    line-height: 1.75;
 }
 
 .copy > img {
@@ -674,7 +681,7 @@ HEADER
 **/
 
 #header {
-    padding-bottom: 5rem;
+    padding-bottom: 1rem;
     overflow:hidden;
 }
 
@@ -742,8 +749,8 @@ HEADER
 
 #namePlate {
     position: absolute;
-    bottom: 2.25rem; /* Converted from 20px to rem */
-    left: 0rem; /* Converted from 16px to rem */
+    bottom: 5rem;
+    left: 0rem; 
 
     width: clamp(16rem, 47vw, 28rem);
     height: clamp(8rem, 22vw, 13rem); /* Converted from 130px to rem */
@@ -804,7 +811,7 @@ ABOUT
 
 #about .buttonPlate {
     display:inline-block;
-    margin-top: 2em;
+    margin-top: 3.5em;
 
     color: transparent;
     text-align:center;
@@ -910,10 +917,14 @@ PROJECT
     line-height: 90%;
 }
 
+#projects .SVGtitle:first-child {
+    font-size: 2em;
+}
+
 #projects .SVGdesc {
-    font-size: clamp(1rem, 2.1vw, 2.3rem);
+    font-size: 0.8em;
     text-transform: uppercase;
-    padding: 10px 0px;
+    padding: 0.4em 0;
 }
 
 
@@ -994,6 +1005,7 @@ CONTACT
 
     color: rgb(var(--secondary-col))!important;
     font-size: clamp(1rem, 2.3vw, 3rem);
+    overflow: hidden;
 
 }
 

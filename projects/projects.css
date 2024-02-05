@@ -1,12 +1,97 @@
 
-.copy {
+.secHeader {
+    position:relative;
+    width:65%; 
+
+    padding-bottom: 1.5em;
+
+    font-weight: bolder;
+    text-transform: uppercase;    
+    font-size: 2.2em;
+}
+
+.subHeader {
     position:relative;
 
-    margin:auto;
+    font-weight: bolder;
+    padding-bottom: 0.3em;
+    text-transform: capitalize;
+    font-size: 1.5em;
+}
+
+p + .subHeader {
+    padding: 1.5em 0 0.3em;
+}
+
+p:last-child {
+    margin:0!important;
+}
+
+.pointHeader {
+    position:relative;
+
+    padding-top: 1em;
+    padding-bottom: 0.2em;
+
+    font-weight: bold;
+    text-transform: capitalize;
+    font-size: 1.2em;
+}
+
+.col {
+    position:relative;
+    max-width:2200px; 
+    margin: 0 auto;
+    padding: 1.2em 0;
+}
+
+
+
+.copy {
+    position:relative;
+    margin: 0 auto;
 
     width: clamp(0px, 100%, 900px);
     box-sizing: border-box;
+    font-size: clamp(1rem, 1vw, 1.3rem);
+
 }
+
+@media (min-width:1240px) {
+    .copy {
+        width: clamp(0px, 100%, 1100px);
+    }
+
+    .col .copy {
+        width: clamp(0px, 46%, 900px);    
+        margin: 0 auto;
+    }
+}
+
+
+.copy .boldText {
+    font-weight:bold;
+}
+
+.copy p {
+    position:relative;
+    margin-top:0;
+    margin-bottom: 1.2em;
+
+    line-height: 1.75;
+}
+
+.copy > img {
+    margin-left: -1rem;
+    margin-bottom:1.5rem;
+
+    width:calc(100% + 2rem);
+}
+
+.padT {
+    padding-top: clamp(4rem, 15vw, 6rem);
+}
+
 
 #headerImage {
     left:0;
@@ -128,3 +213,49 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+.galleryTest {
+    position: sticky;
+    top: 0%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 3000px;
+}
+
+.galleryTest img {
+    position:absolute;
+    width: 100%;
+    height:100%;
+    object-fit:contain;
+    transform:translateZ(5px);
+    border-radius: 1rem;
+}
+
+.panel {
+    width:100%;
+    height:80%;
+    transform-style: preserve-3d;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective-origin: left;
+}
+
+.panel .card {
+    position:absolute;
+    background: rgba(var(--secondary-col));
+    transform-style: preserve-3d;
+    border-radius: 1rem;
+}

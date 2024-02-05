@@ -529,3 +529,360 @@ class gallery {
 
     }    
 }
+
+
+/*          Dynamic gal         */
+
+class dynamicGallery { // canvas builder
+	constructor() {
+        this.onScreen = false
+        this.hook = null
+        this.index = 0
+        this.prevIndex = 1
+        this.firstRun = true
+        this.zOff = -300
+        this.yOff = 100
+        this.xOff = 0
+	}
+
+    setup(ele, hook) {
+
+        this.element = ele
+        this.parent = ele.parentElement
+
+        const observer = new IntersectionObserver(this.galOnScreen.bind(this), {
+            rootMargin:'0% 0% 0% 0%'
+        })
+
+        observer.observe(ele)
+
+
+        this.imgs = []
+        for (var i = 0; i < ele.children.length; i++) {
+            this.imgs.push(ele.children[i])
+        }
+        
+        let panel = document.createElement('div')
+        panel.classList.add('panel')
+    
+        this.imgs.forEach((im, i) => {
+            let card = document.createElement('div')
+            card.classList.add('card')
+            card.style.aspectRatio = im.naturalWidth/im.naturalHeight
+            card.style.width = (im.naturalWidth >= im.naturalHeight) ? '100%' : 'auto'
+            card.style.height = (im.naturalWidth <= im.naturalHeight) ? '100%' : 'auto'
+            panel.appendChild(card).appendChild(im)
+        })
+    
+        ele.appendChild(panel)
+     
+
+
+        if(hook !== undefined) {
+
+            this.hook = qsa(hook)
+
+            const observerHook = new IntersectionObserver(this.hookSwitch.bind(this), {
+                rootMargin: '-50% 0% -50% 0%'
+            });                    
+
+            let tempHook = []
+            attributeSetup(hook,['DGi'])            
+            this.hook.forEach(element => {
+                let array = Array.from(element.classList)
+                array.forEach(val => {
+                        if(val.indexOf('DGi') > -1 && tempHook.indexOf(`${hook}.${val}`) === -1) tempHook.push(`${hook}.${val}`)  
+                })
+                observerHook.observe(element);
+            });
+
+            this.hookIndex = []
+            tempHook.forEach((v,i,a) => {
+               this.hookIndex.push(qsa(v))
+            })
+        }
+
+        const tl = gsap.timeline({
+            onComplete: () => {
+              this.animating = false;
+            }
+          })
+
+        let leaving = [
+            [{
+                x:0,
+                y:0,
+                rotateX: 0,
+                z:0,
+                autoAlpha:1,
+                duration: 0
+            },{
+                x:this.xOff*0.5,
+                y:'-20%',
+                rotateX: 90,
+                z:this.zOff*0.5,
+                autoAlpha:1,
+                duration: 0
+            }],
+            [{
+                x:this.xOff*0.5,
+                y:'-20%',
+                rotateX: 90,
+                z:this.zOff*0.5,
+                autoAlpha:1,
+                duration: 0
+            },{
+                x:this.xOff,
+                y:this.yOff,
+                rotateX: 180,
+                z:this.zOff,
+                autoAlpha:1,
+                duration: 0               
+            }]            
+        ]        
+
+        let coming = [
+            [{
+                x:this.xOff,
+                y:this.yOff,
+                rotateX: 180,
+                z:this.zOff,
+                autoAlpha:1,
+                duration: 0
+            },{
+                x:this.xOff*0.5,
+                y:'20%',
+                rotateX: 270,
+                z:this.zOff/2,
+                autoAlpha:1,
+                duration: 0
+            }],
+            [{
+                x:this.xOff*0.5,
+                y:'20%',
+                rotateX: 270,
+                z:this.zOff/2,
+                autoAlpha:1,
+                duration: 0
+            },{
+                x:0,
+                y:0,
+                rotateX: 360,
+                z:0,
+                autoAlpha:1,
+                duration: 0              
+            }]            
+        ]
+
+        let imz = this.element.querySelectorAll('.card')
+        gsap.set(imz, {autoAlpha:0})
+        if(this.prevIndex > this.index) {
+            leaving.forEach((v,start) => {
+                tl.fromTo(imz[this.prevIndex], v[0], v[1], (start == 0) ? 0 : '>')
+            })
+
+            coming.forEach((v,start) => {
+                tl.fromTo(imz[this.index], v[0], v[1], (start == 0) ? 0 : '>')
+            })
+
+        } else {
+            leaving.forEach((v,start) => {
+                tl.fromTo(imz[this.prevIndex], v[0], v[1], (start == 0) ? 0 : '>')
+            })
+
+            coming.forEach((v,start) => {
+                tl.fromTo(imz[this.index], v[0], v[1], (start == 0) ? 0 : '>')
+            })
+        }
+        this.prevIndex = 0
+    }
+
+    galOnScreen(e, observer) {
+        e.forEach(entry => {
+
+            if (entry.isIntersecting) {
+                this.onScreen = true
+                window.addEventListener('scroll', this.handleScroll.bind(this))
+                window.addEventListener('mousemove', this.handleTilt.bind(this));
+            } else {
+                this.onScreen = false
+                window.removeEventListener('scroll', this.handleScroll.bind(this));     
+                window.removeEventListener('mousemove', this.handleTilt.bind(this));
+            }
+        });
+
+    }
+
+    hookSwitch(e, observer) {
+        e.forEach((entry) => {
+            if (entry.isIntersecting) {
+                
+                // const entryArray = Array.from(this.hookIndex)
+                // const index = entryArray.indexOf(entry.target)
+                if(parseInt(entry.target.dataset.dgi) !== this.index) {
+                    this.index = parseInt(entry.target.dataset.dgi)
+                    this.move()    
+                } else if(this.firstRun) {
+                    this.firstRun = false
+                    gsap.set(this.hookIndex, {background:'none'})
+                    gsap.set(this.hookIndex[this.index], {background:'red'})            
+                }
+                
+            }
+        })
+    }
+
+    positionElements(height) {
+        this.height = height
+    }
+
+    handleScroll(event) {
+        let element = this.parent
+        const boundingBox = this.parent.getBoundingClientRect();
+        const T = boundingBox.top;
+        const H = boundingBox.height;
+        const VH = window.innerHeight;
+        if(this.height !== H) this.positionElements(H)
+
+        this.percentage = Math.max(0, Math.min(1,(T / (H - VH) * -1))) * 100
+    }
+
+    handleTilt(event) {
+        const ele = this.element.querySelector('.panel')
+        const elementRect = ele.getBoundingClientRect();
+        const elementCenterX = elementRect.left + elementRect.width / 2;
+        const elementCenterY = elementRect.top + elementRect.height / 2;
+  
+        const deltaX = event.clientX - elementCenterX;
+        const deltaY = event.clientY - elementCenterY;
+  
+        // tilt max
+        const tiltX = Math.max(-30, Math.min(30,-(deltaY / 100))); 
+        const tiltY = Math.max(-30, Math.min(30, deltaX / 100));
+  
+        ele.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;        
+    }
+
+    moveShift(dir,speed) {
+        if(dir > 0) this.index++; else this.index--;
+        if (this.index < 0) this.index = this.imgs.length - 1;
+        if (this.index > this.imgs.length - 1) this.index = 0;
+        this.move(speed)
+    }
+
+    move(speed) {
+
+        gsap.set(this.hookIndex, {background:'none'})
+        gsap.set(this.hookIndex[this.index], {background:'red'})
+
+        if(this.animating) {
+            clearTimeout(this.moveReturn)
+            this.moveReturn = setTimeout(()=> this.move(speed),100)
+            console.log('repeating')
+            return;
+        }
+        this.animating = true;
+        const tl = gsap.timeline({
+            onComplete: () => {
+              this.animating = false;
+            }
+          })
+
+          speed = speed || 0.5;
+          let imgs = this.imgs
+          let target = qs('.panel')
+
+
+          let leaving = [
+            [{
+                x:0,
+                y:0,
+                rotateX: 0,
+                z:0,
+                autoAlpha:1,
+                duration: speed/2  
+            },{
+                x:this.xOff*0.5,
+                y:'-20%',
+                rotateX: 90,
+                z:this.zOff*0.5,
+                autoAlpha:1,
+                duration: speed/2  
+            }],
+            [{
+                x:this.xOff*0.5,
+                y:'-20%',
+                rotateX: 90,
+                z:this.zOff*0.5,
+                autoAlpha:1,
+                duration: speed/2  
+            },{
+                x:this.xOff,
+                y:this.yOff,
+                rotateX: 180,
+                z:this.zOff,
+                autoAlpha:1,
+                duration: speed/2               
+            }]            
+        ]        
+
+        let coming = [
+            [{
+                x:this.xOff,
+                y:this.yOff,
+                rotateX: 180,
+                z:this.zOff,
+                autoAlpha:1,
+                duration: 0
+            },{
+                x:this.xOff*0.5,
+                y:'20%',
+                rotateX: 270,
+                z:this.zOff/2,
+                autoAlpha:1,
+                duration: speed/2  
+            }],
+            [{
+                x:this.xOff*0.5,
+                y:'20%',
+                rotateX: 270,
+                z:this.zOff/2,
+                autoAlpha:1,
+                duration: 0
+            },{
+                x:0,
+                y:0,
+                rotateX: 360,
+                z:0,
+                autoAlpha:1,
+                duration: speed/2             
+            }]            
+        ]
+
+
+        let imz = this.element.querySelectorAll('.card')
+        gsap.set(imz, {autoAlpha:0})
+        if(this.prevIndex > this.index) {
+            leaving.forEach((v,start) => {
+                tl.fromTo(imz[this.prevIndex], v[0], v[1], (start == 0) ? 0 : '>')
+            })
+
+            coming.forEach((v,start) => {
+                tl.fromTo(imz[this.index], v[0], v[1], (start == 0) ? 0 : '>')
+            })
+
+        } else {
+            leaving.forEach((v,start) => {
+                tl.fromTo(imz[this.prevIndex], v[0], v[1], (start == 0) ? 0 : '>')
+            })
+
+            coming.forEach((v,start) => {
+                tl.fromTo(imz[this.index], v[0], v[1], (start == 0) ? 0 : '>')
+            })
+        }
+
+        this.prevIndex = this.index
+    
+    }
+    
+}

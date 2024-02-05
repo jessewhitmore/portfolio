@@ -164,7 +164,7 @@ function wrapContent(outer, name, element, id) {
     if(id !== undefined) inner.id = id
     while (outer.firstChild) {
         inner.appendChild(outer.firstChild);
-      }      
+    }
     outer.appendChild(inner)
 }
 
@@ -228,6 +228,7 @@ function sendEmail() {
 }
 
 function toClipboard(val) {
+    console.log(val)
     // Copy the text inside the text field
     navigator.clipboard.writeText(val);
 }
@@ -243,7 +244,7 @@ function recursiveChildLoop(element, matchingClass) {
 function batchSet(ele, type, obj) {
     const entries = Object.entries(obj);
 
-    if(type = "style") {
+    if(type == "style") {
         entries.forEach(val => {
             ele[type][val[0]] = val[1]
         })
@@ -483,8 +484,7 @@ function onResizeEnd() {
     document.body.classList.remove('no-transition')
 }
 
-window.onload = function() {
-
+function load() {
     const url = new URL(window.location.href);
 
     // Get the search parameters
@@ -492,7 +492,9 @@ window.onload = function() {
     searchParams.forEach((v,k) => {
         switch(k) {
             case 'msg':
-                jumpTo(v,'instant')
+
+                let j = (qs(`#${v}`) === null) ? qs('#wrapper') : qs(`#${v}`)
+                jumpTo(j,'instant')
             break;
         }
     })
@@ -503,6 +505,16 @@ window.onload = function() {
     if(internalRedirect) (props.mobile) ? linkClick.fromClicked('r') : linkClick.fromClicked('t')
 
 }
+
+window.onload = function() {
+    load()
+}
+
+window.addEventListener('popstate', (event) => {
+    console.log('Back or forward button was pressed');
+    load()
+});
+
 
 
 
@@ -593,10 +605,12 @@ function grainTexture(chance) {
 
 
 
+
+
 /**
  * 
  * 
- *          DATE TIME
+ *          CONTACT SECTION 
  * 
  * 
  */
@@ -702,9 +716,7 @@ function contactSetup() {
     // -------------------------------------------
     
     /*          Generate contact info           */
-    
-    if(qs('#contact')) {
-    
+        
     if(getCountry().toLowerCase() == props.country.toLowerCase()) {
         let modifiedNumber = contactInfo.tel.split(' ')
         modifiedNumber[0] = '0'
@@ -743,17 +755,9 @@ function contactSetup() {
         })
     })
 
-
-
-    
     // handle contact hover clicks
     qsa('.buttonCells div').forEach((ele, index, parent) => {
         ele.addEventListener('click', () => changeContact(ele, index, parent))
-    })
-
-    // handle page clicks
-    qsa('#about .button, .project, #buttonText div, #nav .copy span').forEach((ele) => {
-        ele.addEventListener('click', (event) => clickThrough(ele, event))    
     })
 
     qs('#contactPlate').addEventListener('click', (event) => {
@@ -766,10 +770,37 @@ function contactSetup() {
                 ele.classList.remove('contactOpen')
             })
         }
-    })    
+    })
     
-    }
 }
+
+function contactClickthrough(e) {
+    let mobSwitch = (props.mobile) ? 'r' : 't'
+
+    switch(e) {
+        case 0: // copy phonenumber
+        if(props.mobile) {
+            window.open(`tel:${contactInfo.tel.replace(' ','')}`,'_self')
+        } else {
+            toClipboard(contactInfo.tel) 
+        }
+        break;
+        case 1: // copy email & open email client
+        toClipboard(contactInfo.email);
+        sendEmail()
+        break;
+        case 2: // open linkedin URL
+        linkClick.click(mobSwitch, contactInfo.linkdin)
+        break;
+        default: // open contact page
+        gsap.to('.contactInfo', {y:0, duration: 1, ease: "elastic.out(1,0.5)" })
+        qsa('#contactPlate, .contactInfo').forEach((ele) => {
+            ele.classList.add('contactOpen')
+        })            
+    }
+    
+}
+
 
 
 
@@ -792,6 +823,8 @@ linkClick.setup('.linkClickCanvas','rgba(40,40,40,1)')
 let wipeDir = []
 
 linkClick.click = function(dir,link, postMessage, dur) {
+    if(linkClick.run !== undefined) return;
+    linkClick.run = true;
     if(dir === 'r') wipeDir = [this.height, 'v', [-1,0]]; else  wipeDir = [this.width, 'h',  [0,1]]
     let moveVal = { value: (wipeDir[0] === this.width) ? this.height : 0 };
     dur = dur || 0.5;
@@ -1084,7 +1117,6 @@ function handleVel(result) {
 
 }
 
-
 function scrollVelocity(PN, rf) {
     if (typeof uScroll === 'function') uScroll()
 
@@ -1109,26 +1141,14 @@ function scrollVelocity(PN, rf) {
         rf.deltaY = 0 // reset for next tests
 
     }
-    // unique page scroll function
 }
 
 
 function jumpTo(pos, behavior) {
-    let posEle = (pos.toLowerCase() === 'home') ? qs('#header') : qs(`#${pos.toLowerCase()}`)
-    if(posEle === null) {
-        pos = pos.toLowerCase()
-        switch(pos) {
-            case 'about':
-                linkClick.click((props.mobile) ? 'r' : 't', `${window.location.origin}/portfolio/about.html`)
-            break;
-            default:
-                linkClick.click((props.mobile) ? 'r' : 't', `${window.location.origin}/portfolio/index.html?msg=${pos}`)
-        }
-        return
-    }
+
     behavior = behavior || 'smooth'
 
-    let eleTop = posEle.getBoundingClientRect().top
+    let eleTop = pos.getBoundingClientRect().top
     let distance = eleTop + document.documentElement.scrollTop
     if(eleTop < 10 && eleTop > -10 ) {
         if(props.mobile && document.body.classList.contains('menuOpen')) menuToggle()
@@ -1162,7 +1182,7 @@ function jumpTo(pos, behavior) {
 /**
  * 
  * 
- *          UNIVERSAL INTERACTS
+ *          QUICK SETUP
  * 
  * 
  */
@@ -1170,6 +1190,8 @@ function jumpTo(pos, behavior) {
 function wrapProcessing() {
 
     /*          populate float           */
+
+
 
     qsa('.float').forEach((ele) => {
         let tempObj = {
@@ -1255,8 +1277,6 @@ function calculateNewPosition(mouseX, mouseY, lastX, lastY) {
   
     return { x: newX, y: newY };
 }
-
-
 
 // calculate pushing element
 function pushCalc(ele, x, y, pushFrom, amount, dz) {
@@ -1410,6 +1430,35 @@ function mouse(PN, rf) {
     pm.lastTarget = pm.target
     pm.valid = false;
 }
+
+function navHandling(e) {
+    e = e.toLowerCase()
+    const path = window.location.pathname.replace('/','').split('.html')[0]
+    const site = window.location.origin
+
+    let posEle = qs(`#${e}`)
+    switch(path) {
+        case '':
+        case 'index':
+            if(e === 'home') posEle = qs('#wrapper')
+        break;
+        case 'about':
+            if(e === 'about') posEle = qs('#wrapper')
+        break;
+    }
+
+    if(posEle === null) {
+        if(e === 'about') {
+            linkClick.click((props.mobile) ? 'r' : 't', `${window.location.origin}/about.html`)
+        } else {
+            linkClick.click((props.mobile) ? 'r' : 't', `${window.location.origin}/index.html?msg=${e}`)
+        }
+    } else {
+        jumpTo(posEle)
+    }
+}
+
+
 
 
 
@@ -1613,6 +1662,12 @@ if(props.mobile) {
         }
     }
 
+    // nav clickthrough handling
+    qs('#nav .copy').addEventListener('click', (ev) => {
+        navHandling(ev.target.innerText)
+    })
+
+
 } else {
     // resize listener on desktop
     window.addEventListener('resize', function() {
@@ -1628,10 +1683,8 @@ if(props.mobile) {
 
     // desktop menu
     menuEle.addEventListener('click', (ev) => {
-        if(ev.target.id !== 'menuDesktop') jumpTo(ev.target.innerText)
+        if(ev.target.id !== 'menuDesktop') navHandling(ev.target.innerText)
     })
-
-    
 
     // mouse based events - desktop
     props.mouse = {
@@ -1660,9 +1713,16 @@ document.addEventListener('scroll', event => {
 
 
 // setup tech related
-techMenuEle.addEventListener('click', (ev) => {
+techMenuEle.addEventListener('click', ev => {
     if(ev.target !== techMenuEle) manualPerformance(ev.target)
 })
+
+qsa('#buttonText div').forEach((ele, i) => {
+    ele.addEventListener('click', ev => {
+        contactClickthrough(i)
+    })
+})
+
 
 
 
