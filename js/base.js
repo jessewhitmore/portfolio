@@ -43,23 +43,82 @@ const contactTreatment = {
 // any property I want universal
 const props = { 
     rem: 16,
+    loaded: false,
+    floatOn: true,
     city: 'Sydney',
     country: 'Australia',
     GMT: 11
 }
 
-
+// projects manifest -- used to geneterate projects on index only currently
+const projectManifest = [
+    {
+        title: 'DOG System',
+        desc: 'PROJECT - TYPE - CODE' 
+    }, 
+    {
+        title: '2021 Roadmap',
+        desc: 'PROJECT - TYPE - CODE' 
+    }, 
+    {
+        title: 'New Format: Velocity',
+        desc: 'PROJECT - TYPE - CODE' 
+    }, 
+    {
+        title: 'Studio Sliders',
+        desc: 'PROJECT - TYPE - CODE' 
+    },    
+    {
+        title: 'Self-Serve Templates',
+        desc: 'PROJECT - TYPE - CODE' 
+    }, 
+    {
+        title: 'Client Work Playground',
+        desc: 'PROJECT - TYPE - CODE' 
+    },
+    {
+        title: 'Amazon Black Friday',
+        desc: 'PROJECT - TYPE - CODE' 
+    },
+    {
+        title: 'Uber',
+        desc: 'PROJECT - TYPE - CODE' 
+    },
+    {
+        title: 'Heineken',
+        desc: 'PROJECT - TYPE - CODE' 
+    },    
+    {
+        title: 'Kong Skull Island',
+        desc: 'PROJECT - TYPE - CODE' 
+    },    
+    {
+        title: 'Design for Fun',
+        desc: 'PROJECT - TYPE - CODE' 
+    },    
+]
 
 /*          GLOBALS           */
 
 // textures for screens
 const si = [ 
-    'red',
-    'lightGreen',
-    'blue',
-    'orange',
-    'pink'
+    'url(/assets/screens/yellow.jpg)', // yellow - '#fee440',
+    'url(/assets/screens/cyan.jpg)', // cyan - '#70e4ef',
+    'url(/assets/screens/green.jpg)', // green - '#61f849',
+    'url(/assets/screens/magenta.jpg)', // magenta - '#ff36ab',
+    'url(/assets/screens/red.jpg)', // red - '#fb0102',
+    'url(/assets/screens/blue.jpg)', // blue - '#0301fc',   
 ]
+
+const siC = [ 
+    '#fee440',
+    '#70e4ef',
+    '#61f849',
+    '#ff36ab',
+    '#fb0102',
+    '#0301fc',   
+]
+
 
 
 // how stuff floats
@@ -89,6 +148,12 @@ const scrollVals = {
     lastScroll:0,
     scrollVelocity: 0,
     refreshing: false
+}
+
+// bht
+const bht = {
+    visible: null,
+    scenes:{},
 }
 
 /*          ORPHANED VARIABLES           */
@@ -173,26 +238,24 @@ function generateScreen(parent, col) {
 
     let div = document.createElement('div')
     div.classList.add('screen','selOff','float','vel','dur800','dist20','pushable')
-    let text = document.createElement('span')
-    text.innerText = parent.innerText
-    parent.innerText = ''
+   let text = document.createElement('span')
+   text.innerText = parent.innerText
+   parent.innerText = ''
 
-    col = col || props.primaryCol
+   col = col || props.primaryCol
     gsap.set(text, {
         position:'relative',
         textShadow: `0 0 4px rgba(${col}, 0.6)`
-
     })
 
     parent.appendChild(div)
     parent.appendChild(text)
 
-    let leftOffset = randomChance(70) ? 1 * props.rem * Math.random() : 3 * props.rem * Math.random();
+    let leftOffset = randomChance(70) ? 1 * Math.random() : 2 * Math.random();
     gsap.set(div, {
-        width:`clamp(${6 + 1 * Math.random()}rem, 10vw, ${10 + 3 * Math.random()}rem)`,
-        marginBottom: 'clamp(1rem, 4vw, 2.5rem)',
-        left: -2 * props.rem + leftOffset,
-        bottom:2.5 * props.rem * Math.random(),
+        width:`clamp(${text.offsetHeight/props.rem + 0.2 * props.rem * Math.random()}rem, 10vw, ${text.offsetHeight*1.5/props.rem + 0.4 * props.rem * Math.random()}rem)`,
+        bottom: `${0.2 + 0.4 * Math.random()}em`,
+        left: `${-1.2 + leftOffset}em`,
         aspectRatio: 1.8 + 0.3 * Math.random() 
     })
     
@@ -387,6 +450,10 @@ if(props.mobile) {
     // set-up mouse
     mouseEle = document.createElement('div')
     mouseEle.id = 'mousePointer'
+
+    mouseEleInner = document.createElement('div')
+    mouseEle.appendChild(mouseEleInner)
+
     wrapper.insertAdjacentElement('afterend', mouseEle);
 
     // set-up desktop menu
@@ -459,6 +526,7 @@ function animateScreen() {
             }
             setTimeout(() => {
                 ele.querySelector('.screenTexture').style.background = si[(parseInt(siN)+siG) % si.length]
+                ele.querySelector('.screenGlow').style.boxShadow = `0 0 100px ${siC[(parseInt(siN)+siG) % si.length]}`
             }, 1000);
         })
         setTimeout(() => { siLock = false; if(push.target !== undefined)  if(push.target.classList.contains('screenTexture')) qs('#mousePointer').classList = 'react-play'; },1500)
@@ -502,20 +570,31 @@ function load() {
     if(typeof uResizer === 'function') uResizer()
     
     document.querySelector('#blocker').style.background = "none"
-    if(internalRedirect) (props.mobile) ? linkClick.fromClicked('r') : linkClick.fromClicked('t')
+    if(internalRedirect) {
+        (props.mobile) ? linkClick.fromClicked('r') : linkClick.fromClicked('t')
+        setTimeout(()=>{if(typeof uResizer === 'function') uLoaded()},300)
+        props.loaded = true
+    } else {
+        if(typeof uResizer === 'function') uLoaded()
+        props.loaded = true
+    }
 
 }
 
 window.onload = function() {
+    console.log('onload')
     load()
 }
 
 window.addEventListener('popstate', (event) => {
-    console.log('Back or forward button was pressed');
+    console.log('popstate')
     load()
 });
 
-
+window.addEventListener("hashchange", function(e) {
+    console.log('hashchange')
+    if(e.oldURL.length > e.newURL.length) load()
+});
 
 
 
@@ -1054,7 +1133,7 @@ staticHorizontal.static()
  */
 
 function floatAnimation(mt) {
-    if(mt.onScreen) {
+    if(mt.onScreen && props.floatOn) {
         mt.x += bobControls.movement*mt.movementDirectionX
         mt.y += bobControls.movement*mt.movementDirectionY
 
@@ -1191,8 +1270,6 @@ function wrapProcessing() {
 
     /*          populate float           */
 
-
-
     qsa('.float').forEach((ele) => {
         let tempObj = {
             target: ele,
@@ -1212,14 +1289,51 @@ function wrapProcessing() {
     attributeSetup('.pushable',['amt'])
     attributeSetup('.para',['dist'])
 
+
     /*          screen texture allocation and sub div creation           */
+
+    function screenLoop(obj) {
+        let op = Math.random()
+        let dur = 0.2 + Math.random()
+
+        gsap.to(obj[1], {
+            opacity: 0.15 + (0.15 - op * 0.15),
+            duration: dur, 
+        })
+
+        gsap.to(obj[0], {
+            opacity: op * 0.4, 
+            onCompleteParams: [obj],
+            duration: dur, 
+            onComplete: screenLoop
+        })
+
+
+    }    
 
     for(let ele of qsa('.screen')) {
         let siN = 0 || ele.dataset.si;
         wrapContent(ele, 'screenTexture')
-        ele.querySelector('.screenTexture').style.background = si[siN]
-    } 
+        screenTexture = ele.querySelector('.screenTexture')
+        screenTexture.style.background = si[siN]
+    
+        let rgb = document.createElement('div')
+        rgb.classList.add('rgb')
 
+        let grade = document.createElement('div')
+        grade.classList.add('screenGrad')
+
+        let screenGlow = document.createElement('div')
+        screenGlow.classList.add('screenGlow')
+
+        screenLoop([screenGlow,grade])
+
+        screenTexture.appendChild(grade)
+        screenTexture.appendChild(screenGlow)
+        screenTexture.appendChild(rgb)
+
+
+    }    
 
     /*          pushable element creation           */
 
@@ -1228,6 +1342,10 @@ function wrapProcessing() {
             wrapContent(ele, 'push')
         }
     }
+
+
+
+
 
     animateScreen()
 
@@ -1239,7 +1357,49 @@ function wrapProcessing() {
 
     qsa('img').forEach(ele => ele.setAttribute('draggable', false))
 
+    qsa('.boldText').forEach(v => v.parentElement.classList.add('seperate'))
 
+    if(qsa('.bht').length > 0) {
+        attributeSetup('.bht',['track'])
+        qsa('.bht').forEach((v,i) => {
+            v.style.height =v.dataset.track+'vh'
+            bht.scenes[`scene${i}`] = {
+                target: v
+            }
+
+    
+            function bhtIntersect(e, observer) {
+                bht.visible = null
+                e.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const foundChildKey = 
+                        bht.visible = Object.keys(bht.scenes).find(childKey => {
+                            const subpropertyValue = bht.scenes[childKey].target;
+                            if(subpropertyValue === entry.target) return `scene${childKey}`;
+                          });
+                    } 
+                });
+
+            }
+
+            observerConstructor(bhtIntersect, '.bht', {
+                rootMargin:'50% 0% 50% 0%'
+            })            
+        })
+
+        bht.scrubbing = function() {
+            if(bht.visible == null) return;
+            const boundingBox = bht.scenes[bht.visible].target.getBoundingClientRect();
+            const T = boundingBox.top;
+            const H = boundingBox.height;
+            const VH = window.innerHeight;
+            let percentage = Math.max(0, Math.min(1,(T / (H - VH) * -1)))
+            let length = bht.scenes[bht.visible].timeline._tDur
+            bht.scenes[bht.visible].timeline.seek(length*percentage)
+        }
+
+
+    }
 }
 
 
@@ -1292,9 +1452,8 @@ function pushCalc(ele, x, y, pushFrom, amount, dz) {
 
     // Calculate the distance between the mouse and the element
     const distance = Math.sqrt(deltaX ** 2 + deltaY ** 2);
-
     if(distance <= dz) {
-        return { x:0, y:0 }  
+        return { x:0, y:0 }
     }
 
     // Calculate the scaling factor based on the distance
@@ -1309,9 +1468,15 @@ function pushCalc(ele, x, y, pushFrom, amount, dz) {
     // Calculate the new position with the capped distance
     const newX = ex - cappedDistance * Math.cos(angle);
     const newY = ey - cappedDistance * Math.sin(angle);
-  
-    // Update the element's position
-    return { x: (newX-ex), y: (newY-ey) }    
+
+
+
+    const tiltX = Math.max(-30, Math.min(30,(newY - ey ))); 
+    const tiltY = Math.max(-30, Math.min(30, -(newX - ex )));
+
+
+    return { x: (newX-ex), y: (newY-ey) } //, rotateX: `${(tiltX)}deg`, rotateY: `${(tiltY)}deg` }
+
 }
 
 
@@ -1321,8 +1486,12 @@ function mouse(PN, rf) {
     // forever update the mouse
     gsap.to(mouseEle, {x: pm.offX, y: pm.offY, duration: 0.1, ease: "power2.inOut" })
 
+    // follow mouse at distance
+    if(every(100, PN, 'mouse')) calculateNewPosition(pm.x, pm.y, pm.offX, pm.offY)
+
     // exit if no mouse
     if(!pm.valid ) return;
+
 
     // push elements
     if(every(500, PN, 'push') && props.performanceHandling.pushable) {
@@ -1332,10 +1501,8 @@ function mouse(PN, rf) {
             // animate the push
             gsap.to(val.target, { ...xy, duration: push.dur})
         })
-    }
+    }    
 
-    // follow mouse at distance
-    if(every(100, PN, 'mouse')) calculateNewPosition(pm.x, pm.y, pm.offX, pm.offY)
 
     // interactable over mousePointer
     let classList = pm.target.classList
@@ -1487,6 +1654,7 @@ props.performanceHandling = {
     staticCanvas: true,
     velocity: true
 }
+
 function performanceHandling(controls) {
     switch(controls.dropAmount) {
         case 20:
@@ -1699,6 +1867,7 @@ if(props.mobile) {
             ev: event,
             x: event.clientX,
             y: event.clientY + window.scrollY,
+            jy: event.clientY,
             target: event.target,
             valid: true
         }
@@ -1708,6 +1877,7 @@ if(props.mobile) {
 
 // handle scroll animations
 document.addEventListener('scroll', event => {
+    if(!props.mobile) props.mouse.y = props.mouse.jy + window.scrollY
     props.scrolling = true;
 }); 
 
@@ -1752,7 +1922,7 @@ function drawFrame() {
     
     // set to true when scrolling
     if(props.scrolling) scrollVelocity(F1, rf)
-
+    if(props.scrolling && every(25,F1) && bht.scrubbing !== undefined) { bht.scrubbing() }
     // run ever 300 milliseconds
     if(every(300,F1) && ph.grain) grainTexture()
 

@@ -543,9 +543,12 @@ class dynamicGallery { // canvas builder
         this.zOff = -300
         this.yOff = 100
         this.xOff = 0
+        this.autoClickTimer = null
 	}
 
-    setup(ele, hook) {
+    setup(ele, hook, side) {
+
+        side = side || 'left'
 
         this.element = ele
         this.parent = ele.parentElement
@@ -568,9 +571,12 @@ class dynamicGallery { // canvas builder
         this.imgs.forEach((im, i) => {
             let card = document.createElement('div')
             card.classList.add('card')
-            card.style.aspectRatio = im.naturalWidth/im.naturalHeight
-            card.style.width = (im.naturalWidth >= im.naturalHeight) ? '100%' : 'auto'
-            card.style.height = (im.naturalWidth <= im.naturalHeight) ? '100%' : 'auto'
+
+            let imAR = (im.nodeName.toLowerCase() === 'img') ? im : im.querySelector('img');
+            if(im.children.length > 0) im.children[0].classList.add('galShowing')
+            card.style.aspectRatio = imAR.naturalWidth/imAR.naturalHeight
+            card.style.width = (imAR.naturalWidth >= imAR.naturalHeight) ? '100%' : 'auto'
+            card.style.height = (imAR.naturalWidth <= imAR.naturalHeight) ? '100%' : 'auto'
             panel.appendChild(card).appendChild(im)
         })
     
@@ -588,17 +594,22 @@ class dynamicGallery { // canvas builder
 
             let tempHook = []
             attributeSetup(hook,['DGi'])            
-            this.hook.forEach(element => {
+            this.hook.forEach((element, key, arr) => {
                 let array = Array.from(element.classList)
-                array.forEach(val => {
+                array.forEach((val, i) => {
                         if(val.indexOf('DGi') > -1 && tempHook.indexOf(`${hook}.${val}`) === -1) tempHook.push(`${hook}.${val}`)  
                 })
                 observerHook.observe(element);
+                element.classList.add(`dynamicGallery-${side}-tab`)
+                element.addEventListener('click', ev => this.handleClick(ev, parseInt(element.dataset.dgi), key))
+                element.classList.add('react-play')
             });
 
             this.hookIndex = []
             tempHook.forEach((v,i,a) => {
-               this.hookIndex.push(qsa(v))
+                let val = qsa(v)
+                val[0].classList.add('hookShowing')
+                this.hookIndex.push(val)
             })
         }
 
@@ -607,6 +618,8 @@ class dynamicGallery { // canvas builder
               this.animating = false;
             }
           })
+
+
 
         let leaving = [
             [{
@@ -701,6 +714,21 @@ class dynamicGallery { // canvas builder
         e.forEach(entry => {
 
             if (entry.isIntersecting) {
+                if(this.firstRun) {
+                    this.firstRun = false
+                    this.autoClick()
+                    this.hookIndex.forEach((v, i) => {
+                        if(this.index == i) {
+                            v.forEach((val,ind,a)=> {
+                                if(a.length > 1) val.classList.add('focused','multiSegment'); else val.classList.add('focused')
+                            })
+                        } else {
+                            v.forEach(val => val.classList.remove('focused','multiSegment'))
+                        }
+                    })
+
+                }
+
                 this.onScreen = true
                 window.addEventListener('scroll', this.handleScroll.bind(this))
                 window.addEventListener('mousemove', this.handleTilt.bind(this));
@@ -722,14 +750,44 @@ class dynamicGallery { // canvas builder
                 if(parseInt(entry.target.dataset.dgi) !== this.index) {
                     this.index = parseInt(entry.target.dataset.dgi)
                     this.move()    
-                } else if(this.firstRun) {
-                    this.firstRun = false
-                    gsap.set(this.hookIndex, {background:'none'})
-                    gsap.set(this.hookIndex[this.index], {background:'red'})            
                 }
-                
             }
         })
+    }
+
+    autoClick() {
+        this.autoClickTimer = setTimeout(()=> {
+            let subIndex = Array.from(this.imgs[this.index].children).indexOf(this.imgs[this.index].querySelector('.galShowing'))
+            subIndex++
+            if(subIndex == this.imgs[this.index].children.length) subIndex = 0;
+            this.handleClick(0,this.index,subIndex)
+        },8000)
+    }
+
+    handleClick(event, index, subindex) {
+        if(index !== this.index) {
+            this.index = index
+            this.move()
+        } else if(this.hookIndex[this.index].length > 1) {
+
+            this.hookIndex[this.index].forEach((v,i) => {
+                if(i == subindex) {
+                    v.classList.add('hookShowing')
+                    for(let index = 0; index < this.imgs[this.index].children.length; index++) {
+                        if(index == subindex) {
+                            this.imgs[this.index].children[index].classList.add('galShowing')
+                        } else {
+                            this.imgs[this.index].children[index].classList.remove('galShowing')
+                        }
+                    }
+                } else {
+                    v.classList.remove('hookShowing')
+                }
+            })
+        }
+
+        clearTimeout(this.autoClickTimer)
+        this.autoClick()
     }
 
     positionElements(height) {
@@ -760,7 +818,7 @@ class dynamicGallery { // canvas builder
         const tiltX = Math.max(-30, Math.min(30,-(deltaY / 100))); 
         const tiltY = Math.max(-30, Math.min(30, deltaX / 100));
   
-        ele.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;        
+        ele.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
     }
 
     moveShift(dir,speed) {
@@ -772,13 +830,24 @@ class dynamicGallery { // canvas builder
 
     move(speed) {
 
-        gsap.set(this.hookIndex, {background:'none'})
-        gsap.set(this.hookIndex[this.index], {background:'red'})
+
+        this.hookIndex.forEach((v, i) => {
+            if(this.index == i) {
+                v.forEach((val,ind,a)=> {
+                    if(a.length > 1) {
+                        this.autoClick()
+                        val.classList.add('focused','multiSegment');
+                    } else val.classList.add('focused')
+                })
+            } else {
+                v.forEach(val => val.classList.remove('focused','multiSegment'))
+            }
+        })
+
 
         if(this.animating) {
             clearTimeout(this.moveReturn)
             this.moveReturn = setTimeout(()=> this.move(speed),100)
-            console.log('repeating')
             return;
         }
         this.animating = true;

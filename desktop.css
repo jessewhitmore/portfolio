@@ -45,19 +45,20 @@
     }
 
     #desktopNamePlate {
-        top: 9em;
+        top: 16em;
         position: absolute;
-        margin-left: -27em;   
+        margin-left: -23em;
+        text-align: center;  
     }
     
     #desktopNamePlate span:first-child {
-        font-size: 15em;
-        line-height: 0.92;
+        font-size: 27em;
+        line-height: 0.7;
     }
     
     #desktopNamePlate span:last-child {
         padding-left: 0.1em;
-        font-size: 5.5em;
+        font-size: 7em;
         line-height:1.2;
     }
 
@@ -138,7 +139,7 @@
     
     
     #header .headerSections:nth-child(1) > .screen:nth-child(7) {
-        top: 70em; /* Converted from 200px to rem */
+        top: 62em; /* Converted from 200px to rem */
         margin-left: -65em; /* Converted from 80px to rem */
     
         width: 12em; /* Converted from 120px to rem */
@@ -147,8 +148,8 @@
     }    
 
     #header .headerSections:nth-child(1) > .screen:nth-child(10) {
-        top: 21em; /* Converted from 200px to rem */
-        margin-left: 5.5em; /* Converted from 80px to rem */
+        top: 25em; /* Converted from 200px to rem */
+        margin-left: 17.5em; /* Converted from 80px to rem */
     
         width: 12em; /* Converted from 120px to rem */
         aspect-ratio: 7.5/4;
@@ -157,7 +158,7 @@
     }
 
     #header .headerSections:nth-child(1) > .screen:nth-child(11) {
-        top: 65em; /* Converted from 200px to rem */
+        top: 43em; /* Converted from 200px to rem */
         margin-left: 95em; /* Converted from 80px to rem */
     
         width: 10em; /* Converted from 120px to rem */

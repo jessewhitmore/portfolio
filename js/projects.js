@@ -62,6 +62,31 @@ function processElements() {
         }
     }
 
+    generateScreen(qs('.secHeader .baseline')) 
+    qsa('.subHeader').forEach(v => generateScreen(v) )
+
+
+    let url = window.location.pathname.split('/').pop().split('.')[0].replaceAll('-',' ')
+
+    console.log(url)
+    const projectIndex =  projectManifest.findIndex(obj => obj.title.toLowerCase() === url);
+    const prevProjectIndex = (projectIndex === 0) ? projectManifest.length-1 : projectIndex - 1
+    const nextProjectIndex = (projectIndex === projectManifest.length-1) ? 0 : projectIndex + 1
+
+
+    document.querySelector(':root').style.setProperty('--prev-project', `'${projectManifest[prevProjectIndex].title}'`)
+    document.querySelector(':root').style.setProperty('--next-project', `'${projectManifest[nextProjectIndex].title}'`)
+  
+    qs('#projectNavigator .previous').addEventListener('click', ev => {
+        linkClick.centerSweep(ev.clientY, `./${projectManifest[prevProjectIndex].title.toLowerCase().replaceAll(' ','-')}.html`)
+    })
+
+    qs('#projectNavigator .next').addEventListener('click', ev => {
+        linkClick.centerSweep(ev.clientY, `./${projectManifest[nextProjectIndex].title.toLowerCase().replaceAll(' ','-')}.html`)
+    })    
+    
+    wrapProcessing()
+
 }
 
 
@@ -643,3 +668,5 @@ container.addEventListener('click', function(event) {
 let DGtracking = new dynamicGallery()
 DGtracking.setup(qs('.galleryTest'), '.DGhook1')
 
+let DGtracking2 = new dynamicGallery()
+DGtracking2.setup(qs('.galleryTest2'), '.DGhook2', 'right')

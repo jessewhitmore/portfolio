@@ -7,54 +7,6 @@
  * 
  */
 
-// projects manifest -- used to geneterate projects on index only currently
-const projectManifest = [
-    {
-        title: 'DOG System',
-        desc: 'PROJECT - TYPE - CODE' 
-    }, 
-    {
-        title: '2021 Roadmap',
-        desc: 'PROJECT - TYPE - CODE' 
-    }, 
-    {
-        title: 'New Format: Velocity',
-        desc: 'PROJECT - TYPE - CODE' 
-    }, 
-    {
-        title: 'Studio Sliders',
-        desc: 'PROJECT - TYPE - CODE' 
-    },    
-    {
-        title: 'Self-Serve Templates',
-        desc: 'PROJECT - TYPE - CODE' 
-    }, 
-    {
-        title: 'Client Work Playground',
-        desc: 'PROJECT - TYPE - CODE' 
-    },
-    {
-        title: 'Amazon Black Friday',
-        desc: 'PROJECT - TYPE - CODE' 
-    },
-    {
-        title: 'Uber',
-        desc: 'PROJECT - TYPE - CODE' 
-    },
-    {
-        title: 'Heineken',
-        desc: 'PROJECT - TYPE - CODE' 
-    },    
-    {
-        title: 'Kong Skull Island',
-        desc: 'PROJECT - TYPE - CODE' 
-    },    
-    {
-        title: 'Design for Fun',
-        desc: 'PROJECT - TYPE - CODE' 
-    },    
-]
-
 
 // -------------------------------------
 // -------------------------------------
@@ -168,12 +120,152 @@ function processElements() {
 
     /*          typical wrapping and setups           */
 
+
+    generateScreen(qs('.projectType'))
+
+
+    if(!props.mobile) {
+        props.floatOn = false;
+        props.introTL = gsap.timeline({paused:true, onComplete: ()=> {props.floatOn = true}})
+
+        props.introTL.from('.bg', {
+            scale:1.8,
+            duration:0.3,
+        },0)
+        
+        props.introTL.from('#desktopNamePlate', {
+            y:'-10rem',
+            x:'-10rem',
+            scale:0.6,
+            duration:0.3,
+        },0)
+
+        props.introTL.from(qsa('.sh1')[0], {
+            y:'-1rem',
+            x:'-5rem',
+            scale:0.45,
+            duration:0.3,
+        },0)
+
+
+        props.introTL.from(qsa('.sh1')[1], {
+            y:'-3rem',
+            x:'5rem',
+            scale:0.6,
+            duration:0.3,
+        },0)
+
+        props.introTL.from(qsa('.sh1')[2], {
+            y:'-3rem',
+            x:'-17rem',
+            scale:0.6,
+            duration:0.3,
+        },0)
+
+
+        props.introTL.from(qsa('.sh1')[3], {
+            y:'-3rem',
+            x:'-17rem',
+            scale:0.5,
+            duration:0.3,
+        },0) 
+        
+        props.introTL.from(qsa('.sh1')[4], {
+            y:'-8rem',
+            x:'6rem',
+            scale:0.5,
+            duration:0.3,
+        },0)          
+
+
+        props.introTL.from('#desktopFigure', {
+            y:'30rem',
+            x:'40rem',
+            scale:1.5,
+            filter:'blur(5px)',
+            duration:0.3,
+        },0)
+
+        props.introTL.from(qsa('.sh2')[0], {
+            y:'35rem',
+            x:'10rem',
+            scale:1.6,
+            filter:'blur(6px)',
+            duration:0.3,
+        },0)
+
+        props.introTL.from(qsa('.sh2')[1], {
+            y:'35rem',
+            x:'-2rem',
+            scale:1.8,
+            filter:'blur(6px)',
+            duration:0.3,
+        },0)
+
+
+        props.introTL.from(qsa('.sh2')[2], {
+            y:'7rem',
+            x:'12rem',
+            scale:1.9,
+            filter:'blur(9px)',
+            duration:0.3,
+        },0)        
+
+        props.introTL.from(qsa('.sh2')[3], {
+            y:'47rem',
+            x:'62rem',
+            scale:1.9,
+            filter:'blur(9px)',
+            duration:0.3,
+        },0)
+
+        props.introTL.timeScale(0.5)
+    }
+
+
     wrapProcessing()
 
+
+    let s1bht = gsap.timeline({paused:true})
+
+    s1bht.from(qs('#multidis').parentElement,{
+        opacity:0,
+        x:-1000, 
+        duration:10
+    },0)
+
+    s1bht.from('#multidissub1 span',{
+        opacity:0,
+        x:100,
+        stagger: 3.3,
+        duration:10
+    },'>')
+
+    s1bht.to('#multidissub1 span',{
+        opacity:0,
+        x:100,
+        delay: 20,
+        duration:10
+    },'>')
+
+    s1bht.from(qs('#multidissub2').parentElement,{
+        opacity:0,
+        x:100,
+        duration:10
+    },'>')
+
+    s1bht.from('#multidissub2 .button',{
+        scaleY:0,
+        duration:10
+    },'>')
+
+    bht.scenes.scene0.timeline = s1bht;
 }
 
 
-
+function uLoaded() {
+    props.introTL.play()
+}
 
 
 
@@ -293,7 +385,6 @@ function intersections() {
     function floatIntersect(e, observer) {
         e.forEach(entry => {
             const matchingIndex = float.findIndex((obj) => obj.target === entry.target);
-
             if (entry.isIntersecting) {
                 float[matchingIndex].onScreen = true
             } else {
@@ -346,7 +437,6 @@ function intersections() {
         });
         staticHorizontal.running = obvObjRunning
     }
-    
 
     
     // -------------
@@ -375,11 +465,9 @@ function intersections() {
     observerConstructor(canvasStaticHorizontalIntersect, '.staticBlocksH', {
         rootMargin:'0% 0% 0% 0%'
     })
+
   
 }
-
-
-
 
 
 
