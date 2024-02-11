@@ -48,7 +48,7 @@
 
 @font-face {
     font-family: 'morganite';
-    src: url('/assets/morganite.woff2') format('woff2');
+    src: url('/assets/morganite-sb.woff2') format('woff2');
 }
 
 .morg {
