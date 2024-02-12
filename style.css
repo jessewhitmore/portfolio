@@ -39,7 +39,7 @@
 
 @font-face {
     font-family: 'ignite';
-    src: url('/assets/ignite.woff2') format('woff2');
+    src: url('https://assets.playground.xyz/JWhitmore/eb5c8f0c_Ignite.woff2') format('woff2');
 }
 
 .ignite {
@@ -48,7 +48,7 @@
 
 @font-face {
     font-family: 'morganite';
-    src: url('/assets/morganite-sb.woff2') format('woff2');
+    src: url('https://assets.playground.xyz/JWhitmore/865074dc_Morganite-sb.woff2') format('woff2');
 }
 
 .morg {

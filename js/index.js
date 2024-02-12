@@ -29,7 +29,7 @@ function processElements() {
         let reveal = document.createElement('div')
         reveal.classList.add('reveal')
         img = new Image();
-        img.classList.add('para','dist15')
+        img.classList.add('para','dist50')
         img.onerror = function() {
             this.src = './img/test.jpg'
         }

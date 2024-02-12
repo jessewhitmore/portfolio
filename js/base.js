@@ -950,7 +950,8 @@ function processScreens(ele) {
     screenTexture = ele.querySelector('.screenTexture')
 
     batchSet(screenTexture,'style',{
-        background: si[siN],
+        background: (randomChance(50)) ? 'url(/assets/screens/bars.gif)' :  'url(/assets/screens/static.gif)',
+        backgroundSize: 'cover',
         overflow: 'hidden'
     });
 
@@ -1052,11 +1053,13 @@ function animateScreen() {
             gsap.set(frontV, {autoAlpha:0})
             frontV.load()
             frontV.src = siV[(siN+1) % si.length]
+            frontV.currentTime = 5 * Math.random()
             frontV.pause()
         } else {
             gsap.set(frontV, {autoAlpha:1})
             backV.load()
             backV.src = siV[(siN+1) % si.length]
+            frontV.currentTime = 5 * Math.random()
             backV.pause()
         }        
     }
