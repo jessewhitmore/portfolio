@@ -44,7 +44,6 @@ const contactTreatment = {
 const props = { 
     rem: 16,
     loaded: false,
-    floatOn: true,
     city: 'Sydney',
     country: 'Australia',
     GMT: 11
@@ -110,6 +109,15 @@ const si = [
     'url(/assets/screens/blue.jpg)', // blue - '#0301fc',   
 ]
 
+const siV = [
+    '/assets/screens/blue.mp4',
+    '/assets/screens/cyan.mp4',
+    '/assets/screens/black.mp4',
+    '/assets/screens/blue.mp4',
+    '/assets/screens/cyan.mp4',
+    '/assets/screens/black.mp4',
+]
+
 const siC = [ 
     '#fee440',
     '#70e4ef',
@@ -155,6 +163,8 @@ const bht = {
     visible: null,
     scenes:{},
 }
+
+let screens = []
 
 /*          ORPHANED VARIABLES           */
 
@@ -233,34 +243,16 @@ function wrapContent(outer, name, element, id) {
     outer.appendChild(inner)
 }
 
-// generate screen on text
-function generateScreen(parent, col) {
-
-    let div = document.createElement('div')
-    div.classList.add('screen','selOff','float','vel','dur800','dist20','pushable')
-   let text = document.createElement('span')
-   text.innerText = parent.innerText
-   parent.innerText = ''
-
-   col = col || props.primaryCol
-    gsap.set(text, {
-        position:'relative',
-        textShadow: `0 0 4px rgba(${col}, 0.6)`
-    })
-
-    parent.appendChild(div)
-    parent.appendChild(text)
-
-    let leftOffset = randomChance(70) ? 1 * Math.random() : 2 * Math.random();
-    gsap.set(div, {
-        width:`clamp(${text.offsetHeight/props.rem + 0.2 * props.rem * Math.random()}rem, 10vw, ${text.offsetHeight*1.5/props.rem + 0.4 * props.rem * Math.random()}rem)`,
-        bottom: `${0.2 + 0.4 * Math.random()}em`,
-        left: `${-1.2 + leftOffset}em`,
-        aspectRatio: 1.8 + 0.3 * Math.random() 
-    })
-    
+// default observer construct
+function observerConstructor(fc, ele, opt) {
+    // Create an Intersection Observer with the callback function and options
+    const observer = new IntersectionObserver(fc, opt);
+      
+    // Start observing each element
+    qsa(ele).forEach((element,i) => {
+      observer.observe(element);
+    });        
 }
-
 
 function menuBuilder(content, id, parent, react, state) {
     react = react || undefined
@@ -317,6 +309,20 @@ function batchSet(ele, type, obj) {
         })
     }
 }
+
+/*          Resize listener to kill transitions         */
+let resizeTimer;
+function onResizeStart() {
+    document.body.classList.add('no-transition')
+    if(typeof uDuringResizer === 'function') uDuringResizer()
+}
+
+function onResizeEnd() {
+    if(typeof uResizer === 'function') uResizer()
+    document.body.classList.remove('no-transition')
+}
+
+
 
 
 
@@ -432,7 +438,6 @@ let techMenuContent = [
     { content: 'G', id: 'quality-post', react: 'react-play', state: 3 }, // post processing 1. heavy off, 2. light off. 3. highlight effects off.
 
 ]
-
 techMenuContent.forEach(v =>  menuBuilder(v.content, v.id, techMenuEle, v.react, v.state))
 
 
@@ -473,141 +478,6 @@ if(props.mobile) {
     wrapper.appendChild(menuEle)
     wrapper.appendChild(techMenuEle)    
 }
-
-
-
-function animateScreen() {
-    /*          Screen related           */
-    let siG = 0, 
-    autoChangeTimeout = null,
-    firstAuto = 1000
-
-
-    // -------------
-
-    // randomly flicker to new screen texture
-    function autoChange() {
-        autoChangeTimeout = setTimeout( () => {
-            changeScreen(Math.floor(qsa('.screen').length*Math.random()),'autoed');
-            firstAuto = 15000;
-            autoChange();
-        },firstAuto + 5000*Math.random());
-    } 
-
-
-    // -------------
-
-    // change screen semi-randomly flowing out from clicked screen
-    function changeScreen(i) {
-        if(siLock) return;
-        siLock = true;
-        if(push.target !== undefined) if(push.target.classList.contains('screenTexture')) qs('#mousePointer').classList = null
-        clearTimeout(autoChangeTimeout)
-        autoChange()
-        siG++;
-    
-        qsa('.screen').forEach((ele, index) => {
-    
-            let siN = 0 || ele.dataset.si,
-            intN = Math.floor(4*exponentialDecayWithMax(Math.random() * 100, 100, 0.9)/100),
-            delay = Math.abs(index - i) * 200 * Math.random();
-    
-            if(index !== i) {
-
-                for(let n = 0; n <= intN; n++) {
-                    setTimeout(() => {
-                        ele.querySelector('.screenTexture').style.background = si[((parseInt(siN)+siG) % si.length) - (n % 2)]
-                    }, delay);
-                    delay += 100 + 200 * Math.random()
-                }
-            } else {
-
-                ele.querySelector('.screenTexture').style.background = si[(parseInt(siN)+siG) % si.length]
-            }
-            setTimeout(() => {
-                ele.querySelector('.screenTexture').style.background = si[(parseInt(siN)+siG) % si.length]
-                ele.querySelector('.screenGlow').style.boxShadow = `0 0 100px ${siC[(parseInt(siN)+siG) % si.length]}`
-            }, 1000);
-        })
-        setTimeout(() => { siLock = false; if(push.target !== undefined)  if(push.target.classList.contains('screenTexture')) qs('#mousePointer').classList = 'react-play'; },1500)
-    }
-
-    autoChange()
-
-    // add event listerner to all screen to changeScreen on click
-    qsa('.screen').forEach((ele, index) => {
-        ele.addEventListener('click', () => changeScreen(index));
-    })
-}
-
-/*          Resize listener to kill transitions         */
-let resizeTimer;
-function onResizeStart() {
-    document.body.classList.add('no-transition')
-    if(typeof uDuringResizer === 'function') uDuringResizer()
-}
-
-function onResizeEnd() {
-    if(typeof uResizer === 'function') uResizer()
-    document.body.classList.remove('no-transition')
-}
-
-function load() {
-    const url = new URL(window.location.href);
-
-    // Get the search parameters
-    const searchParams = url.searchParams;
-    searchParams.forEach((v,k) => {
-        switch(k) {
-            case 'msg':
-
-                let j = (qs(`#${v}`) === null) ? qs('#wrapper') : qs(`#${v}`)
-                jumpTo(j,'instant')
-            break;
-        }
-    })
-
-    if(typeof uResizer === 'function') uResizer()
-    
-    document.querySelector('#blocker').style.background = "none"
-    if(internalRedirect) {
-        (props.mobile) ? linkClick.fromClicked('r') : linkClick.fromClicked('t')
-        setTimeout(()=>{if(typeof uResizer === 'function') uLoaded()},300)
-        props.loaded = true
-    } else {
-        if(typeof uResizer === 'function') uLoaded()
-        props.loaded = true
-    }
-
-}
-
-window.onload = function() {
-    console.log('onload')
-    load()
-}
-
-window.addEventListener('popstate', (event) => {
-    console.log('popstate')
-    load()
-});
-
-window.addEventListener("hashchange", function(e) {
-    console.log('hashchange')
-    if(e.oldURL.length > e.newURL.length) load()
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /**
  * 
@@ -676,217 +546,6 @@ function grainTexture(chance) {
         duration:6
     })        
 }
-
-
-
-
-
-
-
-
-
-
-/**
- * 
- * 
- *          CONTACT SECTION 
- * 
- * 
- */
-
-// --------------------------------------------------------------
-
-gsap.set(qs('#buttonText'), {width:'unset'})
-
-function changeContact(e, i, p) {
-    if(props.contactLock === undefined) props.contactLock = false
-    if(i !== 69) {
-        props.contactLock = true;
-        setTimeout(()=> {
-            props.contactLock = false;
-        },700)
-    } else if(i === 69 && props.contactLock ) return;
-
-    switch(i) {
-        case 0: // telephone
-            toClipboard(contactInfo.tel) 
-        break;
-        case 1: // email
-            toClipboard(contactInfo.email);
-        break;
-        case 2: // linkedin
-            linkClick.click((props.mobile) ? 'r' : 't', contactInfo.linkdin)
-        break;
-    }
-
-    if(props.conButton == undefined) props.conButton = qs('#buttonText')
-    if(props.conLastState == undefined) props.conLastState = qs('#buttonText .defaultState')
-    let chosenFace = qs(`#buttonText .${e.id}`)
-
-    gsap.fromTo(props.conButton, {width: props.conLastState.clientWidth }, {width: chosenFace.clientWidth, duration:0.2, onComplete: ()=>{
-        props.conButton.style.width = 'unset'
-    }})
-    props.conLastState = chosenFace
-
-    props.conButton.classList.remove('default-state')
-    p.forEach((ele) => {
-        if(e === ele) {
-            ele.classList.add('onElement')
-        } else {
-            ele.classList.remove('onElement')
-        }
-        props.conButton.classList.remove(ele.id+'-state')
-    });
-
-
-    props.conButton.classList.add(e.id+'-state')
-
-    clearTimeout(props.contactReturn)
-    props.contactReturn = setTimeout(()=> {
-        let chosenFace = qs('#buttonText .defaultState')
-        gsap.fromTo(props.conButton, {width: props.conLastState.clientWidth }, {width: chosenFace.clientWidth, duration:0.2, onComplete: ()=>{
-            props.conButton.style.width = 'unset'
-        }})
-        props.conLastState = chosenFace        
-        p.forEach((ele) => {
-            props.conButton.classList.remove(ele.id+'-state')
-        })
-
-        props.conButton.classList.add('default-state')
-
-    },4000)
-
-}
-
-function contactSetup() {
-
-    let lastSecond = new Date().getSeconds()-1
-
-    // -------------------------------------------
-
-    function setDateWithOffset(gmtOffset) {
-        // Get the current local time
-        const localDate = new Date();
-        const timezoneDiff = localDate.getTimezoneOffset() / 60
-    
-        // Calculate the UTC time based on the GMT offset
-        const utcTime = localDate.getTime()
-    
-        // Apply the desired GMT offset
-        const targetTime = utcTime + ((gmtOffset + timezoneDiff) * 3600000); // 1 hour = 3600000 milliseconds
-    
-        // Create a new Date object with the adjusted time
-        targetDate = new Date(targetTime)
-        lastSecond = targetDate.getSeconds()
-        targetDate = `${targetDate.getHours().pad(2)}:${targetDate.getMinutes().pad(2)}:${targetDate.getSeconds().pad(2)}${(Math.sign(gmtOffset) === 1) ? '+' : ''}${gmtOffset}GMT`
-        
-        return targetDate
-    }
-
-    // -------------------------------------------
-
-    setInterval(()=> {
-        if(new Date().getSeconds() !== lastSecond) qs('#localTime').innerText = setDateWithOffset(props.GMT);
-    },200)    
-    qs('#location').innerText = props.city
-    qs('#local').style.opacity = 1
-
-
-    // -------------------------------------------
-    
-    /*          Generate contact info           */
-        
-    if(getCountry().toLowerCase() == props.country.toLowerCase()) {
-        let modifiedNumber = contactInfo.tel.split(' ')
-        modifiedNumber[0] = '0'
-        contactInfo.tel = modifiedNumber.join(' ').replace(' ','')
-    }
-
-    let conInfo = qs('.contactInfo')
-    const keys = Object.keys(contactInfo);
-    keys.forEach((key,i) => {
-        let infoSpan = document.createElement('span')
-        if(contactTreatment[key].hover !== undefined) infoSpan.classList.add((contactTreatment[key].hover))
-        
-        switch(contactTreatment[key].type) {
-            case 'link':
-                infoSpan.innerText = (contactTreatment[key].text) ? contactTreatment[key].text : contactInfo[key]
-                infoSpan.setAttribute('data-cikey', key)               
-            break;
-            default:
-                infoSpan.innerText = contactInfo[key]
-        }
-        
-        if(i > 0) { let hr = document.createElement('div'); conInfo.appendChild(hr) }
-        conInfo.appendChild(infoSpan)
-
-    });    
-    qsa('.contactInfo span').forEach((ele) => {
-        
-        ele.addEventListener('click', (ev)=> {
-            let key = ev.target.dataset.cikey
-            if(key === undefined) return
-            if(contactTreatment[key].trans) {
-                linkClick.click((props.mobile) ? 'r' : 't', contactInfo[key]);
-            } else {
-                if(contactTreatment[key].func) contactTreatment[key].func(); else window.open(contactInfo[key], '_self')
-            }
-        })
-    })
-
-    // handle contact hover clicks
-    qsa('.buttonCells div').forEach((ele, index, parent) => {
-        ele.addEventListener('click', () => changeContact(ele, index, parent))
-    })
-
-    qs('#contactPlate').addEventListener('click', (event) => {
-        if(event.target.id === 'contactPlate') {
-            gsap.killTweensOf('.contactInfo')
-            gsap.to('.contactInfo', {y:window.innerHeight/2 + qs('.contactInfo').offsetHeight/2, duration: 0.3, ease: "back.in(1.4)", onComplete: ()=>{
-                qs('.contactInfo').style.transform = 'translateY(calc(50vh + 50%))'
-            } })
-            qsa('#contactPlate, .contactInfo').forEach((ele) => {
-                ele.classList.remove('contactOpen')
-            })
-        }
-    })
-    
-}
-
-function contactClickthrough(e) {
-    let mobSwitch = (props.mobile) ? 'r' : 't'
-
-    switch(e) {
-        case 0: // copy phonenumber
-        if(props.mobile) {
-            window.open(`tel:${contactInfo.tel.replace(' ','')}`,'_self')
-        } else {
-            toClipboard(contactInfo.tel) 
-        }
-        break;
-        case 1: // copy email & open email client
-        toClipboard(contactInfo.email);
-        sendEmail()
-        break;
-        case 2: // open linkedin URL
-        linkClick.click(mobSwitch, contactInfo.linkdin)
-        break;
-        default: // open contact page
-        gsap.to('.contactInfo', {y:0, duration: 1, ease: "elastic.out(1,0.5)" })
-        qsa('#contactPlate, .contactInfo').forEach((ele) => {
-            ele.classList.add('contactOpen')
-        })            
-    }
-    
-}
-
-
-
-
-
-
-
-
 
 /**
  * 
@@ -1113,6 +772,581 @@ staticHorizontal.postDraw = function(c, ctx) {
 }
 staticHorizontal.static()
 
+/**
+ * 
+ * 
+ *          QUICK SETUP
+ * 
+ * 
+ */
+
+function wrapProcessing() {
+    /*          attribute set-up            */
+
+    attributeSetup('.vel',['dur','dist'])
+    attributeSetup('.screen',['si'])
+    attributeSetup('.pushable',['amt'])
+    attributeSetup('.para',['dist'])
+
+    /*          screen texture allocation and sub div creation           */
+    qsa('.screen').forEach(v => processScreens(v))
+
+    // generate the screens
+    animateScreen()
+
+
+    /*          populate float           */    
+
+    qsa('.float').forEach((ele) => {
+       wrapContent(ele, 'floated')
+        let tempObj = {
+            target: ele.querySelector('.floated'),
+            movementDirectionX: (Math.random() < 0.5) ? -1 : 1,
+            movementDirectionY: (Math.random() < 0.5) ? -1 : 1,
+            x: Math.round(Math.random()*bobControls.xMax*2)-bobControls.xMax,
+            y: Math.round(Math.random()*bobControls.yMax*2)-bobControls.yMax,
+            onScreen: false
+        }
+        float.push(tempObj)
+    });    
+
+
+
+    
+
+    /*          pushable element creation           */
+
+    if(!props.mobile) {
+        for(let ele of qsa('.pushable')) {
+            wrapContent(ele, 'push')
+        }
+    }
+
+
+
+
+
+    // sub-add react to all child elements
+    qsa(`[class*="react"]`).forEach(ele => {
+        const classList = Array.from(ele.classList);
+        const matchingClass = classList.find(className => className.includes('react'));
+        recursiveChildLoop(ele, matchingClass)
+    })
+
+    // kill draggable for elements
+    qsa('img').forEach(ele => ele.setAttribute('draggable', false))
+
+    // if bold text make for bigger spacing
+    qsa('.boldText').forEach(v => v.parentElement.classList.add('seperate'))
+
+
+    // if there is any bht elements allow to animate
+    if(qsa('.bht').length > 0) {
+        attributeSetup('.bht',['track'])
+        qsa('.bht').forEach((v,i) => {
+            v.style.height =v.dataset.track+'vh'
+            bht.scenes[`scene${i}`] = {
+                target: v
+            }
+
+    
+            function bhtIntersect(e, observer) {
+                bht.visible = null
+                e.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const foundChildKey = 
+                        bht.visible = Object.keys(bht.scenes).find(childKey => {
+                            const subpropertyValue = bht.scenes[childKey].target;
+                            if(subpropertyValue === entry.target) return `scene${childKey}`;
+                          });
+                    } 
+                });
+
+            }
+
+            observerConstructor(bhtIntersect, '.bht', {
+                rootMargin:'50% 0% 50% 0%'
+            })            
+        })
+
+        bht.scrubbing = function() {
+            if(bht.visible == null) return;
+            const boundingBox = bht.scenes[bht.visible].target.getBoundingClientRect();
+            const T = boundingBox.top;
+            const H = boundingBox.height;
+            const VH = window.innerHeight;
+            let percentage = Math.max(0, Math.min(1,(T / (H - VH) * -1)))
+            let length = bht.scenes[bht.visible].timeline._tDur
+            bht.scenes[bht.visible].timeline.seek(length*percentage)
+        }
+
+
+    }
+}
+
+/**
+ * 
+ * 
+ *          SCREENS
+ * 
+ * 
+ */
+
+// generate screen on text
+function generateScreen(parent, col) {
+
+    let div = document.createElement('div')
+    div.classList.add('screen','selOff','float','vel','dur800','dist20','pushable')
+   let text = document.createElement('span')
+   text.innerText = parent.innerText
+   parent.innerText = ''
+
+   col = col || props.primaryCol
+    gsap.set(text, {
+        position:'relative',
+        textShadow: `0 0 4px rgba(${col}, 0.6)`
+    })
+
+    parent.appendChild(div)
+    parent.appendChild(text)
+
+    let leftOffset = randomChance(70) ? 1 * Math.random() : 2 * Math.random();
+    gsap.set(div, {
+        width:`clamp(${text.offsetHeight/props.rem + 0.2 * props.rem * Math.random()}rem, 10vw, ${text.offsetHeight*1.5/props.rem + 0.4 * props.rem * Math.random()}rem)`,
+        bottom: `${0.2 + 0.4 * Math.random()}em`,
+        left: `${-1.2 + leftOffset}em`,
+        aspectRatio: 1.8 + 0.3 * Math.random() 
+    })
+}
+
+// handle flicker and dips for screens
+function screenLoop(obj) {
+    let op = Math.random()
+    let dur = 0.2 + Math.random()
+
+    gsap.to(obj[1], {
+        opacity: 0.15 + (0.1 - op * 0.1),
+        duration: dur, 
+    })
+
+    gsap.to(obj[0], {
+        opacity: op * 0.35, 
+        onCompleteParams: [obj],
+        duration: dur, 
+        onComplete: screenLoop
+    })
+
+
+}
+
+// process screen and craete subelements
+function processScreens(ele) {
+    let siN = ele.dataset.si || 0;
+
+    wrapContent(ele, 'generatedScreen')
+    generatedScreen = ele.querySelector('.generatedScreen')
+
+    wrapContent(generatedScreen, 'screenTexture')
+    screenTexture = ele.querySelector('.screenTexture')
+
+    batchSet(screenTexture,'style',{
+        background: si[siN],
+        overflow: 'hidden'
+    });
+
+    // create the RGB banding
+    let rgb = document.createElement('div')
+    rgb.classList.add('rgb')
+
+    // create the gradient dip
+    let grade = document.createElement('div')
+    grade.classList.add('screenGrad')
+
+    // create the glow effect
+    let screenGlow = document.createElement('div')
+    screenGlow.classList.add('screenGlow')
+
+    // send to animate
+    screenLoop([screenGlow,grade])
+
+    // create the videos and set-up to play if video is attached
+    let screenVid = document.createElement('video')
+    screenVid.muted = true
+    screenVid.autoplay = true
+    screenVid.loop = true
+    batchSet(screenVid, 'style', {
+        position: 'absolute',
+        width: `${120 + parseInt(Math.random()*120)}%`,
+        height: 'auto'
+    })
+
+    let backVid = screenVid.cloneNode(true)
+    backVid.muted = true
+
+    backVid.classList.add('backV')
+    screenVid.classList.add('frontV')
+
+    // attach everything
+    screenTexture.appendChild(backVid)
+    screenTexture.appendChild(screenVid)
+    screenTexture.appendChild(grade)
+    screenTexture.appendChild(rgb)
+    generatedScreen.appendChild(screenGlow)
+    let tempObj = {
+        target: ele,
+        onScreen: false
+    }
+    screens.push(tempObj)
+}
+
+function animateScreen() {
+    /*          Screen related           */
+
+    let siG = 0, 
+    autoChangeTimeout = null,
+    firstAuto = 1000
+
+
+    // -------------
+
+    // randomly flicker to new screen texture
+
+    function autoChange() {
+        autoChangeTimeout = setTimeout( () => {
+            changeScreen(Math.floor(qsa('.screen').length*Math.random()),'autoed');
+            firstAuto = 15000;
+            autoChange();
+        },firstAuto + 5000*Math.random());
+    } 
+
+
+    // -------------
+    
+    
+    function videoIntersect(e, observer) {
+        e.forEach(entry => {
+            const matchingIndex = screens.findIndex((obj) => obj.target === entry.target);
+
+            if (entry.isIntersecting) {
+                entry.target.querySelector((((siG % 2)==0)?'.frontV':'.backV')).play()
+                screens[matchingIndex].onScreen = true
+            } else {
+                entry.target.querySelectorAll('video').forEach(v => v.pause())
+                screens[matchingIndex].onScreen = false
+                    
+            }
+        });
+    }
+
+    
+    observerConstructor(videoIntersect, '.screen', {
+        rootMargin: '10% 0% 10% 0%'
+    })    
+
+    function videoSet(ele) {
+        let frontV = ele.querySelector('.frontV')
+        let backV = ele.querySelector('.backV')
+        let siN = parseInt(ele.dataset.si) + siG || siG
+
+        if(siG % 2 > 0) {
+            gsap.set(frontV, {autoAlpha:0})
+            frontV.load()
+            frontV.src = siV[(siN+1) % si.length]
+            frontV.pause()
+        } else {
+            gsap.set(frontV, {autoAlpha:1})
+            backV.load()
+            backV.src = siV[(siN+1) % si.length]
+            backV.pause()
+        }        
+    }
+
+    function flickerScreens(ele, index, i) {
+        let toggle = siG % 2
+        let intN = 2 + Math.floor(Math.random() * 5)
+        let delay = Math.abs(index - i) * 200 * Math.random()/1000
+
+        let frontV = ele.querySelector('.frontV')
+        let video = ele.querySelectorAll('video')
+
+        if(screens[index].onScreen) {
+            const tl = gsap.timeline({onComplete: () => {
+                setTimeout(()=> videoSet(ele),200)
+            }})
+    
+            video.forEach(v => v.play());
+    
+    
+            for(let n = 0; n <= intN; n++) {
+                let op = (n%2 == 0) ? 1 : 0
+                tl.to(frontV, {
+                    autoAlpha: Math.abs(op - toggle),
+                    duration: 0.01,
+                    delay: ((n == 0) ? delay : 0) + (100 + 300 * Math.random())/1000
+                },'>')           
+            }            
+
+        } else {
+            videoSet(ele)
+        }
+
+    }
+
+    // change screen semi-randomly flowing out from clicked screen
+    function changeScreen(i) {
+        if(siLock) return;
+        siLock = true;
+        if(push.target !== undefined) if(push.target.classList.contains('screenTexture')) qs('#mousePointer').classList = null
+        clearTimeout(autoChangeTimeout)
+        // autoChange()
+        siG++;
+    
+        screens.forEach((ele, index) => flickerScreens(ele.target, index, i ))
+
+        setTimeout(()=>{
+            siLock = false; 
+            if(push.target !== undefined && push.target.classList.contains('screenTexture')) qs('#mousePointer').classList = 'react-play'
+        },1500)
+    } 
+    
+    
+    // add event listerner to all screen to changeScreen on click
+    qsa('.screen').forEach((ele, index) => {
+        ele.addEventListener('click', () => changeScreen(index));
+    })
+    autoChange()
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * 
+ * 
+ *          CONTACT SECTION 
+ * 
+ * 
+ */
+
+// --------------------------------------------------------------
+
+gsap.set(qs('#buttonText'), {width:'unset'})
+
+function changeContact(e, i, p) {
+    if(props.contactLock === undefined) props.contactLock = false
+    if(i !== 69) {
+        props.contactLock = true;
+        setTimeout(()=> {
+            props.contactLock = false;
+        },700)
+    } else if(i === 69 && props.contactLock ) return;
+
+    switch(i) {
+        case 0: // telephone
+            toClipboard(contactInfo.tel) 
+        break;
+        case 1: // email
+            toClipboard(contactInfo.email);
+        break;
+        case 2: // linkedin
+            linkClick.click((props.mobile) ? 'r' : 't', contactInfo.linkdin)
+        break;
+    }
+
+    if(props.conButton == undefined) props.conButton = qs('#buttonText')
+    if(props.conLastState == undefined) props.conLastState = qs('#buttonText .defaultState')
+    let chosenFace = qs(`#buttonText .${e.id}`)
+
+    gsap.fromTo(props.conButton, {width: props.conLastState.clientWidth }, {width: chosenFace.clientWidth, duration:0.2, onComplete: ()=>{
+        props.conButton.style.width = 'unset'
+    }})
+    props.conLastState = chosenFace
+
+    props.conButton.classList.remove('default-state')
+    p.forEach((ele) => {
+        if(e === ele) {
+            ele.classList.add('onElement')
+        } else {
+            ele.classList.remove('onElement')
+        }
+        props.conButton.classList.remove(ele.id+'-state')
+    });
+
+
+    props.conButton.classList.add(e.id+'-state')
+
+    clearTimeout(props.contactReturn)
+    props.contactReturn = setTimeout(()=> {
+        let chosenFace = qs('#buttonText .defaultState')
+        gsap.fromTo(props.conButton, {width: props.conLastState.clientWidth }, {width: chosenFace.clientWidth, duration:0.2, onComplete: ()=>{
+            props.conButton.style.width = 'unset'
+        }})
+        props.conLastState = chosenFace        
+        p.forEach((ele) => {
+            props.conButton.classList.remove(ele.id+'-state')
+        })
+
+        props.conButton.classList.add('default-state')
+
+    },4000)
+
+}
+
+function contactSetup() {
+
+    let lastSecond = new Date().getSeconds()-1
+
+    // -------------------------------------------
+
+    function setDateWithOffset(gmtOffset) {
+        // Get the current local time
+        const localDate = new Date();
+        const timezoneDiff = localDate.getTimezoneOffset() / 60
+    
+        // Calculate the UTC time based on the GMT offset
+        const utcTime = localDate.getTime()
+    
+        // Apply the desired GMT offset
+        const targetTime = utcTime + ((gmtOffset + timezoneDiff) * 3600000); // 1 hour = 3600000 milliseconds
+    
+        // Create a new Date object with the adjusted time
+        targetDate = new Date(targetTime)
+        lastSecond = targetDate.getSeconds()
+        targetDate = `${targetDate.getHours().pad(2)}:${targetDate.getMinutes().pad(2)}:${targetDate.getSeconds().pad(2)}${(Math.sign(gmtOffset) === 1) ? '+' : ''}${gmtOffset}GMT`
+        
+        return targetDate
+    }
+
+    // -------------------------------------------
+
+    setInterval(()=> {
+        if(new Date().getSeconds() !== lastSecond) qs('#localTime').innerText = setDateWithOffset(props.GMT);
+    },200)    
+    qs('#location').innerText = props.city
+    qs('#local').style.opacity = 1
+
+
+    // -------------------------------------------
+    
+    /*          Generate contact info           */
+        
+    if(getCountry().toLowerCase() == props.country.toLowerCase()) {
+        let modifiedNumber = contactInfo.tel.split(' ')
+        modifiedNumber[0] = '0'
+        contactInfo.tel = modifiedNumber.join(' ').replace(' ','')
+    }
+
+    let conInfo = qs('.contactInfo')
+    const keys = Object.keys(contactInfo);
+    keys.forEach((key,i) => {
+        let infoSpan = document.createElement('span')
+        if(contactTreatment[key].hover !== undefined) infoSpan.classList.add((contactTreatment[key].hover))
+        
+        switch(contactTreatment[key].type) {
+            case 'link':
+                infoSpan.innerText = (contactTreatment[key].text) ? contactTreatment[key].text : contactInfo[key]
+                infoSpan.setAttribute('data-cikey', key)               
+            break;
+            default:
+                infoSpan.innerText = contactInfo[key]
+        }
+        
+        if(i > 0) { let hr = document.createElement('div'); conInfo.appendChild(hr) }
+        conInfo.appendChild(infoSpan)
+
+    });    
+    qsa('.contactInfo span').forEach((ele) => {
+        
+        ele.addEventListener('click', (ev)=> {
+            let key = ev.target.dataset.cikey
+            if(key === undefined) return
+            if(contactTreatment[key].trans) {
+                linkClick.click((props.mobile) ? 'r' : 't', contactInfo[key]);
+            } else {
+                if(contactTreatment[key].func) contactTreatment[key].func(); else window.open(contactInfo[key], '_self')
+            }
+        })
+    })
+
+    // handle contact hover clicks
+    qsa('.buttonCells div').forEach((ele, index, parent) => {
+        ele.addEventListener('click', () => changeContact(ele, index, parent))
+    })
+
+    qs('#contactPlate').addEventListener('click', (event) => {
+        if(event.target.id === 'contactPlate') {
+            gsap.killTweensOf('.contactInfo')
+            gsap.to('.contactInfo', {y:window.innerHeight/2 + qs('.contactInfo').offsetHeight/2, duration: 0.3, ease: "back.in(1.4)", onComplete: ()=>{
+                qs('.contactInfo').style.transform = 'translateY(calc(50vh + 50%))'
+            } })
+            qsa('#contactPlate, .contactInfo').forEach((ele) => {
+                ele.classList.remove('contactOpen')
+            })
+        }
+    })
+    
+}
+
+function contactClickthrough(e) {
+    let mobSwitch = (props.mobile) ? 'r' : 't'
+
+    switch(e) {
+        case 0: // copy phonenumber
+        if(props.mobile) {
+            window.open(`tel:${contactInfo.tel.replace(' ','')}`,'_self')
+        } else {
+            toClipboard(contactInfo.tel) 
+        }
+        break;
+        case 1: // copy email & open email client
+        toClipboard(contactInfo.email);
+        sendEmail()
+        break;
+        case 2: // open linkedin URL
+        linkClick.click(mobSwitch, contactInfo.linkdin)
+        break;
+        default: // open contact page
+        gsap.to('.contactInfo', {y:0, duration: 1, ease: "elastic.out(1,0.5)" })
+        qsa('#contactPlate, .contactInfo').forEach((ele) => {
+            ele.classList.add('contactOpen')
+        })            
+    }
+    
+}
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1133,7 +1367,7 @@ staticHorizontal.static()
  */
 
 function floatAnimation(mt) {
-    if(mt.onScreen && props.floatOn) {
+    if(mt.onScreen) {
         mt.x += bobControls.movement*mt.movementDirectionX
         mt.y += bobControls.movement*mt.movementDirectionY
 
@@ -1145,32 +1379,6 @@ function floatAnimation(mt) {
 
 
 
-
-
-
-
-
-
-
-
-/**
- * 
- * 
- *          INTERSECT OBSERVERS
- * 
- * 
- */
-
-// default observer construct
-function observerConstructor(fc, ele, opt) {
-    // Create an Intersection Observer with the callback function and options
-    const observer = new IntersectionObserver(fc, opt);
-      
-    // Start observing each element
-    qsa(ele).forEach((element,i) => {
-      observer.observe(element);
-    });        
-}
 
 
 
@@ -1247,166 +1455,6 @@ function jumpTo(pos, behavior) {
         window.scrollTo({top: distance, behavior});
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-/**
- * 
- * 
- *          QUICK SETUP
- * 
- * 
- */
-
-function wrapProcessing() {
-
-    /*          populate float           */
-
-    qsa('.float').forEach((ele) => {
-        let tempObj = {
-            target: ele,
-            movementDirectionX: (Math.random() < 0.5) ? -1 : 1,
-            movementDirectionY: (Math.random() < 0.5) ? -1 : 1,
-            x: Math.round(Math.random()*bobControls.xMax*2)-bobControls.xMax,
-            y: Math.round(Math.random()*bobControls.yMax*2)-bobControls.yMax,
-            onScreen: false
-        }
-        float.push(tempObj)
-    });    
-
-    /*          attribute set-up            */
-
-    attributeSetup('.vel',['dur','dist'])
-    attributeSetup('.screen',['si'])
-    attributeSetup('.pushable',['amt'])
-    attributeSetup('.para',['dist'])
-
-
-    /*          screen texture allocation and sub div creation           */
-
-    function screenLoop(obj) {
-        let op = Math.random()
-        let dur = 0.2 + Math.random()
-
-        gsap.to(obj[1], {
-            opacity: 0.15 + (0.15 - op * 0.15),
-            duration: dur, 
-        })
-
-        gsap.to(obj[0], {
-            opacity: op * 0.4, 
-            onCompleteParams: [obj],
-            duration: dur, 
-            onComplete: screenLoop
-        })
-
-
-    }    
-
-    for(let ele of qsa('.screen')) {
-        let siN = 0 || ele.dataset.si;
-        wrapContent(ele, 'screenTexture')
-        screenTexture = ele.querySelector('.screenTexture')
-        screenTexture.style.background = si[siN]
-    
-        let rgb = document.createElement('div')
-        rgb.classList.add('rgb')
-
-        let grade = document.createElement('div')
-        grade.classList.add('screenGrad')
-
-        let screenGlow = document.createElement('div')
-        screenGlow.classList.add('screenGlow')
-
-        screenLoop([screenGlow,grade])
-
-        screenTexture.appendChild(grade)
-        screenTexture.appendChild(screenGlow)
-        screenTexture.appendChild(rgb)
-
-
-    }    
-
-    /*          pushable element creation           */
-
-    if(!props.mobile) {
-        for(let ele of qsa('.pushable')) {
-            wrapContent(ele, 'push')
-        }
-    }
-
-
-
-
-
-    animateScreen()
-
-    qsa(`[class*="react"]`).forEach(ele => {
-        const classList = Array.from(ele.classList);
-        const matchingClass = classList.find(className => className.includes('react'));
-        recursiveChildLoop(ele, matchingClass)
-    })
-
-    qsa('img').forEach(ele => ele.setAttribute('draggable', false))
-
-    qsa('.boldText').forEach(v => v.parentElement.classList.add('seperate'))
-
-    if(qsa('.bht').length > 0) {
-        attributeSetup('.bht',['track'])
-        qsa('.bht').forEach((v,i) => {
-            v.style.height =v.dataset.track+'vh'
-            bht.scenes[`scene${i}`] = {
-                target: v
-            }
-
-    
-            function bhtIntersect(e, observer) {
-                bht.visible = null
-                e.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const foundChildKey = 
-                        bht.visible = Object.keys(bht.scenes).find(childKey => {
-                            const subpropertyValue = bht.scenes[childKey].target;
-                            if(subpropertyValue === entry.target) return `scene${childKey}`;
-                          });
-                    } 
-                });
-
-            }
-
-            observerConstructor(bhtIntersect, '.bht', {
-                rootMargin:'50% 0% 50% 0%'
-            })            
-        })
-
-        bht.scrubbing = function() {
-            if(bht.visible == null) return;
-            const boundingBox = bht.scenes[bht.visible].target.getBoundingClientRect();
-            const T = boundingBox.top;
-            const H = boundingBox.height;
-            const VH = window.innerHeight;
-            let percentage = Math.max(0, Math.min(1,(T / (H - VH) * -1)))
-            let length = bht.scenes[bht.visible].timeline._tDur
-            bht.scenes[bht.visible].timeline.seek(length*percentage)
-        }
-
-
-    }
-}
-
-
-
-
-
-
 
 
 
@@ -1960,9 +2008,59 @@ function drawFrame() {
 
 
 
+function load() {
+    const url = new URL(window.location.href);
+
+    // Get the search parameters
+    const searchParams = url.searchParams;
+    searchParams.forEach((v,k) => {
+        switch(k) {
+            case 'msg':
+
+                let j = (qs(`#${v}`) === null) ? qs('#wrapper') : qs(`#${v}`)
+                jumpTo(j,'instant')
+            break;
+        }
+    })
+
+    if(typeof uResizer === 'function') uResizer()
+    
+    document.querySelector('#blocker').style.background = "none"
+    if(internalRedirect) {
+        (props.mobile) ? linkClick.fromClicked('r') : linkClick.fromClicked('t')
+        setTimeout(()=>{if(typeof uResizer === 'function') uLoaded()},300)
+        props.loaded = true
+    } else {
+        if(typeof uResizer === 'function') uLoaded()
+        props.loaded = true
+    }
 
 
+    qsa('.screen').forEach(v => {
+        let si = parseInt(v.dataset.si) || 0
+        let si1 = (si+1) % (siV.length-1)
 
+        v.querySelector('.backV').src = siV[si]
+        v.querySelector('.frontV').src = siV[si1]
+        
+    })
+
+}
+
+window.onload = function() {
+    console.log('onload')
+    load()
+}
+
+window.addEventListener('popstate', (event) => {
+    console.log('popstate')
+    load()
+});
+
+window.addEventListener("hashchange", function(e) {
+    console.log('hashchange')
+    if(e.oldURL.length > e.newURL.length) load()
+});
 
 /*
 

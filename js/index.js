@@ -18,7 +18,7 @@ function processElements() {
     props.projectIMG = []
     projectManifest.forEach((v,i) => {
 
-        let titleDashed = v.title.toLowerCase().replaceAll(' ','-')
+        let titleDashed = v.title.toLowerCase().replaceAll(' ','-').replaceAll(':','')
 
         // create and tag - project
         let project = document.createElement('div')
@@ -33,7 +33,8 @@ function processElements() {
         img.onerror = function() {
             this.src = './img/test.jpg'
         }
-        img.src = `./projects/title-${titleDashed}.jpg`;
+        console.log(titleDashed)
+        img.src = `/projects/${titleDashed}/title.jpg`;
         img.setAttribute('data-projectIndex', i+1)
         reveal.appendChild(img)
 
@@ -140,42 +141,42 @@ function processElements() {
             duration:0.3,
         },0)
 
-        props.introTL.from(qsa('.sh1')[0], {
-            y:'-1rem',
-            x:'-5rem',
-            scale:0.45,
-            duration:0.3,
-        },0)
+        // props.introTL.from(qsa('.sh1')[0], {
+        //     y:'-1rem',
+        //     x:'-5rem',
+        //     scale:0.45,
+        //     duration:0.3,
+        // },0)
 
 
-        props.introTL.from(qsa('.sh1')[1], {
-            y:'-3rem',
-            x:'5rem',
-            scale:0.6,
-            duration:0.3,
-        },0)
+        // props.introTL.from(qsa('.sh1')[1], {
+        //     y:'-3rem',
+        //     x:'5rem',
+        //     scale:0.6,
+        //     duration:0.3,
+        // },0)
 
-        props.introTL.from(qsa('.sh1')[2], {
-            y:'-3rem',
-            x:'-17rem',
-            scale:0.6,
-            duration:0.3,
-        },0)
+        // props.introTL.from(qsa('.sh1')[2], {
+        //     y:'-3rem',
+        //     x:'-17rem',
+        //     scale:0.6,
+        //     duration:0.3,
+        // },0)
 
 
-        props.introTL.from(qsa('.sh1')[3], {
-            y:'-3rem',
-            x:'-17rem',
-            scale:0.5,
-            duration:0.3,
-        },0) 
+        // props.introTL.from(qsa('.sh1')[3], {
+        //     y:'-3rem',
+        //     x:'-17rem',
+        //     scale:0.5,
+        //     duration:0.3,
+        // },0) 
         
-        props.introTL.from(qsa('.sh1')[4], {
-            y:'-8rem',
-            x:'6rem',
-            scale:0.5,
-            duration:0.3,
-        },0)          
+        // props.introTL.from(qsa('.sh1')[4], {
+        //     y:'-8rem',
+        //     x:'6rem',
+        //     scale:0.5,
+        //     duration:0.3,
+        // },0)          
 
 
         props.introTL.from('#desktopFigure', {
@@ -186,38 +187,38 @@ function processElements() {
             duration:0.3,
         },0)
 
-        props.introTL.from(qsa('.sh2')[0], {
-            y:'35rem',
-            x:'10rem',
-            scale:1.6,
-            filter:'blur(6px)',
-            duration:0.3,
-        },0)
+        // props.introTL.from(qsa('.sh2')[0], {
+        //     y:'35rem',
+        //     x:'10rem',
+        //     scale:1.6,
+        //     filter:'blur(6px)',
+        //     duration:0.3,
+        // },0)
 
-        props.introTL.from(qsa('.sh2')[1], {
-            y:'35rem',
-            x:'-2rem',
-            scale:1.8,
-            filter:'blur(6px)',
-            duration:0.3,
-        },0)
+        // props.introTL.from(qsa('.sh2')[1], {
+        //     y:'35rem',
+        //     x:'-2rem',
+        //     scale:1.8,
+        //     filter:'blur(6px)',
+        //     duration:0.3,
+        // },0)
 
 
-        props.introTL.from(qsa('.sh2')[2], {
-            y:'7rem',
-            x:'12rem',
-            scale:1.9,
-            filter:'blur(9px)',
-            duration:0.3,
-        },0)        
+        // props.introTL.from(qsa('.sh2')[2], {
+        //     y:'7rem',
+        //     x:'12rem',
+        //     scale:1.9,
+        //     filter:'blur(9px)',
+        //     duration:0.3,
+        // },0)        
 
-        props.introTL.from(qsa('.sh2')[3], {
-            y:'47rem',
-            x:'62rem',
-            scale:1.9,
-            filter:'blur(9px)',
-            duration:0.3,
-        },0)
+        // props.introTL.from(qsa('.sh2')[3], {
+        //     y:'47rem',
+        //     x:'62rem',
+        //     scale:1.9,
+        //     filter:'blur(9px)',
+        //     duration:0.3,
+        // },0)
 
         props.introTL.timeScale(0.5)
     }
@@ -384,7 +385,7 @@ function intersections() {
     
     function floatIntersect(e, observer) {
         e.forEach(entry => {
-            const matchingIndex = float.findIndex((obj) => obj.target === entry.target);
+            const matchingIndex = float.findIndex((obj) => obj.target === entry.target)
             if (entry.isIntersecting) {
                 float[matchingIndex].onScreen = true
             } else {
@@ -450,11 +451,11 @@ function intersections() {
         rootMargin: '20% 0% 20% 0%'
     })
 
-    if(props.mobile) observerConstructor(projectIntersect, '.project',  {
+    observerConstructor(projectIntersect, '.project',  {
         rootMargin: '-50% 0% -50% 0%'
     })
 
-    observerConstructor(floatIntersect, '.float', {
+    observerConstructor(floatIntersect, '.floated', {
         rootMargin: '0% 0% 0% 0%'
     })
     

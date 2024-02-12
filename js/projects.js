@@ -17,41 +17,6 @@ function processElements() {
     let imz = ['../img/test.jpg', '../img/test.jpg', '../img/test.jpg', '../img/test.jpg', '../img/test.jpg', '../img/test.jpg', '../img/test.jpg', '../img/test.jpg', '../img/test.jpg', '../img/test.jpg']
 //    gal.setup(imz, qs('#gal'), true)
 
-    /*          sizing issues           */
-    qs('#buttonText').style.width = qs('#buttonText .defaultState').clientWidth+'px'
-
-
-    /*          generateScreens to titles           */
-
-//    generateScreen(qs('.secHeader'))
-
-
-    /*          populate float           */
-
-    qsa('.float').forEach((ele) => {
-        let tempObj = {
-            target: ele,
-            movementDirectionX: (Math.random() < 0.5) ? -1 : 1,
-            movementDirectionY: (Math.random() < 0.5) ? -1 : 1,
-            x: Math.round(Math.random()*bobControls.xMax*2)-bobControls.xMax,
-            y: Math.round(Math.random()*bobControls.yMax*2)-bobControls.yMax,
-            onScreen: false
-        }
-        float.push(tempObj)
-    });    
-    
-
-    /*          Velocity and parallax setup attribute setup           */
-
-
-
-    /*          screen texture allocation and sub div creation           */
-
-    for(let ele of qsa('.screen')) {
-        let siN = 0 || ele.dataset.si;
-        wrapContent(ele, 'screenTexture')
-        ele.querySelector('.screenTexture').style.background = si[siN]
-    } 
 
 
     /*          pushable element creation           */
