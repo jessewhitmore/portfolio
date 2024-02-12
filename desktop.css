@@ -38,7 +38,7 @@
 
 
     .desktopHeader {
-        font-size: clamp(0.3rem, 1.4vh, 1rem);
+        font-size: clamp(0.3rem, 1.4vh, 1.21rem);
 
         display: flex;
         justify-content: center;
@@ -131,7 +131,7 @@
         top: 52em; /* Converted from 200px to rem */
         margin-left: 8rem; /* Converted from 80px to rem */
     
-        width: 15em; /* Converted from 120px to rem */
+        width: 17em; /* Converted from 120px to rem */
     
         aspect-ratio: 7.5/3.75;
         transform: translate(-50%, -50%);
@@ -139,29 +139,29 @@
     
     
     #header .headerSections:nth-child(1) > .screen:nth-child(7) {
-        top: 62em; /* Converted from 200px to rem */
+        top: 64em; /* Converted from 200px to rem */
         margin-left: -65em; /* Converted from 80px to rem */
     
-        width: 12em; /* Converted from 120px to rem */
+        width: 20em; /* Converted from 120px to rem */
         aspect-ratio: 7.5/3.75;
         transform: translate(-50%, -50%);
     }    
 
     #header .headerSections:nth-child(1) > .screen:nth-child(10) {
-        top: 25em; /* Converted from 200px to rem */
+        top: 24em; /* Converted from 200px to rem */
         margin-left: 17.5em; /* Converted from 80px to rem */
     
-        width: 12em; /* Converted from 120px to rem */
+        width: 13em; /* Converted from 120px to rem */
         aspect-ratio: 7.5/4;
         transform: translate(-50%, -50%);
 
     }
 
     #header .headerSections:nth-child(1) > .screen:nth-child(11) {
-        top: 43em; /* Converted from 200px to rem */
-        margin-left: 95em; /* Converted from 80px to rem */
+        top: 47em; /* Converted from 200px to rem */
+        margin-left: 99em; /* Converted from 80px to rem */
     
-        width: 10em; /* Converted from 120px to rem */
+        width: 14em; /* Converted from 120px to rem */
         aspect-ratio: 6.5/3.5;
         transform: translate(-50%, -50%);
 

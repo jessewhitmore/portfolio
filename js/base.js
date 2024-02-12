@@ -948,13 +948,14 @@ function processScreens(ele) {
 
     wrapContent(generatedScreen, 'screenTexture')
     screenTexture = ele.querySelector('.screenTexture')
+    screenTexture.style.overflow =  'hidden'
 
-    batchSet(screenTexture,'style',{
+    let fallbackELE = document.createElement('div')
+    batchSet(fallbackELE, 'style', {
         background: (randomChance(50)) ? 'url(/assets/screens/bars.gif)' :  'url(/assets/screens/static.gif)',
-        backgroundSize: 'cover',
-        overflow: 'hidden'
-    });
-
+        backgroundSize: 'cover'
+    })
+    
     // create the RGB banding
     let rgb = document.createElement('div')
     rgb.classList.add('rgb')
@@ -988,6 +989,7 @@ function processScreens(ele) {
     screenVid.classList.add('frontV')
 
     // attach everything
+    screenTexture.appendChild(fallbackELE)
     screenTexture.appendChild(backVid)
     screenTexture.appendChild(screenVid)
     screenTexture.appendChild(grade)
@@ -1000,26 +1002,26 @@ function processScreens(ele) {
     screens.push(tempObj)
 }
 
+
+
+
 function animateScreen() {
     /*          Screen related           */
 
-    let siG = 0, 
-    autoChangeTimeout = null,
-    firstAuto = 1000
-
+    let siG = 0;
+    let autoChangeTimeout = null;
 
     // -------------
 
     // randomly flicker to new screen texture
 
-    function autoChange() {
+
+    function autoChange(T) {
         autoChangeTimeout = setTimeout( () => {
             changeScreen(Math.floor(qsa('.screen').length*Math.random()),'autoed');
-            firstAuto = 15000;
-            autoChange();
-        },firstAuto + 5000*Math.random());
-    } 
-
+            autoChange(15000);
+        },T + 5000*Math.random());
+    } autoChange(2500)
 
     // -------------
     
@@ -1051,14 +1053,14 @@ function animateScreen() {
 
         if(siG % 2 > 0) {
             gsap.set(frontV, {autoAlpha:0})
-            frontV.load()
             frontV.src = siV[(siN+1) % si.length]
+            frontV.load()
             frontV.currentTime = 5 * Math.random()
             frontV.pause()
         } else {
             gsap.set(frontV, {autoAlpha:1})
-            backV.load()
             backV.src = siV[(siN+1) % si.length]
+            backV.load()
             frontV.currentTime = 5 * Math.random()
             backV.pause()
         }        
@@ -1066,7 +1068,7 @@ function animateScreen() {
 
     function flickerScreens(ele, index, i) {
         let toggle = siG % 2
-        let intN = 2 + Math.floor(Math.random() * 5)
+        let intN = 2 + Math.floor(Math.random() * 3)
         let delay = Math.abs(index - i) * 200 * Math.random()/1000
 
         let frontV = ele.querySelector('.frontV')
@@ -1099,16 +1101,16 @@ function animateScreen() {
     function changeScreen(i) {
         if(siLock) return;
         siLock = true;
-        if(push.target !== undefined) if(push.target.classList.contains('screenTexture')) qs('#mousePointer').classList = null
+        if(props.mouse.target !== undefined) if(props.mouse.target.classList.contains('generatedScreen')) mouseEle.classList = null
         clearTimeout(autoChangeTimeout)
-        // autoChange()
+        autoChange()
         siG++;
     
         screens.forEach((ele, index) => flickerScreens(ele.target, index, i ))
 
         setTimeout(()=>{
             siLock = false; 
-            if(push.target !== undefined && push.target.classList.contains('screenTexture')) qs('#mousePointer').classList = 'react-play'
+            if(props.mouse.target !== undefined) if(props.mouse.target.classList.contains('generatedScreen')) mouseEle.classList = 'react-play'
         },1500)
     } 
     
@@ -1117,7 +1119,6 @@ function animateScreen() {
     qsa('.screen').forEach((ele, index) => {
         ele.addEventListener('click', () => changeScreen(index));
     })
-    autoChange()
 
 }
 
@@ -1561,7 +1562,7 @@ function mouse(PN, rf) {
     let interactable = arrayClassList.some(className => className.includes('react'))
 
     // mousePointer indicator change
-    if(interactable && !(classList.contains('screenTexture') && siLock)) {
+    if(interactable && !(classList.contains('generatedScreen') && siLock)) {
         const matchingClass = arrayClassList.find(className => className.includes('react'))
         mouseEle.classList = matchingClass
     } else {
@@ -2037,16 +2038,31 @@ function load() {
         if(typeof uResizer === 'function') uLoaded()
         props.loaded = true
     }
+    setTimeout(()=>{
+        qsa('.screen').forEach(v => {
+            let si = parseInt(v.dataset.si) || 0
+            let si1 = (si+1) % (siV.length-1)
+            let backV = v.querySelector('.backV')
+            let frontV = v.querySelector('.frontV')
+
+            gsap.set([backV, frontV], {autoAlpha:0})
+            backV.src = siV[si]
+            backV.load()
+
+            frontV.src = siV[si1]
+
+            setTimeout(()=>{
+                gsap.set(backV, {autoAlpha:1})
+            },12000)
+
+            backV.addEventListener('play', function(event) {
+                setTimeout(()=>gsap.set(event.target, {autoAlpha:1}),250)
+            });            
+        })
+
+    },10)
 
 
-    qsa('.screen').forEach(v => {
-        let si = parseInt(v.dataset.si) || 0
-        let si1 = (si+1) % (siV.length-1)
-
-        v.querySelector('.backV').src = siV[si]
-        v.querySelector('.frontV').src = siV[si1]
-        
-    })
 
 }
 

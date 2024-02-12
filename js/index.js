@@ -33,7 +33,7 @@ function processElements() {
         img.onerror = function() {
             this.src = './img/test.jpg'
         }
-        console.log(titleDashed)
+
         img.src = `/projects/${titleDashed}/title.jpg`;
         img.setAttribute('data-projectIndex', i+1)
         reveal.appendChild(img)
@@ -127,7 +127,11 @@ function processElements() {
 
     if(!props.mobile) {
         props.floatOn = false;
-        props.introTL = gsap.timeline({paused:true, onComplete: ()=> {props.floatOn = true}})
+        props.introTL = gsap.timeline({
+            paused: true,
+            onComplete: ()=> {props.floatOn = true}
+        })
+
 
         props.introTL.from('.bg', {
             scale:1.8,
@@ -135,92 +139,93 @@ function processElements() {
         },0)
         
         props.introTL.from('#desktopNamePlate', {
-            y:'-10rem',
-            x:'-10rem',
-            scale:0.6,
+            ease: "power2.out",
+            z:-600,
             duration:0.3,
         },0)
 
-        // props.introTL.from(qsa('.sh1')[0], {
-        //     y:'-1rem',
-        //     x:'-5rem',
-        //     scale:0.45,
-        //     duration:0.3,
-        // },0)
 
 
-        // props.introTL.from(qsa('.sh1')[1], {
-        //     y:'-3rem',
-        //     x:'5rem',
-        //     scale:0.6,
-        //     duration:0.3,
-        // },0)
 
-        // props.introTL.from(qsa('.sh1')[2], {
-        //     y:'-3rem',
-        //     x:'-17rem',
-        //     scale:0.6,
-        //     duration:0.3,
-        // },0)
+        props.introTL.from(qsa('.sh1')[0], {
+            ease: "back.out(3)",
+            scaleY:0,
+            duration:0.25,
+            delay: 0.35
+        },0)
 
 
-        // props.introTL.from(qsa('.sh1')[3], {
-        //     y:'-3rem',
-        //     x:'-17rem',
-        //     scale:0.5,
-        //     duration:0.3,
-        // },0) 
+        props.introTL.from(qsa('.sh1')[1], {
+            ease: "back.out(3)",
+            scaleY:0,
+            duration:0.25,
+            delay: 0.4
+        },0)
+
+        props.introTL.from(qsa('.sh1')[2], {
+            ease: "back.out(3)",
+            scaleY:0,
+            duration:0.25,
+            delay: 0.5
+        },0)
+
+
+        props.introTL.from(qsa('.sh1')[3], {
+            ease: "back.out(3)",
+            scaleY:0,
+            duration:0.25,
+            delay: 0.3
+        },0)
         
-        // props.introTL.from(qsa('.sh1')[4], {
-        //     y:'-8rem',
-        //     x:'6rem',
-        //     scale:0.5,
-        //     duration:0.3,
-        // },0)          
+
+        props.introTL.from(qsa('.sh1')[4], {
+            ease: "back.out(3)",
+            scaleY:0,
+            duration:0.25,
+            delay: 0.25
+        },0)        
+
 
 
         props.introTL.from('#desktopFigure', {
-            y:'30rem',
-            x:'40rem',
-            scale:1.5,
-            filter:'blur(5px)',
+            ease: "power2.out",
+            z:200,
+        //    filter:'blur(5px)',
             duration:0.3,
         },0)
 
-        // props.introTL.from(qsa('.sh2')[0], {
-        //     y:'35rem',
-        //     x:'10rem',
-        //     scale:1.6,
-        //     filter:'blur(6px)',
-        //     duration:0.3,
-        // },0)
+   
 
-        // props.introTL.from(qsa('.sh2')[1], {
-        //     y:'35rem',
-        //     x:'-2rem',
-        //     scale:1.8,
-        //     filter:'blur(6px)',
-        //     duration:0.3,
-        // },0)
+        props.introTL.from(qsa('.sh2')[0], {
+            ease: "power2.out",
+            z:300,
+ //           filter:'blur(6px)',
+            duration:0.4,
+        },0)
 
+        props.introTL.from(qsa('.sh2')[1], {
+            ease: "power2.out",
+            z:300,
+//            filter:'blur(6px)',
+            duration:0.15,
+        },0)
 
-        // props.introTL.from(qsa('.sh2')[2], {
-        //     y:'7rem',
-        //     x:'12rem',
-        //     scale:1.9,
-        //     filter:'blur(9px)',
-        //     duration:0.3,
-        // },0)        
+        props.introTL.from(qsa('.sh2')[2], {
+            ease: "power2.out",
+            z:400,
+//            filter:'blur(9px)',
+            duration:0.5,
+        },0)        
 
-        // props.introTL.from(qsa('.sh2')[3], {
-        //     y:'47rem',
-        //     x:'62rem',
-        //     scale:1.9,
-        //     filter:'blur(9px)',
-        //     duration:0.3,
-        // },0)
+        props.introTL.from(qsa('.sh2')[3], {
+            ease: "power2.out",
+            z:400,
+//            filter:'blur(9px)',
+            duration:0.4,
+//            delay: 0.5
+        },0)
 
-        props.introTL.timeScale(0.5)
+        props.introTL.timeScale(0.8)
     }
 
 
@@ -265,7 +270,7 @@ function processElements() {
 
 
 function uLoaded() {
-    props.introTL.play()
+    if(!props.mobile) props.introTL.play()
 }
 
 
