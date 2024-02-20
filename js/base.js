@@ -2038,7 +2038,8 @@ function load() {
         props.loaded = true
     } else {
 
-        document.querySelector('.linkClick').style.transform = "scale(0)"        
+        document.querySelector('.linkClick').style.transform = "scale(0)"
+        document.querySelector('.linkClick').style.background = 'red' 
 
         if(typeof uResizer === 'function') uLoaded()
         props.loaded = true
