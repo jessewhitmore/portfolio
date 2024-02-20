@@ -59,6 +59,23 @@ function processElements() {
     
     wrapProcessing()
 
+
+    let buttonShaS = 7; // Adjust this variable as needed
+    let buttonSha = `-${0.0625 / buttonShaS}em -${0.0625 / buttonShaS}em 0 rgba(255,255,255, 0.2),
+                  ${0.0625 / buttonShaS}em -${0.0625 / buttonShaS}em 0 rgba(255,255,255, 0.3),
+                  -${0.0625 / buttonShaS}em ${0.0625 / buttonShaS}em 0 rgba(255,255,255, 0.2),
+                  ${0.0625 / buttonShaS}em ${0.0625 / buttonShaS}em 0 rgba(255,255,255, 0.3),
+                  0 -${0.125 / buttonShaS}em ${1.2 / buttonShaS}em,
+                  0 0 ${0.125 / buttonShaS}em,
+                  0 0 ${0.3125 / buttonShaS}em rgba(255,126,0,0.5),
+                  0 0 ${5.9375 / buttonShaS}em rgba(255, 68, 68,0.6),
+                  0 0 ${0.125 / buttonShaS}em rgba(255,126,0,0.5),
+                  0 ${0.125 / buttonShaS}em ${0.1875 / buttonShaS}em rgba(0,0,0,0.7)`;    
+    qsa('#projectNavigator .button').forEach(v => {
+        v.style.boxShadow = buttonSha
+    })
+
+
     
     props.parallax =  qsa('.para')
     const windowHeight = window.innerHeight

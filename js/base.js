@@ -440,11 +440,24 @@ let techMenuContent = [
 ]
 techMenuContent.forEach(v =>  menuBuilder(v.content, v.id, techMenuEle, v.react, v.state))
 
+let menuSize = 5; // Adjust this variable as needed
+let menuSha = `-${0.0625 / menuSize}em -${0.0625 / menuSize}em 0 rgba(255,255,255, 0.2),
+              ${0.0625 / menuSize}em -${0.0625 / menuSize}em 0 rgba(255,255,255, 0.3),
+              -${0.0625 / menuSize}em ${0.0625 / menuSize}em 0 rgba(255,255,255, 0.2),
+              ${0.0625 / menuSize}em ${0.0625 / menuSize}em 0 rgba(255,255,255, 0.3),
+              0 -${0.125 / menuSize}em ${1.2 / menuSize}em,
+              0 0 ${0.125 / menuSize}em,
+              0 0 ${0.3125 / menuSize}em rgba(255,126,0,0.5),
+              0 0 ${5.9375 / menuSize}em rgba(255, 68, 68,0.6),
+              0 0 ${0.125 / menuSize}em rgba(255,126,0,0.5),
+              0 ${0.125 / menuSize}em ${0.1875 / menuSize}em rgba(0,0,0,0.7)`;    
 
 if(props.mobile) {
 
     // set-up mobile menu
-    menuEle.classList.add('vel','float','dur1000','dist20')
+    menuEle.style.boxShadow = menuSha
+
+    menuEle.classList.add('vel','dur1000','dist20')
     menuEle.id = 'menu'
     menuEle.innerText = "|||"
     wrapper.appendChild(menuEle)
@@ -466,6 +479,7 @@ if(props.mobile) {
 
     let hoverScreen = document.createElement('div')
     hoverScreen.classList.add('menuScreen','vel','dur1000','dist20')
+    hoverScreen.style.boxShadow = menuSha
     menuEle.appendChild(hoverScreen)
     let MenuContent = [
         { content: 'HOME', id: 'menu-header' },
@@ -614,6 +628,12 @@ linkClick.click = function(dir,link, postMessage, dur) {
                 if(postMessage !== undefined) link += `?msg=${postMessage.toLowerCase()}`
                 window.open(link,"_self")
             }
+            setTimeout(() => {
+                gsap.set('.linkClick', {
+                    scaleX: 0,
+                    scaleY: 0
+                })
+            },500) 
         }
     })
 }
