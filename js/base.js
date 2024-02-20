@@ -2018,7 +2018,6 @@ function load() {
     // Get the search parameters
     const searchParams = url.searchParams;
 
-    console.log(searchParams)
     searchParams.forEach((v,k) => {
         switch(k) {
             case 'msg':
@@ -2033,12 +2032,12 @@ function load() {
     
     document.querySelector('#blocker').style.background = "none"
 
-    console.log(document.querySelector('#blocker'))
     if(internalRedirect) {
         (props.mobile) ? linkClick.fromClicked('r') : linkClick.fromClicked('t')
         setTimeout(()=>{if(typeof uResizer === 'function') uLoaded()},300)
         props.loaded = true
     } else {
+        console.log('here now')
         if(typeof uResizer === 'function') uLoaded()
         props.loaded = true
     }
