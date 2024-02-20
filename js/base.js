@@ -657,11 +657,12 @@ linkClick.centerSweep = function(pos, link, dur) {
         } else {
             window.open(link,"_self")
         }
-
-        gsap.set('.linkClick', {
-            scaleX: 0,
-            scaleY: 0
-        })      
+        setTimeout(() => {
+            gsap.set('.linkClick', {
+                scaleX: 0,
+                scaleY: 0
+            })
+        },500) 
     }
     })
 }
