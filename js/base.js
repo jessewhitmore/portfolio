@@ -638,6 +638,8 @@ linkClick.centerSweep = function(pos, link, dur) {
         ease: "power1.inOut"
     })
 
+    console.log('firing')
+
     gsap.to(moveVal, {
     value: this.height * 1.1 + pos,
     duration: dur * 2,         // Duration of the animation in seconds
