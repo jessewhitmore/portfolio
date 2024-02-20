@@ -270,7 +270,7 @@ function processElements() {
 
 
 function uLoaded() {
-    if(!props.mobile) props.introTL.play()
+    
 }
 
 

@@ -1438,6 +1438,7 @@ function scrollVelocity(PN, rf) {
 
 
 function jumpTo(pos, behavior) {
+    
 
     behavior = behavior || 'smooth'
 
@@ -1559,49 +1560,51 @@ function mouse(PN, rf) {
 
 
     // interactable over mousePointer
-    let classList = pm.target.classList
-    let arrayClassList = Array.from(classList)
-    let interactable = arrayClassList.some(className => className.includes('react'))
+    if(pm.target.classList !== undefined) {
+        let classList = pm.target.classList
+        let arrayClassList = Array.from(classList)
+        let interactable = arrayClassList.some(className => className.includes('react'))
 
-    // mousePointer indicator change
-    if(interactable && !(classList.contains('generatedScreen') && siLock)) {
-        const matchingClass = arrayClassList.find(className => className.includes('react'))
-        mouseEle.classList = matchingClass
-    } else {
-        mouseEle.classList = null
-    }
+        // mousePointer indicator change
+        if(interactable && !(classList.contains('generatedScreen') && siLock)) {
+            const matchingClass = arrayClassList.find(className => className.includes('react'))
+            mouseEle.classList = matchingClass
+        } else {
+            mouseEle.classList = null
+        }
 
-    if(props.performanceHandling.highlightEffect) {
+        if(props.performanceHandling.highlightEffect) {
 
-        // do highlight on elements    
-        let hlh = qsa('.highlightHover')
-        if(interactable) {
-            // check if this has been run before
-            if(pm.lastTarget !== pm.target) {
+            // do highlight on elements    
+            let hlh = qsa('.highlightHover')
+            if(interactable) {
+                // check if this has been run before
+                if(pm.lastTarget !== pm.target) {
+                    hlh.forEach((ele) => {
+                        ele.classList.remove('highlightHover')
+                    })
+
+                    // do a check over contact bar
+                    if(pm.target.parentNode.classList.contains('buttonCells')) { 
+                        qs('#buttonText').classList.add('highlightHover')
+                        classList.add('highlightHover')
+                    } else if(pm.target.parentNode.id === "buttonText") {
+                        pm.target.parentNode.classList.add('highlightHover')
+                        if(!classList.contains('defaultState')) {
+                            qs(`#${arrayClassList.find(className => className !== 'highlightHover')}`).classList.add('highlightHover')
+                        }
+                    } else {
+                        classList.add('highlightHover')
+                    }
+                }
+            // clear all hlh lights if no interactable
+            } else if(hlh.length > 0) {
                 hlh.forEach((ele) => {
                     ele.classList.remove('highlightHover')
                 })
-
-                // do a check over contact bar
-                if(pm.target.parentNode.classList.contains('buttonCells')) { 
-                    qs('#buttonText').classList.add('highlightHover')
-                    classList.add('highlightHover')
-                } else if(pm.target.parentNode.id === "buttonText") {
-                    pm.target.parentNode.classList.add('highlightHover')
-                    if(!classList.contains('defaultState')) {
-                        qs(`#${arrayClassList.find(className => className !== 'highlightHover')}`).classList.add('highlightHover')
-                    }
-                } else {
-                    classList.add('highlightHover')
-                }
             }
-        // clear all hlh lights if no interactable
-        } else if(hlh.length > 0) {
-            hlh.forEach((ele) => {
-                ele.classList.remove('highlightHover')
-            })
-        }
 
+        }
     }
 
     // handle contact click as a hover when on pc
@@ -2023,7 +2026,6 @@ function load() {
     searchParams.forEach((v,k) => {
         switch(k) {
             case 'msg':
-
                 let j = (qs(`#${v}`) === null) ? qs('#wrapper') : qs(`#${v}`)
                 jumpTo(j,'instant')
             break;
