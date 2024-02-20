@@ -9,14 +9,14 @@
     top:66.5vh;
 
     height:0;
-    width:clamp(0px, calc(100vw - 2rem), 85em);
+    width:clamp(0px, calc(100vw - 4rem), 85em);
     
     margin-left:calc(50% - 1rem);
     transform:translateX(-50%);
 }
 
 .baseline {
-    width:clamp(0px, calc(100vw - 2rem), 7em);
+    width:clamp(0px, calc(100vw - 4rem), 7em);
     position: absolute;
     bottom:0;
 }
@@ -39,7 +39,7 @@
     height:100%;
 
     text-align: center;
-    padding: 3em 0;
+    padding: 3em 0.8em;
 
 }
 

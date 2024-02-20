@@ -19,95 +19,121 @@
 
     <div id="wrapper">
 
-      <div id="projectHeader" class = "sectionAuto">
-        <div id="headerImage" class="section50">  </div>
+      <div id="subpageHeader" class = "section">
+        <div id="headerImage" class="section60">
+          <img class = 'para dist50' src="./dog-system/header.png" />
+          <div class="shade"></div>
+        </div>
+        <div class = "secHeader"><span class="baseline ignite">Amazon Black Friday</span></div>
+        <div class="statsBar">
+          <div id="role">
+            <span class="statHeader">Role</span>
+            <span class="statData">Solo Project</span>
+          </div>
+          <divider></divider>
+          <div id="for">
+            <span class="statHeader">FOR</span>
+            <span class="statData">PLAYGROUND XYZ</span>
+          </div>
+          <divider></divider>
+          <div id="with">
+            <span class="statHeader">WITH</span>
+            <span class="statData">Solo Project</span>
+          </div>
+          <divider></divider>
+          <div id="read">
+            <span class="statHeader">LENGTH</span>
+            <span class="statData">22.9min read</span>
+          </div>
+        </div>
         <div class="copy">
-          <div class = "HEADER">Amazon Black Friday</div>
-          <div class = "SUBHEADER">Role</div>
-          <p>Project Manager
-          </br>Front-end developer</p>
-          <div class = "SUBHEADER">Technical Terminology</div>
+          <div class = "subHeader">Technical Terminology</div>
           <p>List of terms used within this case study that are not layman's terms parlance 
           </br><span class = "boldText">API:</span> Application Programming Interface - A set of rules allowing different software applications to communicate with a system to retrieve specific data.
           </br><span class = "boldText">WebSocket:</span> A protocol for real-time, bidirectional communication between clients and servers over a single connection.
           </br><span class = "boldText">CORS:</span> Cross-Origin Resource Sharing - A browser security feature managing cross-origin HTTP requests for web applications.</p>
-          <div class = "SUBHEADER">The Problem</div>
+          <div class = "subHeader">The Problem</div>
           <p>Faced with the immense competition of Black Friday, Amazon sought not just to participate but to redefine online purchase in the Australian market as the recent newcomer. Eager to make an indelible mark, the challenge was to craft a first-to-market initiative that would allow Amazon the opportunity to ensure their brand was as trusted in Australia as it is abroad.</p>
-          <div class = "SUBHEADER">The Investigation</div>
+          <div class = "subHeader">The Investigation</div>
           <p>Faced with the challenge of showcasing Amazon’s reputation for competitive pricing, where prices could not be supplied for use in out-of-home as the company lacked direct control over prices; and contending with stringent legal requirements for accurate pricing and stock levels, an idea was born. We planned on leveraging the Amazon API to dynamically fetch real-time stock levels and precise pricing information. To guarantee accuracy, a timestamp mechanism was proposed, cross-referencing the data with the internal time of the ad units. It was my belief that enough safety measures could be implemented to assure that Amazon strict legal requirements could be met to ensure an accurate campaign.</p>
-          <div class = "SUBHEADER">The Development</div>
+          <div class = "subHeader">The Development</div>
           <p>Collaborating closely with developers, the challenge was to devise a method for data polling within the constrained environment of a JCDecaux digital screen. These screens operated on a paired-down Linux box without a live browser, rather launching a saved HTML file directly from the desktop, posing substantial CORS (Cross-Origin Resource Sharing) issues. The ingenious solution involved utilising WebSocket-based chat protocols to inject a JavaScript file housing a manifest and updated price list. In my role as a project manager, I ensured all legal requirements were met for Amazon, incorporating fail-safes like a default message in case of manifest polling issues and skipping out-of-stock products. Adding a layer of client flexibility, a bespoke system was established, allowing them to change the showcased product on the fly during the campaign.</p>
-          <div class = "SUBHEADER">The Solution</div>
+          <div class = "subHeader">The Solution</div>
           <p>This campaign was groundbreaking for Amazon, a solution which was a world-first for Amazon. The live pricing fetching, a pioneering achievement for their company, not even performed within the more logical digital advertising space. All other providers had been unable to reach the high bar set by the Amazon team. The green light for this unique initiative attests to my ability to navigate complexities, push boundaries, and build confidence in others to deliver an unprecedented and impactful campaigns.</p>          
+          <div id="projectNavigator">
+            <div class="info ignite mobileOnly">Want to</br>see more?</div>
+            <div class="previous react-open">
+              <div class="button vel dur800 dist10"><</div>
+            </div>
+            <div class="info ignite desktopOnly">Want to</br>see more?</div>
+            <div class="next react-open">
+              <div class="button vel dur800 dist10">></div>
+
+            </div>
+          </div>
         </div>
       </div>
 
-      <div id="contact" class = "section void">
-        <canvas class = "staticBlocksH" width = "800" height="400" ></canvas>
-
-        <div class="contactMax">
-
-          <div class="screen selOff float vel dur800 dist50 pushable react-play"> </div>
-          <div class="screen selOff float vel dur800 dist30 pushable react-play"> </div>
-          <div class="screen selOff float vel dur800 dist90 pushable react-play"> </div>
-          <div class="screen selOff float vel dur800 dist50 pushable react-play"> </div>
-          <div class="screen selOff float vel dur800 dist30 pushable react-play"> </div>
-
-        <div class="copy">
+      <div id="contact" class="section100 void">
+        <canvas class="staticBlocksH" width="800" height="400"></canvas>
   
-          <div class="heading">
-            Like what</br>
-            you see?
-            <hr>
-          </div>
-          <div class="buttonPlate vel dur800 dist120 pushable">
-            <div class="button">
-              <div id = "buttonText" class = "default-state ">
-                <div class = "telButton react-copy" data-linkRef = "2">(+61) 4 21 907 903</div>
-                <div class = "emailButton react-copy" data-linkRef = "3">j.whitmore.mail</br>@gmail.com</div>
-                <div class = "socialsButton react-open" data-linkRef = "4">@jwhitmore</div>
-                <div class="defaultState react-play" data-linkRef = "5">contact</div>
-              </div>
-              <div class="buttonCells">
-                <div id = "telButton" class = "react-copy">T</div>
-                <div id = "emailButton" class = "react-copy">E</div>
-                <div id = "socialsButton" class = "react-open">in</div>
-              </div>
+        <div class="contactMax">
+  
+          <div class="copy">
+  
+            <div class="heading">
+              LIKE WHAT YOU</br>
+              SAW?
             </div>
-            <div id = "local">
-              Local Time: <span id = "localTime">x</span></br>
-              Location: <span id = "location">x</span>
+            <div class="buttonPlate vel dur1200 dist50 pushable">
+              <div class="button">
+                <div id="buttonText" class="default-state ">
+                  <div class="telButton react-copy" >(+61) 4 21 907 903</div>
+                  <div class="emailButton react-copy">j.whitmore.mail</br>@gmail.com</div>
+                  <div class="socialsButton react-open">@jwhitmore</div>
+                  <div class="defaultState react-play">contact</div>
+                </div>
+                <div class="buttonCells">
+                  <div id="telButton" class="react-copy"><div class = "icon"></div></div>
+                  <div id="emailButton" class="react-copy"><div class = "icon"></div></div>
+                  <div id="socialsButton" class="react-open"><div class = "icon"></div></div>
+                </div>
+              </div>
+              <div id="local">
+                Local Time: <span id="localTime">x</span></br>
+                Location: <span id="location">x</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-
+  
         <div id="contactPlate">
           <div class="contactInfo">
           </div>
         </div>
-    </div>
-
-      <div id = "nav" >
-        <div class = "screen float pushable"></div>
-        <div class = "screen float pushable"></div>        
-        <div class = "screen float pushable"></div>        
-
+      </div>
+      <div id="nav">
+  
         <div class="copy">
-          <span data-linkRef="6">HOME</span>
-          <span data-linkRef="6">ABOUT</span>
-          <span data-linkRef="6">PROJECTS</span>
-          <span data-linkRef="6">CONTACT</span>
+          <span class="react-play">HOME</span>
+          <span class="react-play">ABOUT</span>
+          <span class="react-play">PROJECTS</span>
+          <span class="react-play">CONTACT</span>
         </div>
       </div>
-
-      <canvas class = "menuWipe"></canvas>
-
-      <div id = "navCanvas">
+  
+      <canvas class="menuWipe"></canvas>
+  
+      <div id="navCanvas">
       </div>
-
-
-    <div id="blocker" style = "background:rgb(38, 42, 44); width:100%; height:100%; pointer-events:none; position:fixed; top:0; left:0;"></div>
+  
+    </div>
+  
+  
+    <div id="blocker"
+      style="background:rgb(37, 36, 34); width:100%; height:100%; pointer-events:none; position:fixed; top:0; left:0;">
+    </div>
+  
 
     <div class="linkClick"></div>
     <canvas class="linkClickCanvas"></canvas>

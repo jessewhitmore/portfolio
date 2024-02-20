@@ -5,6 +5,7 @@
     --primary-tint: 153, 153, 152;
     --primary-shade: 64, 62, 62;
     --accent-col: 255,204,0;
+    --accent-shade: 137,114,42;
     --accent-tint: 181,74,92;
     --void-col: 144, 144, 144;
 
@@ -363,7 +364,7 @@ canvas, .screen {
     width: 3rem;
     height: 3rem;
 
-    border: 2px solid rgb(var(--secondary-col));
+    border: 2px solid rgb(var(--accent-shade));
     border-radius: 100%;
 
     opacity: 0.2;
@@ -378,7 +379,7 @@ canvas, .screen {
 }
 
 /* ani */ #mousePointer.react-play, #mousePointer.react-copy, #mousePointer.react-open {
-    border: 2px solid rgb(var(--secondary-col));
+    border: 2px solid rgb(var(--accent-shade));
 
     opacity: 0.75;
 
@@ -386,7 +387,7 @@ canvas, .screen {
 }
 
 #mousePointer div {
-    background-color: rgb(var(--secondary-col));
+    background-color: rgb(var(--accent-shade));
     -webkit-mask-image: url(/assets/mouse/inactive.svg);
     mask-image: url(/assets/mouse/inactive.svg);
 
@@ -398,19 +399,19 @@ canvas, .screen {
 }
 
 #mousePointer.react-play div {
-    background-color: rgb(var(--secondary-col));
+    background-color: rgb(var(--accent-shade));
     -webkit-mask-image: url(/assets/mouse/play.svg);
     mask-image: url(/assets/mouse/play.svg);    
 }
 
 #mousePointer.react-copy div {
-    background-color: rgb(var(--secondary-col));
+    background-color: rgb(var(--accent-shade));
     -webkit-mask-image: url(/assets/mouse/download.svg);
     mask-image: url(/assets/mouse/download.svg);   
 }
 
 #mousePointer.react-open div {
-    background-color: rgb(var(--secondary-col));
+    background-color: rgb(var(--accent-shade));
     -webkit-mask-image: url(/assets/mouse/external.svg);
     mask-image: url(/assets/mouse/external.svg);   
 }
@@ -870,100 +871,131 @@ HEADER
 ABOUT
 
 **/
+.bht {
+    position: relative;
+    width:100%;
+}
+
+.bht > * {
+    position: sticky;
+    top:0;
+}
 
 #about {
+    padding:0;
+    font-size: clamp(0.1rem, 0.8vw, 1.2em);
+}
+
+#about div {
+    position:absolute;
+}
+
+.about-t {
+    line-height:0.75;
+    text-transform: uppercase;
+}
+
+.about-t span {
+    font-size: 30em;
+}
+
+.subabout-t {
+    line-height:0.85;
+}
+
+#multidissub1 {
+    transform-origin: 0% 0%;
+    transform:translate(19.7em, 8.2em);
+    color: rgb(var(--primary-tint))
+}
+
+#multidissub1 span {
+    font-size: 6.4em;
+    display: block;
+}
+
+#multidissub2 {
+    opacity:1;
+    width: 53em;
+    transform-origin: 0% 0%;
+    transform:translate(23em, 2.8em);
+    color: rgb(var(--primary-tint))
+}
+
+#multidissub2 span {
+    font-size: 6.4em;
+}
+
+#multidissub2 .button {
     display:flex;
-    display:none;
-    background: rgb(var(--primary-col));
+    justify-content: center;
+    align-items: center;
+    margin-top:0.15em;
+    height:1.5em;
+    width:4em;
+    color: rgb(var(--primary-col));
+    background: rgba(255,204,0,1);
 }
-
-#about .copy {
+.frame {
+    position:relative;
     width:100%;
-    max-width: 700px;
-    margin:auto;
-    font-size: clamp(1rem, 1vw, 3rem);
-}
-
-#about .copy:nth-child(1) > div {
-    background:red;
-    aspect-ratio: 700/740;
-
+    height:100%;
     display:flex;
     justify-content: center;
     align-items: center;
 }
 
-
-#about .buttonPlate {
-    display:inline-block;
-    margin-top: 3.5em;
-
-    color: transparent;
-    text-align:center;
-}
-
-#about .button {
-    width:100%;
-    height:100%;
-
-    font-size: 1.2em;
-    padding: 1.1em 1.2em;
-    background: rgba(255,204,0,1);
-    
-    color: rgb(var(--secondary-col));
-}
-
-
-#about .about {
-    display: block;
-    width:100%;
-}
-
-
-#about h1 {
-    margin:0;
-    margin-bottom:1em;
-
-    display: flex;
-    justify-content: center;
-    color: rgba(137,114,42,1);
-    text-shadow: 0 2px 3px rgba(0,0,0,0.7);
-}
-
-#about h1 > span {
-    text-align:center;
-    font-size:1em;
-}
-
-
-#about .about > span {
+.projectType {
     position:relative;
-    padding-bottom:1.5em;
-    
-    -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 0) 15px, rgba(0, 0, 0, 1) 20px );
-    mask-image: linear-gradient(to top, rgba(0, 0, 0, 0) 15px, rgba(0, 0, 0, 1) 20px );
-
-    line-height:1.5em;
-    color: transparent;
-    text-wrap:nowrap;
+    margin: 6em 8em;
 }
 
-.about span span {
+.projectType span {
+    font-size:10em;
+    font-family: 'ignite', Helvetica, Arial, sans-serif;
+}
+
+.projectType .screen {
+    margin-bottom: 2em;
+}
+.rgb {
     position:absolute;
-    left:0;
-    top:0;
+    background:url(assets/screens/rgb.png);
 
-    opacity:1;
-    color:rgb(var(--secondary-col));
-
-    transition: transform 0.7s, opacity 0.5s;
-    transform:translateY(0%);
-    text-wrap:nowrap;
+    background-size: 22px;
+    opacity:0.1;
 }
 
-.about.selOff span span {
-    transform:translateY(125%);
-    opacity:0;
+.screenGrad {
+    position:absolute;
+    background: radial-gradient(ellipse farthest-corner at center center, transparent 40%, rgba(var(--primary-col),1) 100%);
+    opacity:0.2;
+}
+
+.screenGlow {
+    box-shadow: 0 0 100px #fff;
+}
+
+.generatedScreen * {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+}
+
+#about {
+    overflow: hidden;
+}
+
+.headerSections {
+    perspective: 500px;
+    perspective-origin: 50% 30%; /* 30% 10%; */
+    transform-style: preserve-3d;
+    box-sizing: border-box;
+}
+
+.headerSections * {
+    transform-style: preserve-3d;
 }
 
 
@@ -996,6 +1028,7 @@ PROJECT
     left:0;
     transition: all 0.5s;
     pointer-events: none;
+    background: rgba(var(--primary-col), 0.3);
 }
 
 
@@ -1139,7 +1172,7 @@ CONTACT
 
 #contact .buttonPlate {
     position: absolute;
-    top:6.5em;
+    top:6em;
     right:2em;
 
     text-align:right;
@@ -1147,7 +1180,7 @@ CONTACT
 
 #contact .button {
     position:relative;
-    height: 5em;
+    height: 5.5em;
 
     margin-bottom: 0.4em;
 
@@ -1255,7 +1288,7 @@ CONTACT
     justify-content: center;
 }
 
-#contact .buttonCells div {
+#contact .buttonCells > div {
     height:100%;
     aspect-ratio: 1/3;
 
@@ -1269,6 +1302,7 @@ CONTACT
 #buttonText.default-state {
     background: rgba(255,204,0,1);
 }
+
 
 #contact #telButton, #buttonText.telButton-state {
     background: rgba(255,204,0,1);
@@ -1306,6 +1340,37 @@ CONTACT
 
 #contact #socialsButton, #buttonText.socialsButton-state {
     background: rgba(255,204,0,1);
+}
+
+
+#contact #telButton .icon {
+    margin:auto;
+    width:50%;
+    height:50%;
+    background-color: rgb(var(--primary-col));
+    -webkit-mask-image: url(/assets/icons/ph.svg);
+    mask-image: url(/assets/icons/ph.svg);
+    pointer-events:none;
+}
+
+#contact #emailButton .icon {
+    margin:auto;
+    width:50%;
+    height:50%;
+    background-color: rgb(var(--primary-col));
+    -webkit-mask-image: url(/assets/icons/ml.svg);
+    mask-image: url(/assets/icons/ml.svg);       
+    pointer-events:none;
+}
+
+#contact #socialsButton .icon {
+    margin:auto;
+    width:50%;
+    height:50%;
+    background-color: rgb(var(--primary-col));
+    -webkit-mask-image: url(/assets/icons/in.svg);
+    mask-image: url(/assets/icons/in.svg);
+    pointer-events:none;
 }
 
 #contactPlate {
@@ -1425,129 +1490,3 @@ CONTACT
 
 
 
-.bht {
-    position: relative;
-    width:100%;
-}
-
-.bht > * {
-    position: sticky;
-    top:0;
-}
-
-#newabout {
-    padding:0;
-    font-size: clamp(0.1rem, 0.8vw, 1.2em);
-}
-
-#newabout div {
-    position:absolute;
-}
-
-.about-t {
-    line-height:0.75;
-    text-transform: uppercase;
-}
-
-.about-t span {
-    font-size: 30em;
-}
-
-.subabout-t {
-    line-height:0.85;
-}
-
-#multidissub1 {
-    transform-origin: 0% 0%;
-    transform:translate(19.7em, 8.2em);
-    color: rgb(var(--primary-tint))
-}
-
-#multidissub1 span {
-    font-size: 6.4em;
-    display: block;
-}
-
-#multidissub2 {
-    opacity:1;
-    width: 53em;
-    transform-origin: 0% 0%;
-    transform:translate(23em, 2.8em);
-    color: rgb(var(--primary-tint))
-}
-
-#multidissub2 span {
-    font-size: 6.4em;
-}
-
-#multidissub2 .button {
-    display:flex;
-    justify-content: center;
-    align-items: center;
-    margin-top:0.15em;
-    height:1.5em;
-    width:4em;
-    color: rgb(var(--primary-col));
-    background: rgba(255,204,0,1);
-}
-.frame {
-    position:relative;
-    width:100%;
-    height:100%;
-    display:flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.projectType {
-    position:relative;
-    margin: 6em 8em;
-}
-
-.projectType span {
-    font-size:10em;
-    font-family: 'ignite', Helvetica, Arial, sans-serif;
-}
-
-.projectType .screen {
-    margin-bottom: 2em;
-}
-.rgb {
-    position:absolute;
-    background:url(assets/screens/rgb.png);
-
-    background-size: 22px;
-    opacity:0.1;
-}
-
-.screenGrad {
-    position:absolute;
-    background: radial-gradient(ellipse farthest-corner at center center, transparent 40%, rgba(var(--primary-col),1) 100%);
-    opacity:0.2;
-}
-
-.screenGlow {
-    box-shadow: 0 0 100px #fff;
-}
-
-.generatedScreen * {
-    display:flex;
-    justify-content: center;
-    align-items: center;
-    pointer-events: none;
-}
-
-#newabout {
-    overflow: hidden;
-}
-
-.headerSections {
-    perspective: 500px;
-    perspective-origin: 50% 30%; /* 30% 10%; */
-    transform-style: preserve-3d;
-    box-sizing: border-box;
-}
-
-.headerSections * {
-    transform-style: preserve-3d;
-}

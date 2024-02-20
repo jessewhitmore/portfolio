@@ -39,22 +39,23 @@ function processElements() {
 
 
 
-    let url = window.location.pathname.split('/').pop().split('.')[0].replaceAll('-',' ')
+    let url = window.location.pathname.split('/').pop().split('.')[0].replaceAll('_',' ')
+
+    if(url == 'new format velocity') url = 'new format: velocity'
 
     const projectIndex =  projectManifest.findIndex(obj => obj.title.toLowerCase() === url);
     const prevProjectIndex = (projectIndex === 0) ? projectManifest.length-1 : projectIndex - 1
     const nextProjectIndex = (projectIndex === projectManifest.length-1) ? 0 : projectIndex + 1
 
-
     document.querySelector(':root').style.setProperty('--prev-project', `'${projectManifest[prevProjectIndex].title}'`)
     document.querySelector(':root').style.setProperty('--next-project', `'${projectManifest[nextProjectIndex].title}'`)
   
     qs('#projectNavigator .previous').addEventListener('click', ev => {
-        linkClick.centerSweep(ev.clientY, `./${projectManifest[prevProjectIndex].title.toLowerCase().replaceAll(' ','-')}.html`)
+        linkClick.centerSweep(ev.clientY, `./${projectManifest[prevProjectIndex].title.toLowerCase().replaceAll(':','').replaceAll(' ','_')}.html`)
     })
 
     qs('#projectNavigator .next').addEventListener('click', ev => {
-        linkClick.centerSweep(ev.clientY, `./${projectManifest[nextProjectIndex].title.toLowerCase().replaceAll(' ','-')}.html`)
+        linkClick.centerSweep(ev.clientY, `./${projectManifest[nextProjectIndex].title.toLowerCase().replaceAll(':','').replaceAll(' ','_')}.html`)
     })    
     
     wrapProcessing()
@@ -84,7 +85,6 @@ function processElements() {
         const aspect = obj.naturalWidth / obj.naturalHeight
 
         const tA = 1700 * aspect
-        console.log(tA)
         obj.style.minWidth = tA+'px'
 
 
@@ -318,7 +318,7 @@ function intersections() {
         rootMargin: '20% 0% 20% 0%'
     })
 
-    observerConstructor(floatIntersect, '.float', {
+    observerConstructor(floatIntersect, '.floated', {
         rootMargin: '0% 0% 0% 0%'
     })
     
@@ -370,230 +370,6 @@ function intersections() {
 
 
 
-/**
- * 
- * 
- *          SCROLL RELATED
- * 
- * 
- */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/**
- * 
- * 
- *          USER INTERACTION RELATED
- *          Buttons, hover near, etc.
- * 
- * 
- */
-
-
-   
-function clickThrough(e, ev) {
-
-    let mobSwitch = (props.mobile) ? 'r' : 't', link;
-    switch(parseInt(e.dataset.linkref)) {
-        case 0: // about page
-            link = './about.html'
-            linkClick.click(mobSwitch, link)
-        break;
-        case 1: // project page            
-            qsa('.highlight').forEach((ele) => {        ele.classList.remove('highlight')     })
-            let projChosen = e.querySelector('.title').innerText.toLowerCase().replace(' ', '-');
-            linkClick.centerSweep(ev.clientY, `./projects/${projChosen}.html`)
-        break;
-        case 2: // copy phonenumber
-
-            if(props.mobile) {
-                window.open(`tel:${contactInfo.tel.replace(' ','')}`,'_self')
-            } else {
-                toClipboard(contactInfo.tel) 
-            }
-            
-        break;
-        case 3: // copy email & open email client
-            toClipboard(contactInfo.email);
-            sendEmail()
-        break;
-        case 4: // open linkedin URL
-            linkClick.click(mobSwitch, contactInfo.linkdin)
-        break;
-        case 5: // open contact page
-            gsap.to('.contactInfo', {y:0, duration: 1, ease: "elastic.out(1,0.5)" })
-            qsa('#contactPlate, .contactInfo').forEach((ele) => {
-                ele.classList.add('contactOpen')
-            })            
-        break;
-        default: // within nav 
-            if(!scrollVals.autoScrolling) jumpTo(e.innerText)
-        break;
-    }
-}
-    
-
-// --------------------------------------------------------------
-
-gsap.set(qs('#buttonText'), {width:'unset'})
-
-function changeContact(e, i, p) {
-    if(props.contactLock === undefined) props.contactLock = false
-    if(i !== 69) {
-        props.contactLock = true;
-        setTimeout(()=> {
-            props.contactLock = false;
-        },700)
-    } else if(i === 69 && props.contactLock ) return;
-
-    switch(i) {
-        case 0: // telephone
-            toClipboard(contactInfo.tel) 
-        break;
-        case 1: // email
-            toClipboard(contactInfo.email);
-        break;
-        case 2: // linkedin
-            linkClick.click((props.mobile) ? 'r' : 't', contactInfo.linkdin)
-        break;
-    }
-
-    if(props.conButton == undefined) props.conButton = qs('#buttonText')
-    if(props.conLastState == undefined) props.conLastState = qs('#buttonText .defaultState')
-    let chosenFace = qs(`#buttonText .${e.id}`)
-
-    gsap.fromTo(props.conButton, {width: props.conLastState.clientWidth }, {width: chosenFace.clientWidth, duration:0.2, onComplete: ()=>{
-        props.conButton.style.width = 'unset'
-    }})
-    props.conLastState = chosenFace
-
-    props.conButton.classList.remove('default-state')
-    p.forEach((ele) => {
-        if(e === ele) {
-            ele.classList.add('onElement')
-        } else {
-            ele.classList.remove('onElement')
-        }
-        props.conButton.classList.remove(ele.id+'-state')
-    });
-
-
-    props.conButton.classList.add(e.id+'-state')
-
-    clearTimeout(props.contactReturn)
-    props.contactReturn = setTimeout(()=> {
-        let chosenFace = qs('#buttonText .defaultState')
-        gsap.fromTo(props.conButton, {width: props.conLastState.clientWidth }, {width: chosenFace.clientWidth, duration:0.2, onComplete: ()=>{
-            props.conButton.style.width = 'unset'
-        }})
-        props.conLastState = chosenFace        
-        p.forEach((ele) => {
-            props.conButton.classList.remove(ele.id+'-state')
-        })
-
-        props.conButton.classList.add('default-state')
-
-    },4000)
-
-} 
-
-function userInteractions() {
-
-    // handle contact hover clicks
-    qsa('.buttonCells div').forEach((ele, index, parent) => {
-        ele.addEventListener('click', () => changeContact(ele, index, parent))
-    })
-
-    // handle page clicks
-    qsa('#about .button, .project, #buttonText div, #nav span').forEach((ele) => {
-        ele.addEventListener('click', (event) => clickThrough(ele, event))    
-    })    
-
-    qs('#contactPlate').addEventListener('click', (event) => {
-        if(event.target.id === 'contactPlate') {
-            gsap.killTweensOf('.contactInfo')
-            gsap.to('.contactInfo', {y:window.innerHeight/2 + qs('.contactInfo').offsetHeight/2, duration: 0.3, ease: "back.in(1.4)", onComplete: ()=>{
-                qs('.contactInfo').style.transform = 'translateY(calc(50vh + 50%))'
-            } })
-            qsa('#contactPlate, .contactInfo').forEach((ele) => {                
-                ele.classList.remove('contactOpen')
-            })
-        }
-    })
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -601,9 +377,6 @@ function userInteractions() {
 
 processElements()
 intersections()
-
-
-userInteractions()
 contactSetup()
 
 

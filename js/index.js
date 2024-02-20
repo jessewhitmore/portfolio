@@ -15,10 +15,23 @@ function processElements() {
 
     /*          Gen projects            */
 
+
+    projectGlow = 6
+    projSha = `-${0.0625 / projectGlow}em -${0.0625 / projectGlow}em 0 rgba(255,255,255, 0.2),
+                  ${0.0625 / projectGlow}em -${0.0625 / projectGlow}em 0 rgba(255,255,255, 0.3),
+                  -${0.0625 / projectGlow}em ${0.0625 / projectGlow}em 0 rgba(255,255,255, 0.2),
+                  ${0.0625 / projectGlow}em ${0.0625 / projectGlow}em 0 rgba(255,255,255, 0.3),
+                  0 -${0.125 / projectGlow}em ${1.2 / projectGlow}em,
+                  0 0 ${0.125 / projectGlow}em,
+                  0 0 ${0.3125 / projectGlow}em rgba(255,126,0,0.5),
+                  0 0 ${5.9375 / projectGlow}em rgba(255, 68, 68,0.6),
+                  0 0 ${0.125 / projectGlow}em rgba(255,126,0,0.5),
+                  0 ${0.125 / projectGlow}em ${0.1875 / projectGlow}em rgba(0,0,0,0.7)`;       
+
     props.projectIMG = []
     projectManifest.forEach((v,i) => {
 
-        let titleDashed = v.title.toLowerCase().replaceAll(' ','-').replaceAll(':','')
+        let titleDashed = v.title.toLowerCase().replaceAll(' ','_').replaceAll(':','')
 
         // create and tag - project
         let project = document.createElement('div')
@@ -91,11 +104,9 @@ function processElements() {
 
         FO.appendChild(FOele)        
         let FOback = FO.cloneNode(true)
-
         FO.style.color = `rgb(${props.secondaryCol})`
-        FOback.style.color = `rgb(${props.primaryCol})`
-        FOback.style.textShadow = `0px 0px 9px rgba(${props.secondaryCol},0.6)`
-
+        FOback.style.color = `rgb(${props.accentCol})`
+        FOback.style.textShadow = projSha
         svg.appendChild(FOback)
 
         svg.appendChild(path)
@@ -123,110 +134,6 @@ function processElements() {
 
 
 
-
-    if(!props.mobile) {
-        
-//         props.floatOn = false;
-//         props.introTL = gsap.timeline({
-//             paused: true,
-//             onComplete: ()=> {props.floatOn = true}
-//         })
-
-
-//         props.introTL.from('.bg', {
-//             scale:1.8,
-//             duration:0.3,
-//         },0)
-        
-//         props.introTL.from('#desktopNamePlate', {
-//             ease: "power2.out",
-//             z:-600,
-//             duration:0.3,
-//         },0)
-
-
-
-
-//         props.introTL.from(qsa('.sh1')[0], {
-//             ease: "back.out(3)",
-//             scaleY:0,
-//             duration:0.25,
-//             delay: 0.35
-//         },0)
-
-
-//         props.introTL.from(qsa('.sh1')[1], {
-//             ease: "back.out(3)",
-//             scaleY:0,
-//             duration:0.25,
-//             delay: 0.4
-//         },0)
-
-//         props.introTL.from(qsa('.sh1')[2], {
-//             ease: "back.out(3)",
-//             scaleY:0,
-//             duration:0.25,
-//             delay: 0.5
-//         },0)
-
-
-//         props.introTL.from(qsa('.sh1')[3], {
-//             ease: "back.out(3)",
-//             scaleY:0,
-//             duration:0.25,
-//             delay: 0.3
-//         },0)
-        
-
-//         props.introTL.from(qsa('.sh1')[4], {
-//             ease: "back.out(3)",
-//             scaleY:0,
-//             duration:0.25,
-//             delay: 0.25
-//         },0)        
-
-
-
-//         props.introTL.from('#desktopFigure', {
-//             ease: "power2.out",
-//             z:200,
-//         //    filter:'blur(5px)',
-//             duration:0.3,
-//         },0)
-
-   
-
-//         props.introTL.from(qsa('.sh2')[0], {
-//             ease: "power2.out",
-//             z:300,
-//  //           filter:'blur(6px)',
-//             duration:0.4,
-//         },0)
-
-//         props.introTL.from(qsa('.sh2')[1], {
-//             ease: "power2.out",
-//             z:300,
-// //            filter:'blur(6px)',
-//             duration:0.15,
-//         },0)
-
-//         props.introTL.from(qsa('.sh2')[2], {
-//             ease: "power2.out",
-//             z:400,
-// //            filter:'blur(9px)',
-//             duration:0.5,
-//         },0)        
-
-//         props.introTL.from(qsa('.sh2')[3], {
-//             ease: "power2.out",
-//             z:400,
-// //            filter:'blur(9px)',
-//             duration:0.4,
-// //            delay: 0.5
-//         },0)
-
-//         props.introTL.timeScale(0.8)
-    }
 
 
     wrapProcessing()
@@ -270,7 +177,7 @@ function processElements() {
 
 
 function uLoaded() {
-    
+
 }
 
 
@@ -522,7 +429,7 @@ function intersections() {
 let txtSha = null
 function aboutSetup() {
 
-    /*          split about title           */
+    /*          split my name           */
 
     let aboutTitleSplit = qs('#nameTop').innerText.split('')
     let rephrasedTitle = '';
@@ -531,15 +438,6 @@ function aboutSetup() {
     });
     qs('#nameTop').innerHTML = rephrasedTitle
 
-
-    /*          split about text            */
-
-    let aboutCopySplit = qs('#aboutTxt').innerText.split(' ');
-    let rephrasedCopy = '';
-    aboutCopySplit.forEach(v => {
-        rephrasedCopy += `<span>${v} <span>${v} </span></span>`
-    });
-    qs('#aboutTxt').innerHTML = rephrasedCopy
 
 
 
@@ -582,7 +480,7 @@ function aboutSetup() {
                   0 0 ${5.9375 / parentEM}em rgba(255, 68, 68,0.6),
                   0 0 ${0.125 / parentEM}em rgba(255,126,0,0.5),
                   0 ${0.125 / parentEM}em ${0.1875 / parentEM}em rgba(0,0,0,0.7)`;       
-    qs('#newabout .button').style.boxShadow = txtSha
+    qs('#about .button').style.boxShadow = txtSha
 
 
     // -------------
@@ -672,50 +570,50 @@ function uDuringResizer() {
 // do resizing for the about sections then run SVG stuff
 function uResizer() {
         // Get the parent and child elements
-        const parent = qs('#text');
-        const child = qsa('#text span');
+        // const parent = qs('#text');
+        // const child = qsa('#text span');
 
-        // Calculate and set the font size relative to the parent's width
-        const parentWidth = parent.offsetWidth;
-        let childWidth = 0;
-        child.forEach(ele => {
-            childWidth += ele.offsetWidth
-        })
+        // // Calculate and set the font size relative to the parent's width
+        // const parentWidth = parent.offsetWidth;
+        // let childWidth = 0;
+        // child.forEach(ele => {
+        //     childWidth += ele.offsetWidth
+        // })
         
-        let fontSizePercentage = 0.2; // Adjust this value based on your design needs
+        // let fontSizePercentage = 0.2; // Adjust this value based on your design needs
 
 
-        let exitTrig = 0;
-        while(childWidth > parentWidth) {
-            let fontSize = parentWidth * fontSizePercentage;
-            childWidth = 0;
-            child.forEach(ele => {
-                childWidth += ele.offsetWidth                
-                ele.style.fontSize = fontSize + 'px'
-            })
-            fontSizePercentage -= 0.01
+        // let exitTrig = 0;
+        // while(childWidth > parentWidth) {
+        //     let fontSize = parentWidth * fontSizePercentage;
+        //     childWidth = 0;
+        //     child.forEach(ele => {
+        //         childWidth += ele.offsetWidth                
+        //         ele.style.fontSize = fontSize + 'px'
+        //     })
+        //     fontSizePercentage -= 0.01
 
-        }
+        // }
 
-        while(childWidth < parentWidth) {
-            let fontSize = parentWidth * fontSizePercentage;
-            childWidth = 0;
-            child.forEach(ele => {
-                childWidth += ele.offsetWidth                
-                ele.style.fontSize = fontSize + 'px'
-            })
-            fontSizePercentage += 0.01
-        } 
+        // while(childWidth < parentWidth) {
+        //     let fontSize = parentWidth * fontSizePercentage;
+        //     childWidth = 0;
+        //     child.forEach(ele => {
+        //         childWidth += ele.offsetWidth                
+        //         ele.style.fontSize = fontSize + 'px'
+        //     })
+        //     fontSizePercentage += 0.01
+        // } 
         
-        while(childWidth > parentWidth) {
-            let fontSize = parentWidth * fontSizePercentage;
-            childWidth = 0;
-            child.forEach(ele => {
-                childWidth += ele.offsetWidth                
-                ele.style.fontSize = fontSize + 'px'
-            })
-            fontSizePercentage -= 0.001
-        }         
+        // while(childWidth > parentWidth) {
+        //     let fontSize = parentWidth * fontSizePercentage;
+        //     childWidth = 0;
+        //     child.forEach(ele => {
+        //         childWidth += ele.offsetWidth                
+        //         ele.style.fontSize = fontSize + 'px'
+        //     })
+        //     fontSizePercentage -= 0.001
+        // }         
 
 
         projectSVGshape()
