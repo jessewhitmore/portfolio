@@ -2037,7 +2037,9 @@ function load() {
         setTimeout(()=>{if(typeof uResizer === 'function') uLoaded()},300)
         props.loaded = true
     } else {
-        console.log('here now')
+
+        document.querySelector('.linkClick').style.transfrom = "scale(0)"        
+
         if(typeof uResizer === 'function') uLoaded()
         props.loaded = true
     }
