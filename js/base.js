@@ -792,7 +792,7 @@ function wrapProcessing() {
     qsa('.screen').forEach(v => processScreens(v))
 
     // generate the screens
-    animateScreen()
+    if(qsa('.screen').length > 0) animateScreen()
 
 
     /*          populate float           */    
@@ -2017,6 +2017,8 @@ function load() {
 
     // Get the search parameters
     const searchParams = url.searchParams;
+
+    console.log(searchParams)
     searchParams.forEach((v,k) => {
         switch(k) {
             case 'msg':
@@ -2030,6 +2032,8 @@ function load() {
     if(typeof uResizer === 'function') uResizer()
     
     document.querySelector('#blocker').style.background = "none"
+
+    console.log(document.querySelector('#blocker'))
     if(internalRedirect) {
         (props.mobile) ? linkClick.fromClicked('r') : linkClick.fromClicked('t')
         setTimeout(()=>{if(typeof uResizer === 'function') uLoaded()},300)
@@ -2038,29 +2042,29 @@ function load() {
         if(typeof uResizer === 'function') uLoaded()
         props.loaded = true
     }
-    setTimeout(()=>{
-        qsa('.screen').forEach(v => {
-            let si = parseInt(v.dataset.si) || 0
-            let si1 = (si+1) % (siV.length-1)
-            let backV = v.querySelector('.backV')
-            let frontV = v.querySelector('.frontV')
+    // setTimeout(()=>{
+    //     qsa('.screen').forEach(v => {
+    //         let si = parseInt(v.dataset.si) || 0
+    //         let si1 = (si+1) % (siV.length-1)
+    //         let backV = v.querySelector('.backV')
+    //         let frontV = v.querySelector('.frontV')
 
-            gsap.set([backV, frontV], {autoAlpha:0})
-            backV.src = siV[si]
-            backV.load()
+    //         gsap.set([backV, frontV], {autoAlpha:0})
+    //         backV.src = siV[si]
+    //         backV.load()
 
-            frontV.src = siV[si1]
+    //         frontV.src = siV[si1]
 
-            setTimeout(()=>{
-                gsap.set(backV, {autoAlpha:1})
-            },12000)
+    //         setTimeout(()=>{
+    //             gsap.set(backV, {autoAlpha:1})
+    //         },12000)
 
-            backV.addEventListener('play', function(event) {
-                setTimeout(()=>gsap.set(event.target, {autoAlpha:1}),250)
-            });            
-        })
+    //         backV.addEventListener('play', function(event) {
+    //             setTimeout(()=>gsap.set(event.target, {autoAlpha:1}),250)
+    //         });            
+    //     })
 
-    },10)
+    // },10)
 
 
 
