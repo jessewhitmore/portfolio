@@ -1,7 +1,7 @@
 @media (min-aspect-ratio: 4/3) {
     
     .mobileOnly {
-        display:none;
+        display:none!important;
     }
 
     #projects .reveal {
@@ -28,144 +28,48 @@
 
 
     
-
-
-
-
-
-
-
-
-
-    .desktopHeader {
-        font-size: clamp(0.3rem, 1.4vh, 1.21rem);
-
-        display: flex;
-        justify-content: center;
-    }
-
-    #desktopNamePlate {
-        top: 16em;
-        position: absolute;
-        margin-left: -23em;
-        text-align: center;  
-    }
-    
-    #desktopNamePlate span:first-child {
-        font-size: 27em;
-        line-height: 0.7;
-    }
-    
-    #desktopNamePlate span:last-child {
-        padding-left: 0.1em;
-        font-size: 7em;
-        line-height:1.2;
-    }
-
-    #desktopFigure {
-        position: absolute;
-        bottom:0;
-        height:100%;
-        margin-left: 78em;
-        margin-bottom: -5rem;
-        pointer-events: none;
-    }
-
-
-    #header .headerSections:nth-child(1) > .screen:nth-child(1) {
-        top: -4em;
-
-        margin-left: -20em;
-
-        width: 30em; /* Converted from 150px to rem */
-    
-        aspect-ratio: 9.4/5;
-        transform: translate(-50%, -50%);
-    }
-
-    #header .headerSections:nth-child(1) > .screen:nth-child(2) {
-        top: 8em;
-
-        margin-left: -185em;
-
-        width: 22em; /* Converted from 150px to rem */
-    
-        aspect-ratio: 15/7;
-        transform: translate(-50%, -50%);
-    }
-
-    #header .headerSections:nth-child(1) > .screen:nth-child(3) {
-        top: 28em;
-
-        margin-left: 190em;
-
-        width: 16em; /* Converted from 150px to rem */
-    
-        aspect-ratio: 10/5;
-        transform: translate(-50%, -50%);
-    }
-
-    #header .headerSections:nth-child(1) > .screen:nth-child(4) {
-        top:15em;
-        
-        margin-left: 105em;
-    
-        width: 25em; /* Converted from 120px to rem */
-    
-        aspect-ratio: 7.5/3.75;
-        transform: translate(-50%, -50%);
-    }
-    
-    #header .headerSections:nth-child(1) > .screen:nth-child(5) {
-        top: 40em;
-        margin-left: -71em; /* Converted from 80px to rem */
-    
-        width: 40em; /* Converted from 300px to rem */
-    
-        aspect-ratio: 18.75/11;
-        transform: translate(-50%, -50%);
-    }
-    
-    
-    #header .headerSections:nth-child(1) > .screen:nth-child(6) {
-        top: 52em; /* Converted from 200px to rem */
-        margin-left: 8rem; /* Converted from 80px to rem */
-    
-        width: 17em; /* Converted from 120px to rem */
-    
-        aspect-ratio: 7.5/3.75;
-        transform: translate(-50%, -50%);
-    }    
-    
-    
-    #header .headerSections:nth-child(1) > .screen:nth-child(7) {
-        top: 64em; /* Converted from 200px to rem */
-        margin-left: -65em; /* Converted from 80px to rem */
-    
-        width: 20em; /* Converted from 120px to rem */
-        aspect-ratio: 7.5/3.75;
-        transform: translate(-50%, -50%);
+    .baseline {
+        font-size: 10em;
     }    
 
-    #header .headerSections:nth-child(1) > .screen:nth-child(10) {
-        top: 24em; /* Converted from 200px to rem */
-        margin-left: 17.5em; /* Converted from 80px to rem */
-    
-        width: 13em; /* Converted from 120px to rem */
-        aspect-ratio: 7.5/4;
-        transform: translate(-50%, -50%);
 
-    }
 
-    #header .headerSections:nth-child(1) > .screen:nth-child(11) {
-        top: 47em; /* Converted from 200px to rem */
-        margin-left: 99em; /* Converted from 80px to rem */
-    
-        width: 14em; /* Converted from 120px to rem */
-        aspect-ratio: 6.5/3.5;
-        transform: translate(-50%, -50%);
 
-    }
+
+
+
+
 
 
 }
+
+
+.desktopHeader {
+
+    display: flex;
+    justify-content: center;
+}
+
+#desktopNamePlate {
+    top: 50%;
+    transform:translateY(-50%);
+    position: absolute;
+    text-align: center;  
+}
+
+#desktopNamePlate #nameTop {
+    display:inline-block;
+    font-size: 27em;
+    line-height: 0.7;
+    color: rgba(0,0,0,0);
+}
+
+#desktopNamePlate #subTop {
+    display:inline-block;
+    font-size: 7em;
+    line-height:1.2;
+}
+
+#desktopNamePlate #subTop span {
+    display:inline-block;        
+}    

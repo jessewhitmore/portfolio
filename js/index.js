@@ -122,110 +122,110 @@ function processElements() {
     /*          typical wrapping and setups           */
 
 
-    generateScreen(qs('.projectType'))
 
 
     if(!props.mobile) {
-        props.floatOn = false;
-        props.introTL = gsap.timeline({
-            paused: true,
-            onComplete: ()=> {props.floatOn = true}
-        })
-
-
-        props.introTL.from('.bg', {
-            scale:1.8,
-            duration:0.3,
-        },0)
         
-        props.introTL.from('#desktopNamePlate', {
-            ease: "power2.out",
-            z:-600,
-            duration:0.3,
-        },0)
+//         props.floatOn = false;
+//         props.introTL = gsap.timeline({
+//             paused: true,
+//             onComplete: ()=> {props.floatOn = true}
+//         })
+
+
+//         props.introTL.from('.bg', {
+//             scale:1.8,
+//             duration:0.3,
+//         },0)
+        
+//         props.introTL.from('#desktopNamePlate', {
+//             ease: "power2.out",
+//             z:-600,
+//             duration:0.3,
+//         },0)
 
 
 
 
-        props.introTL.from(qsa('.sh1')[0], {
-            ease: "back.out(3)",
-            scaleY:0,
-            duration:0.25,
-            delay: 0.35
-        },0)
+//         props.introTL.from(qsa('.sh1')[0], {
+//             ease: "back.out(3)",
+//             scaleY:0,
+//             duration:0.25,
+//             delay: 0.35
+//         },0)
 
 
-        props.introTL.from(qsa('.sh1')[1], {
-            ease: "back.out(3)",
-            scaleY:0,
-            duration:0.25,
-            delay: 0.4
-        },0)
+//         props.introTL.from(qsa('.sh1')[1], {
+//             ease: "back.out(3)",
+//             scaleY:0,
+//             duration:0.25,
+//             delay: 0.4
+//         },0)
 
-        props.introTL.from(qsa('.sh1')[2], {
-            ease: "back.out(3)",
-            scaleY:0,
-            duration:0.25,
-            delay: 0.5
-        },0)
+//         props.introTL.from(qsa('.sh1')[2], {
+//             ease: "back.out(3)",
+//             scaleY:0,
+//             duration:0.25,
+//             delay: 0.5
+//         },0)
 
 
-        props.introTL.from(qsa('.sh1')[3], {
-            ease: "back.out(3)",
-            scaleY:0,
-            duration:0.25,
-            delay: 0.3
-        },0)
+//         props.introTL.from(qsa('.sh1')[3], {
+//             ease: "back.out(3)",
+//             scaleY:0,
+//             duration:0.25,
+//             delay: 0.3
+//         },0)
         
 
-        props.introTL.from(qsa('.sh1')[4], {
-            ease: "back.out(3)",
-            scaleY:0,
-            duration:0.25,
-            delay: 0.25
-        },0)        
+//         props.introTL.from(qsa('.sh1')[4], {
+//             ease: "back.out(3)",
+//             scaleY:0,
+//             duration:0.25,
+//             delay: 0.25
+//         },0)        
 
 
 
-        props.introTL.from('#desktopFigure', {
-            ease: "power2.out",
-            z:200,
-        //    filter:'blur(5px)',
-            duration:0.3,
-        },0)
+//         props.introTL.from('#desktopFigure', {
+//             ease: "power2.out",
+//             z:200,
+//         //    filter:'blur(5px)',
+//             duration:0.3,
+//         },0)
 
    
 
-        props.introTL.from(qsa('.sh2')[0], {
-            ease: "power2.out",
-            z:300,
- //           filter:'blur(6px)',
-            duration:0.4,
-        },0)
+//         props.introTL.from(qsa('.sh2')[0], {
+//             ease: "power2.out",
+//             z:300,
+//  //           filter:'blur(6px)',
+//             duration:0.4,
+//         },0)
 
-        props.introTL.from(qsa('.sh2')[1], {
-            ease: "power2.out",
-            z:300,
-//            filter:'blur(6px)',
-            duration:0.15,
-        },0)
+//         props.introTL.from(qsa('.sh2')[1], {
+//             ease: "power2.out",
+//             z:300,
+// //            filter:'blur(6px)',
+//             duration:0.15,
+//         },0)
 
-        props.introTL.from(qsa('.sh2')[2], {
-            ease: "power2.out",
-            z:400,
-//            filter:'blur(9px)',
-            duration:0.5,
-        },0)        
+//         props.introTL.from(qsa('.sh2')[2], {
+//             ease: "power2.out",
+//             z:400,
+// //            filter:'blur(9px)',
+//             duration:0.5,
+//         },0)        
 
-        props.introTL.from(qsa('.sh2')[3], {
-            ease: "power2.out",
-            z:400,
-//            filter:'blur(9px)',
-            duration:0.4,
-//            delay: 0.5
-        },0)
+//         props.introTL.from(qsa('.sh2')[3], {
+//             ease: "power2.out",
+//             z:400,
+// //            filter:'blur(9px)',
+//             duration:0.4,
+// //            delay: 0.5
+//         },0)
 
-        props.introTL.timeScale(0.8)
+//         props.introTL.timeScale(0.8)
     }
 
 
@@ -519,17 +519,17 @@ function intersections() {
  * 
  * 
  */
-
+let txtSha = null
 function aboutSetup() {
 
     /*          split about title           */
 
-    let aboutTitleSplit = qs('#text').innerText.split('')
+    let aboutTitleSplit = qs('#nameTop').innerText.split('')
     let rephrasedTitle = '';
     aboutTitleSplit.forEach(v => {
         rephrasedTitle += `<span class = "selOff text">${v}</span>`
     });
-    qs('#text').innerHTML = rephrasedTitle
+    qs('#nameTop').innerHTML = rephrasedTitle
 
 
     /*          split about text            */
@@ -547,16 +547,42 @@ function aboutSetup() {
 
     /*          neons           */
 
-    let neon = qs('#text')
+    let neon = qs('#nameTop')
     let breakAt = [], flickerDelay = [], flickerDur = []
     let brokenCell = (randomChance(70)) ? [ Math.floor(neon.children.length*Math.random()) ] : [  Math.floor(neon.children.length*Math.random()),  Math.floor(neon.children.length*Math.random()) ]
     let BflickerTimes = (randomChance(80)) ? 40 + Math.floor(10*Math.random()) : 60 + Math.round(10*Math.random())
-    
-    let txtSha = '-1px -1px 0 rgba(255,255,255, 0.2), 1px -1px 0 rgba(255,255,255, 0.3), -1px 1px 0 rgba(255,255,255, 0.2), 1px 1px 0 rgba(255,255,255, 0.3), 0 -2px 8px, 0 0 2px, 0 0 5px rgba(255,126,0,0.5), 0 0 15px rgba(255, 68, 68,0.6), 0 0 2px rgba(255,126,0,0.5), 0 2px 3px rgba(0,0,0,0.7)'
+
+    let parentEM = 27; // Adjust this variable as needed
+    txtSha = `-${0.0625 / parentEM}em -${0.0625 / parentEM}em 0 rgba(255,255,255, 0.2),
+                  ${0.0625 / parentEM}em -${0.0625 / parentEM}em 0 rgba(255,255,255, 0.3),
+                  -${0.0625 / parentEM}em ${0.0625 / parentEM}em 0 rgba(255,255,255, 0.2),
+                  ${0.0625 / parentEM}em ${0.0625 / parentEM}em 0 rgba(255,255,255, 0.3),
+                  0 -${0.125 / parentEM}em ${1.2 / parentEM}em,
+                  0 0 ${0.125 / parentEM}em,
+                  0 0 ${0.3125 / parentEM}em rgba(255,126,0,0.5),
+                  0 0 ${5.9375 / parentEM}em rgba(255, 68, 68,0.6),
+                  0 0 ${0.125 / parentEM}em rgba(255,126,0,0.5),
+                  0 ${0.125 / parentEM}em ${0.1875 / parentEM}em rgba(0,0,0,0.7)`;    
+//    let txtSha = '-1px -1px 0 rgba(255,255,255, 0.2), 1px -1px 0 rgba(255,255,255, 0.3), -1px 1px 0 rgba(255,255,255, 0.2), 1px 1px 0 rgba(255,255,255, 0.3), 0 -2px 8px, 0 0 2px, 0 0 5px rgba(255,126,0,0.5), 0 0 15px rgba(255, 68, 68,0.6), 0 0 2px rgba(255,126,0,0.5), 0 2px 3px rgba(0,0,0,0.7)'
     let fOn = { color: 'rgba(255,204,0,1)', textShadow: txtSha }
     let fOff = { color: 'rgba(137,114,42,1)', textShadow: '0 2px 3px rgba(0,0,0,0.7)' } 
 
     let ts = 7 // scale of flicker speed
+
+    // -------------
+
+    parentEM = 6
+    txtSha = `-${0.0625 / parentEM}em -${0.0625 / parentEM}em 0 rgba(255,255,255, 0.2),
+                  ${0.0625 / parentEM}em -${0.0625 / parentEM}em 0 rgba(255,255,255, 0.3),
+                  -${0.0625 / parentEM}em ${0.0625 / parentEM}em 0 rgba(255,255,255, 0.2),
+                  ${0.0625 / parentEM}em ${0.0625 / parentEM}em 0 rgba(255,255,255, 0.3),
+                  0 -${0.125 / parentEM}em ${1.2 / parentEM}em,
+                  0 0 ${0.125 / parentEM}em,
+                  0 0 ${0.3125 / parentEM}em rgba(255,126,0,0.5),
+                  0 0 ${5.9375 / parentEM}em rgba(255, 68, 68,0.6),
+                  0 0 ${0.125 / parentEM}em rgba(255,126,0,0.5),
+                  0 ${0.125 / parentEM}em ${0.1875 / parentEM}em rgba(0,0,0,0.7)`;       
+    qs('#newabout .button').style.boxShadow = txtSha
 
 
     // -------------
@@ -606,7 +632,25 @@ function aboutSetup() {
     }
 
     // set a scale 
+
+    let odd = qsa('#subTop span:nth-child(odd)')
+    let even = qsa('#subTop span:nth-child(even)')
+
+    timeline.from(odd, {
+        y:30,
+        autoAlpha: 0,
+        duration: 3,
+        stagger: 2
+    },9)
+
+    timeline.from(even, {
+        autoAlpha: 0,
+        duration: 3,
+        stagger: 2
+    },10)
+
     timeline.timeScale(ts)
+    timeline.play()
 
 
 

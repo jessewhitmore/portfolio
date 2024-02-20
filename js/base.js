@@ -53,47 +53,47 @@ const props = {
 const projectManifest = [
     {
         title: 'DOG System',
-        desc: 'PROJECT - TYPE - CODE' 
+        desc: 'UI/UX - DESIGN - PROJECT' 
     }, 
     {
         title: '2021 Roadmap',
-        desc: 'PROJECT - TYPE - CODE' 
+        desc: 'PROJECT - LEADERSHIP' 
     }, 
     {
         title: 'New Format: Velocity',
-        desc: 'PROJECT - TYPE - CODE' 
+        desc: 'PROJECT - CODE - UI/UX - DESIGN' 
     }, 
     {
         title: 'Studio Sliders',
-        desc: 'PROJECT - TYPE - CODE' 
+        desc: 'PROJECT - UI/UX' 
     },    
     {
         title: 'Self-Serve Templates',
-        desc: 'PROJECT - TYPE - CODE' 
+        desc: 'UI/UX - DESIGN' 
     }, 
     {
         title: 'Client Work Playground',
-        desc: 'PROJECT - TYPE - CODE' 
+        desc: 'CODE - DESIGN' 
     },
     {
         title: 'Amazon Black Friday',
-        desc: 'PROJECT - TYPE - CODE' 
+        desc: 'PROJECT - CODE' 
     },
     {
         title: 'Uber',
-        desc: 'PROJECT - TYPE - CODE' 
+        desc: 'PROJECT - CODE' 
     },
     {
         title: 'Heineken',
-        desc: 'PROJECT - TYPE - CODE' 
+        desc: 'PROJECT' 
     },    
     {
         title: 'Kong Skull Island',
-        desc: 'PROJECT - TYPE - CODE' 
+        desc: 'PROJECT' 
     },    
     {
         title: 'Design for Fun',
-        desc: 'PROJECT - TYPE - CODE' 
+        desc: 'DESIGN' 
     },    
 ]
 
@@ -465,7 +465,7 @@ if(props.mobile) {
     menuEle.id = 'menuDesktop'
 
     let hoverScreen = document.createElement('div')
-    hoverScreen.classList.add('menuScreen','screen','vel','float','dur1000','dist20')
+    hoverScreen.classList.add('menuScreen','vel','dur1000','dist20')
     menuEle.appendChild(hoverScreen)
     let MenuContent = [
         { content: 'HOME', id: 'menu-header' },
@@ -1004,7 +1004,7 @@ function processScreens(ele) {
 
 
 
-
+// place the timeline outside of the change 
 function animateScreen() {
     /*          Screen related           */
 
@@ -1955,9 +1955,9 @@ function every(milli, PN, label) {
     if((PN - props.requestFrame.launchTime) / milli - props.requestFrame[label] > 1) {
         props.requestFrame[label] = Math.floor((PN - props.requestFrame.launchTime) / milli)
         return true;
-    } else {
-        return false;
-    }
+    } 
+    return false;
+    
 }
 
 // launch time

@@ -288,7 +288,7 @@ class gallery {
         this.touchEndX = 0        
 	}
     
-    setup(imgs, target, zoomable, intv) {
+    setup(imgs, target, caption, zoomable, intv) {
         intv = intv || 8000
         this.zoomable = zoomable || false
 
@@ -325,18 +325,26 @@ class gallery {
         let wayfinder = document.createElement('div')
         wayfinder.classList.add('gallery-nav')
 
+        let galleryHold = document.createElement('div')
+        galleryHold.classList.add('gallery-frame')
+
+        let altText = null
+        let captionValid = false
+        caption.forEach(v => {if(v !== null) captionValid = true; })
+
         imgs.forEach((im, i) => {
             let img = new Image()
             img.src = im
             img.classList.add('vel')
             img.setAttribute('data-gallerypos', i)
-            img.addEventListener('click', (event)=> this.clicked(event))
+            if(caption[i] !== null) img.setAttribute('alt',caption[i])
 
+            img.addEventListener('click', (event)=> this.clicked(event))
 
             let div = document.createElement('div')
             div.classList.add('gallery-img')
 
-            target.appendChild(div).appendChild(img)
+            galleryHold.appendChild(div).appendChild(img)
 
             let wayNav = document.createElement('div')
             wayNav.classList.add('react-play')
@@ -382,7 +390,31 @@ class gallery {
             this.handleSwipe();
         });        
 
+        target.appendChild(galleryHold)
+
+        if(captionValid) {
+            const captionBar = document.createElement('div')
+            captionBar.classList.add('gallery-caption')
+            target.appendChild(captionBar)
+            if(caption[0] !== null) {            
+                const captionText = document.createElement('span')
+                captionText.classList.add('coming')
+                captionText.innerText = caption[0]
+                captionBar.appendChild(captionText)
+                captionBar.style.opacity = 1;
+                captionBar.style.height = captionText.offsetHeight + 'px'
+            }
+        }
         target.appendChild(wayfinder)
+
+        if(window.getComputedStyle(target).position == 'sticky') {
+            target.style.top = `calc(50% - ${(target.offsetHeight/2 + 20)}px)`
+
+            this.resize = window.addEventListener('resize', ()=> {
+                this.target.style.top = `calc(50% - ${(this.target.offsetHeight/2 + 20)}px)`
+            })
+
+        }
 
         this.interval = intv
         this.imgs = imgs
@@ -416,7 +448,6 @@ class gallery {
             scale:1,
         }
 
-
         let right = {
             autoAlpha: 1,
             x: '40%',
@@ -435,6 +466,39 @@ class gallery {
             if(dir > 0) this.index++; else this.index--;
             if (this.index < 0) this.index = imgs.length - 1;
             if (this.index > imgs.length - 1) this.index = 0;
+
+
+
+            if(target.querySelectorAll(`.gallery-img:nth-child(${this.index+1}) img`)[0].alt.length > 0) {
+                const caption = target.querySelector('.gallery-caption')
+                const cText = document.createElement('span')
+                cText.classList.add('coming')
+                cText.style.transition = 'opacity 0.25s 0.25s'
+                cText.style.opacity = 0
+                cText.innerText = target.querySelectorAll(`.gallery-img:nth-child(${this.index+1}) img`)[0].alt
+
+                target.querySelectorAll('.leaving').forEach(v => v.remove())
+
+                const lText = target.querySelector('.coming')
+                if(lText !== null) {
+                    lText.classList.remove('coming')
+                    lText.classList.add('leaving')
+                    lText.style.transition = 'opacity 0.25s'
+                    lText.style.opacity = 0
+                }
+
+                caption.appendChild(cText)
+                caption.style.opacity = 1;
+                caption.style.height = cText.offsetHeight+'px'
+                cText.style.opacity = 1
+            } else if(target.querySelector('.gallery-caption') !== null) {
+                target.querySelector('.gallery-caption').style.opacity = 0;
+                target.querySelector('.gallery-caption').style.height = 0;
+            }
+
+            if(window.getComputedStyle(target).position == 'sticky') {
+                target.style.top = `calc(50% - ${(target.offsetHeight/2 + 20)}px)`
+            }
 
             target.querySelectorAll('.gallery-img').forEach((div, i, l)=> {
                 const rati = (i - this.index + imgs.length) % imgs.length;
@@ -575,8 +639,10 @@ class dynamicGallery { // canvas builder
             let imAR = (im.nodeName.toLowerCase() === 'img') ? im : im.querySelector('img');
             if(im.children.length > 0) im.children[0].classList.add('galShowing')
             card.style.aspectRatio = imAR.naturalWidth/imAR.naturalHeight
-            card.style.width = (imAR.naturalWidth >= imAR.naturalHeight) ? '100%' : 'auto'
-            card.style.height = (imAR.naturalWidth <= imAR.naturalHeight) ? '100%' : 'auto'
+            card.style.width = '100%'
+            card.style.height = 'auto'
+            // card.style.width = (imAR.naturalWidth >= imAR.naturalHeight) ? '100%' : 'auto'
+            // card.style.height = (imAR.naturalWidth <= imAR.naturalHeight) ? '100%' : 'auto'
             panel.appendChild(card).appendChild(im)
         })
     
@@ -597,11 +663,14 @@ class dynamicGallery { // canvas builder
             this.hook.forEach((element, key, arr) => {
                 let array = Array.from(element.classList)
                 array.forEach((val, i) => {
-                        if(val.indexOf('DGi') > -1 && tempHook.indexOf(`${hook}.${val}`) === -1) tempHook.push(`${hook}.${val}`)  
+                        if(val.indexOf('DGi') > -1) {
+                        if(tempHook.indexOf(`${hook}.${val}`) === -1) tempHook.push(`${hook}.${val}`)  
+                        }
                 })
                 observerHook.observe(element);
                 element.classList.add(`dynamicGallery-${side}-tab`)
-                element.addEventListener('click', ev => this.handleClick(ev, parseInt(element.dataset.dgi), key))
+                let dgiIndex = Array.from(qsa(`${hook}.DGi${element.dataset.dgi}`)).indexOf(element)
+                element.addEventListener('click', ev => this.handleClick(ev, parseInt(element.dataset.dgi), dgiIndex))
                 element.classList.add('react-play')
             });
 

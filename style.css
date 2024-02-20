@@ -4,7 +4,7 @@
     --secondary-col: 245, 245, 245;
     --primary-tint: 153, 153, 152;
     --primary-shade: 64, 62, 62;
-    --accent-col: 255,54,87;
+    --accent-col: 255,204,0;
     --accent-tint: 181,74,92;
     --void-col: 144, 144, 144;
 
@@ -69,6 +69,10 @@ rootColTest {
 /**
 DEBUG
 **/
+
+.secSizer {
+    font-size: clamp(0.1rem, 1vw, 1.21rem);
+}
 
 #ABOUTPAGE {
     position:fixed;
@@ -195,12 +199,11 @@ body {
 
 .col { /* column */
 
-    column-gap: 2rem;
+    column-gap: 3rem;
     width:100%; 
 
     display:flex;
     flex-direction: row;
-    flex-wrap: wrap;
     padding-bottom: 1.2em;
 
 }
@@ -647,8 +650,6 @@ MENU
     height:1rem;
     width:auto;
     padding: 1rem;
-    
-
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -660,6 +661,8 @@ MENU
     width:3rem;
     height:3rem;
     transform:scaleY(0);
+    background: rgba(255,204,0,1);
+
 }
 
 #menuDesktop span, .techMenu span {
@@ -763,7 +766,7 @@ HEADER
 **/
 
 #header {
-    padding: 0rem 2rem 1rem;
+    padding: 0rem 0rem 1rem;
     overflow:hidden;
 }
 
@@ -905,7 +908,7 @@ ABOUT
 
     font-size: 1.2em;
     padding: 1.1em 1.2em;
-    background: yellow;
+    background: rgba(255,204,0,1);
     
     color: rgb(var(--secondary-col));
 }
@@ -1263,19 +1266,45 @@ CONTACT
 }
 
 #buttonText.default-state {
-    background:lightyellow;
+    background: rgba(255,204,0,1);
 }
 
 #contact #telButton, #buttonText.telButton-state {
-    background:lightskyblue;
+    background: rgba(255,204,0,1);
 }
 
 #contact #emailButton, #buttonText.emailButton-state {
-    background:lightcoral;
+    position:relative;
+    background: rgba(255,204,0,1);
 }
 
+#contact #emailButton::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    margin-bottom: -0.125rem; /* Converted from 2px to rem */
+    top:0%;
+    
+    width: 100%;
+    height: 0.125rem; /* Converted from 2px to rem */
+    background: linear-gradient(90deg, rgba(var(--primary-col),0.0) 0%, rgba(var(--primary-col),0.1) 50%, rgba(var(--primary-col),0.0) 100%);
+}
+
+#contact #emailButton::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    margin-bottom: -0.125rem; /* Converted from 2px to rem */
+    top:100%;
+    
+    width: 100%;
+    height: 0.125rem; /* Converted from 2px to rem */
+    background: linear-gradient(90deg, rgba(var(--primary-col),0.0) 0%, rgba(var(--primary-col),0.1) 50%, rgba(var(--primary-col),0.0) 100%);
+}
+
+
 #contact #socialsButton, #buttonText.socialsButton-state {
-    background:lightcyan;
+    background: rgba(255,204,0,1);
 }
 
 #contactPlate {
@@ -1330,7 +1359,7 @@ CONTACT
 
 .contactInfo span.highlightHover:hover {
     mask-image: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 30%, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
-    background: linear-gradient(90deg, rgba(var(--accent-col),0) 0%, rgba(var(--accent-col),0.2) 50%, rgba(var(--accent-col),0) 100%);
+    background: linear-gradient(90deg, rgba(var(--accent-col),0) 0%, rgba(var(--accent-col),0.4) 50%, rgba(var(--accent-col),0) 100%);
 }
 
 .contactInfo div {
@@ -1406,7 +1435,8 @@ CONTACT
 }
 
 #newabout {
-
+    padding:0;
+    font-size: clamp(0.1rem, 0.8vw, 1.2em);
 }
 
 #newabout div {
@@ -1426,7 +1456,6 @@ CONTACT
 }
 
 #multidissub1 {
-    font-size:1rem;
     transform-origin: 0% 0%;
     transform:translate(19.7em, 8.2em);
     color: rgb(var(--primary-tint))
@@ -1439,7 +1468,6 @@ CONTACT
 
 #multidissub2 {
     opacity:1;
-    font-size:1rem;
     width: 53em;
     transform-origin: 0% 0%;
     transform:translate(23em, 2.8em);
@@ -1458,7 +1486,7 @@ CONTACT
     height:1.5em;
     width:4em;
     color: rgb(var(--primary-col));
-    background:yellow;
+    background: rgba(255,204,0,1);
 }
 .frame {
     position:relative;

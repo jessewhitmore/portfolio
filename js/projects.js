@@ -11,11 +11,21 @@
 
 // -------------------------------------
 // -------------------------------------
+
 function processElements() {
     
-    const gal = new gallery()    
-    let imz = ['../img/test.jpg', '../img/test.jpg', '../img/test.jpg', '../img/test.jpg', '../img/test.jpg', '../img/test.jpg', '../img/test.jpg', '../img/test.jpg', '../img/test.jpg', '../img/test.jpg']
-//    gal.setup(imz, qs('#gal'), true)
+
+    qsa('.gals').forEach(v => {
+        let imgs = []
+        let caption = []
+        v.querySelectorAll('img').forEach(i => {
+            imgs.push(i.src)
+            if(i.alt.length > 0) { caption.push(i.alt) } else { caption.push(null) }
+        })
+        const gal = new gallery()
+        v.innerHTML = '';
+        gal.setup(imgs, v, caption)
+    })
 
 
 
@@ -27,13 +37,10 @@ function processElements() {
         }
     }
 
-    generateScreen(qs('.secHeader .baseline')) 
-    qsa('.subHeader').forEach(v => generateScreen(v) )
 
 
     let url = window.location.pathname.split('/').pop().split('.')[0].replaceAll('-',' ')
 
-    console.log(url)
     const projectIndex =  projectManifest.findIndex(obj => obj.title.toLowerCase() === url);
     const prevProjectIndex = (projectIndex === 0) ? projectManifest.length-1 : projectIndex - 1
     const nextProjectIndex = (projectIndex === projectManifest.length-1) ? 0 : projectIndex + 1
@@ -52,19 +59,80 @@ function processElements() {
     
     wrapProcessing()
 
+    
+    props.parallax =  qsa('.para')
+    const windowHeight = window.innerHeight
+    props.parallax.forEach(obj => {
+        
+        const aspect = obj.naturalWidth / obj.naturalHeight
+
+        const tA = 1700 * aspect
+        console.log(tA)
+        obj.style.minWidth = tA+'px'
+
+
+
+        obj.style.marginTop = -obj.offsetHeight/2 + 'px'  
+        
+        const parent = obj.parentElement.getBoundingClientRect()   
+        const mid = window.scrollY + parent.top + (parent.height / 2)
+        const halfHeight = window.innerHeight / 2
+
+        const relativePos = (window.scrollY + halfHeight - mid)
+        const speed = relativePos * (obj.dataset.dist/100)
+        obj.style.position = "absolute"
+        obj.style.left = "50%"
+        obj.style.transform = `translateX(-50%) translateY(${speed}px)`
+        
+    })
+}
+
+
+function parallax() {
+
+    props.parallax.forEach(obj => {
+        const parent = obj.parentElement.getBoundingClientRect()   
+        const mid = window.scrollY + parent.top + (parent.height / 2)
+        const halfHeight = window.innerHeight / 2
+
+        const relativePos = (window.scrollY + halfHeight - mid)
+        const speed = relativePos * (obj.dataset.dist/100)
+        obj.style.transform = `translateX(-50%) translateY(${speed}px)`
+    })
+
+}
+
+function uLoaded() {
+
 }
 
 
 
+function uDuringResizer() {
+
+}
+
+function uResizer() {
+    const windowHeight = window.innerHeight
+    props.parallax.forEach(obj => {
+        obj.style.marginTop = -obj.offsetHeight/2 + 'px'  
+        
+        const parent = obj.parentElement.getBoundingClientRect()   
+        const mid = window.scrollY + parent.top + (parent.height / 2)
+        const halfHeight = window.innerHeight / 2
+
+        const relativePos = (window.scrollY + halfHeight - mid)
+        const speed = relativePos * (obj.dataset.dist/100)
+        obj.style.transform = `translateX(-50%) translateY(${speed}px)`
+        
+    })
+
+}
 
 
-
-
-
-
-
-
-
+function uScroll() {
+    parallax()
+}
 
 
 
@@ -630,8 +698,8 @@ container.addEventListener('click', function(event) {
 
 */
 
-let DGtracking = new dynamicGallery()
-DGtracking.setup(qs('.galleryTest'), '.DGhook1')
+// let DGtracking = new dynamicGallery()
+// DGtracking.setup(qs('.galleryTest'), '.DGhook1')
 
-let DGtracking2 = new dynamicGallery()
-DGtracking2.setup(qs('.galleryTest2'), '.DGhook2', 'right')
+// let DGtracking2 = new dynamicGallery()
+// DGtracking2.setup(qs('.galleryTest2'), '.DGhook2', 'right')
