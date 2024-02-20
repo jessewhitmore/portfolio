@@ -2038,8 +2038,7 @@ function load() {
         props.loaded = true
     } else {
 
-        document.querySelector('.linkClick').style.transform = "scale(0)"
-        document.querySelector('.linkClick').style.background = 'red' 
+        gsap.set(document.querySelector('.linkClick'), {scaleX:0, scaleY:0})
 
         if(typeof uResizer === 'function') uLoaded()
         props.loaded = true
