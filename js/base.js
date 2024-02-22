@@ -28,7 +28,7 @@ const contactInfo = {
     tel: '+61 421 907 903',
     email: 'j.whitmore.mail@gmail.com',
     linkdin: 'https://www.linkedin.com/in/jesse-whitmore-998a18133/',
-    CV: './contact/cv.pdf'
+    CV: '/CV-Jesse-Whitmore.pdf'
 }
 
 // how those values will be treated
