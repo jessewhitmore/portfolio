@@ -815,6 +815,49 @@ function wrapProcessing() {
     attributeSetup('.pushable',['amt'])
     attributeSetup('.para',['dist'])
 
+    // Function to load and inject SVG
+    function loadSVG(ele, dir) {
+    // Fetch the SVG content
+
+    const url = '/assets/icons/arrow.svg'
+
+    fetch(url)
+        .then(response => response.text())
+        .then(svgData => {
+        // Create a new div element
+        const div = document.createElement('div');
+        
+        // Set the inner HTML of the div to the SVG content
+        div.innerHTML = svgData;
+
+        // Get the first child of the div (the SVG element)
+        const svgElement = div.firstChild;
+
+        const arrow = ele.innerText.split(dir)
+        arrow.splice(1,0,svgData)
+        const joined = arrow.join('')
+        ele.innerHTML = joined
+
+        // Get the computed style of the element
+        const col = window.getComputedStyle(ele).getPropertyValue('color');
+
+        ele.querySelector('polygon').setAttribute('fill',col)
+
+        if(dir =='<') ele.querySelector('svg').style.transform = 'rotate(180deg)'
+
+
+        })
+        .catch(error => console.error('Error loading SVG:', error));
+    }
+
+
+    // Call the loadSVG function with the URL and target element
+    qsa('.button').forEach(e => {
+        if(e.innerText.indexOf('>') > -1) loadSVG(e, '>')
+        if(e.innerText.indexOf('<') > -1) loadSVG(e, '<')
+    })
+
+
     /*          screen texture allocation and sub div creation           */
     qsa('.screen').forEach(v => processScreens(v))
 
@@ -848,8 +891,6 @@ function wrapProcessing() {
             wrapContent(ele, 'push')
         }
     }
-
-
 
 
 
@@ -906,9 +947,8 @@ function wrapProcessing() {
             let length = bht.scenes[bht.visible].timeline._tDur
             bht.scenes[bht.visible].timeline.seek(length*percentage)
         }
-
-
     }
+
 }
 
 /**
@@ -1284,7 +1324,9 @@ function contactSetup() {
     // -------------------------------------------
     
     /*          Generate contact info           */
-        
+    
+
+
     if(getCountry().toLowerCase() == props.country.toLowerCase()) {
         let modifiedNumber = contactInfo.tel.split(' ')
         modifiedNumber[0] = '0'
@@ -1292,6 +1334,7 @@ function contactSetup() {
     }
 
     let conInfo = qs('.contactInfo')
+    qs('.telButton').innerText = contactInfo.tel
     const keys = Object.keys(contactInfo);
     keys.forEach((key,i) => {
         let infoSpan = document.createElement('span')
@@ -1469,6 +1512,7 @@ function jumpTo(pos, behavior) {
 
     let eleTop = pos.getBoundingClientRect().top
     let distance = eleTop + document.documentElement.scrollTop
+    if(pos.id == 'about' && document.documentElement.scrollTop < eleTop) distance += pos.parentElement.getBoundingClientRect().height - pos.getBoundingClientRect().height
     if(eleTop < 10 && eleTop > -10 ) {
         if(props.mobile && document.body.classList.contains('menuOpen')) menuToggle()
     } else {

@@ -77,6 +77,12 @@ function processElements() {
     })
 
 
+    qsa('.col > div').forEach(v => {
+        if(v.children[0].classList.contains('subHeader')) {
+            v.parentElement.style.marginTop = '2.5em'
+        }
+    })
+
     
     props.parallax =  qsa('.para')
     const windowHeight = window.innerHeight
@@ -121,16 +127,37 @@ function parallax() {
 
 function uLoaded() {
 
+    setTimeout(()=>{
+        qsa('iframe').forEach(v => {
+
+            v.src = v.dataset.src
+    
+            batchSet(v, 'style', {
+                width:'100%',
+                height:'auto',
+                aspectRatio: v.getAttribute('width')/v.getAttribute('height'),
+                padding: '0.25em 0 0.75em'
+            })
+    
+            v.removeAttribute('height')
+            v.removeAttribute('width')
+    
+        })
+    },500)
+
 }
 
 
 
 function uDuringResizer() {
+    qs('#headerImage img').style.opacity = 0;
 
 }
 
 function uResizer() {
     const windowHeight = window.innerHeight
+    qs('#headerImage img').style.opacity = 1;
+
     props.parallax.forEach(obj => {
         obj.style.marginTop = -obj.offsetHeight/2 + 'px'  
         

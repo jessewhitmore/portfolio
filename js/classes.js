@@ -295,7 +295,7 @@ class gallery {
         target.classList.add('gallery')
 
         let left = {
-            autoAlpha: 1,
+            autoAlpha: 0.4,
             x: '-40%',
             z: 0,
             scale:0.6,
@@ -309,7 +309,7 @@ class gallery {
         }
 
         let right = {
-            autoAlpha: 1,
+            autoAlpha: 0.4,
             x: '40%',
             z: 0,
             scale:0.6,
@@ -435,7 +435,7 @@ class gallery {
         let target = this.target
 
         let left = {
-            autoAlpha: 1,
+            autoAlpha: 0.4,
             x: '-40%',
             z: 0,
             scale:0.6,
@@ -449,7 +449,7 @@ class gallery {
         }
 
         let right = {
-            autoAlpha: 1,
+            autoAlpha: 0.4,
             x: '40%',
             z: 0,
             scale:0.6,
@@ -500,10 +500,11 @@ class gallery {
                 target.style.top = `calc(50% - ${(target.offsetHeight/2 + 20)}px)`
             }
 
+
             target.querySelectorAll('.gallery-img').forEach((div, i, l)=> {
                 const rati = (i - this.index + imgs.length) % imgs.length;
                 const img = div.querySelector('img')
-                qs(`.gallery-nav div:nth-child(${i+1})`).classList.remove('gallery-navOn')
+                target.querySelector('.gallery-nav').children[i].classList.remove('gallery-navOn')
                 if(this.zoomable) div.querySelector('img').classList.remove('zoomable')
                 if(rati === imgs.length-1) {
                     gsap.to(div, {...left, duration:speed })
@@ -517,7 +518,7 @@ class gallery {
                         if(this.zoomable) img.classList.add('zoomable')
                         img.classList.remove('react-play')
                     } })
-                    qs(`.gallery-nav div:nth-child(${i+1})`).classList.add('gallery-navOn')
+                    target.querySelector('.gallery-nav').children[i].classList.add('gallery-navOn')
                 } else if(rati === 1) {
                     gsap.to(div, {...right, duration: speed })
                     gsap.to(img, {'mask-image': 'linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0))', duration:Math.max(0.3, speed) })

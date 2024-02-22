@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>HTML 5 Boilerplate</title>
+      <title>Jesse Whitmore</title>
+  <link rel="icon" type="image/x-icon" href="/assets/icons/icon.png" />
+
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="../mobile.css">
     <link rel="stylesheet" href="../desktop.css">
@@ -21,14 +23,14 @@
 
       <div id="subpageHeader" class = "section">
         <div id="headerImage" class="section60">
-          <img class = 'para dist50' src="./dog-system/header.png" />
+          <img class = 'para dist50' src="./studio_sliders/ex2.jpg" />
           <div class="shade"></div>
         </div>
         <div class = "secHeader"><span class="baseline ignite">Studio Sliders</span></div>
         <div class="statsBar">
           <div id="role">
             <span class="statHeader">Role</span>
-            <span class="statData">Solo Project</span>
+            <span class="statData">Product Manager</br>UI/UX Designer</span>
           </div>
           <divider></divider>
           <div id="for">
@@ -38,12 +40,12 @@
           <divider></divider>
           <div id="with">
             <span class="statHeader">WITH</span>
-            <span class="statData">Solo Project</span>
+            <span class="statData">Lead Developer</span>
           </div>
           <divider></divider>
           <div id="read">
             <span class="statHeader">LENGTH</span>
-            <span class="statData">22.9min read</span>
+            <span class="statData">7.9min read</span>
           </div>
         </div>
         <div class="copy">
@@ -56,12 +58,31 @@
           </br><span class = "boldText">UX:</span> User Experience - The overall satisfaction and usability a user experiences with a product or service.</p>
           <div class = "subHeader">The Problem</div>
           <p>Playground (PXYZ) faced a challenge in bridging the gap for external designers who desired to create bespoke builds at the standard of what was being produced by the internal team. The system that existed which allowed the use of simplistic PSD to fill in, altering some layers to create different animation then upload as an PNG that then was processed into a dynamic Ad, did not match where the industry and the internal team had pushed the product. The studio allowed these external designers the same chance to create as the internal team however the stack was complex, front-end development of the level required was rarer external, and there was a complicated pitfall present by the complex context object redirection done by our technology. The leap proved to be daunting, leading external designers to struggle, resulting in tasks falling back onto the internal team to resolve. The internal team, already stretched for time, faced an influx of requests. This highlighted the need for a more user-friendly middle ground, accommodating both internal and external users who lacked the expertise of our Creative Technologist. The goal was to create a means that would facilitate impactful changes and generate more finely tuned build, without complex interactions. Thus reducing dependency on the internal team and allow the studio to hold more value and ease of access to the creation process of those external to the company.</p>
+          </div>
+          <div class = "col">
+          <div class="copy">
           <div class = "subHeader">The Investigation</div>
           <p>In addressing the challenges, two key observations became apparent. Firstly, both internal and external users rarely modified the layers controlling animation, often unaware of their existence in existing PSD templates completely. Secondly, the level of modification permitted even if they made these changes was significantly limited and binary compared to the possibility explored by the internal team within the format and showcased to clients. To tackle this discussion with my lead developer led us to consider creating a system similar to dat.gui, a commonly employed debugging tool in 3JS development. Recognising its effectiveness in providing quick live feedback for modified values, we envisioned incorporating sliders, toggles and drop-downs to enable fine robust controls while remaining accessible to users with entry-level skills.</p>
           <p>To maximise this tool for Creative Technologist, we aimed to make the configuration of these sliders from within the studio itself. This meant the feature would have an evergreen use case outside of simply fixing limited client facing templates. This initiative also presented an opportunity to create a soft SDK for all formats. Having implemented a wealth of helper functions and efficiencies within format during my time at Playground, this code was not locked within the SDK as they were not always applicable and having them within the format gave the Technologists more control. This had created a state where the already complicated studio JavaScript panel was even more difficult to interact with to those uninitiated. The soft SDK concept aimed to streamline this by concealing unnecessary details unless voluntarily revealed and creating a scope in which context objects were redeclared (document and jquery’s $ for example) to work as an external user would expect without specific domain knowledge about how our ads work.</p>
           <div class = "subHeader">The Development</div>
           <p>With Key features and desired UI/UX mapped out, we embarked on developing a new tool and additional upgrades to enhance accessibility of our studio platform. I feel it was pivot to include the soft SDK, with it ending up being probably nearly as important as the actual implementation of Sliders themselves, when creating accessibility to new users. Concealing the majority of the format made for an extremely clean, space-saving panel which removed all domain issues and was near unbreakable for the general public, while not removing any features or control from the internal team. We also made the interface buildable from within the Javascript panel meaning that the sliders updated the values within the javascript, but the object coded within the javascript created the interface to then alter. This allowed a dynamic customisable option that empowered technologists to craft their own sliders. This meant bespoke could more easily transfer into client facing templates, something that was a complicated process til now.</p>
           <p>User testing played a crucial role in the development phase, involving key internal users with expertise levels akin to external users. The goal was to secure buy-in from this user group, recognising their potential to be significant adopters and influencers. The testing phase not only generated excitement and visibility for the project but also provided valuable insights, leading to refinements for the optimal UX.</p>
+          <div class="gals mobileOnly">
+            <img src="./studio_sliders/ex1.jpg" alt="UI mock-ups">
+            <img src="./studio_sliders/ex2.jpg" alt="Left the sliders. Right the object generating the sliders and modified by the sliders.">
+            <img src="./studio_sliders/ex3.jpg" alt="Example of different layout elements">
+            <img src="./studio_sliders/ex4.jpg" alt="Example of expandable section. ie: colour picker.">
+          </div>          
+          </div><div class="copy desktopOnly wider">
+            <div class="gals">
+              <img src="./studio_sliders/ex1.jpg" alt="UI mock-ups">
+              <img src="./studio_sliders/ex2.jpg" alt="Left the sliders. Right the object generating the sliders and modified by the sliders.">
+              <img src="./studio_sliders/ex3.jpg" alt="Example of different layout elements">
+              <img src="./studio_sliders/ex4.jpg" alt="Example of expandable section. ie: colour picker.">
+            </div>
+          </div>
+          </div>
+          <div class="copy">
           <div class = "subHeader">The Conclusion</div>
           <p>The introduction of sliders for Technologists marked a significant leap in streamlining the development and revision cycles of their builds. Technologists gained early access to sliders, facilitating a faster iteration process for them. This empowerment enabled designers to integrate sliders into their workflow, allowing external users to directly modify their work allowing for less guess work in revisions requests. Moreover, technologists could swiftly test various values on animation, enhancing their efficiency. Notably, technologists now had the flexibility to modify a single value – the timeline speed – without needing to individually adjust all values this alone was a huge time saver with only relative pacing verus global pacing now a concern.</p>
           <p>The time-saving benefits extended to existing templates, prompting a re-evaluation and modification to incorporate sliders. This development laid the groundwork for the subsequent project, “self-serve templates” which is listed on this site.</p>
@@ -89,7 +110,7 @@
   
             <div class="heading">
               LIKE WHAT YOU</br>
-              SAW?
+              SEE?
             </div>
             <div class="buttonPlate vel dur1200 dist50 pushable">
               <div class="button">

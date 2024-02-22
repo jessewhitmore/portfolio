@@ -7,27 +7,131 @@
  * 
  */
 
+
+
 // -------------------------------------
 // -------------------------------------
 
 function processElements() {
-
-    /*          generateScreens to titles           */
     
-    generateScreen(qs('.secHeader'))    
 
-    /*          parallax setup attribute setup           */
+    qsa('.gals').forEach(v => {
+        let imgs = []
+        let caption = []
+        v.querySelectorAll('img').forEach(i => {
+            imgs.push(i.src)
+            if(i.alt.length > 0) { caption.push(i.alt) } else { caption.push(null) }
+        })
+        const gal = new gallery()
+        v.innerHTML = '';
+        gal.setup(imgs, v, caption)
+    })
 
-    attributeSetup('.para',['dist'])
 
+
+    /*          pushable element creation           */
+
+    if(!props.mobile) {
+        for(let ele of qsa('.pushable')) {
+            wrapContent(ele, 'push')
+        }
+    }
+
+
+
+    
     wrapProcessing()
+
+
+    let buttonShaS = 7; // Adjust this variable as needed
+    let buttonSha = `-${0.0625 / buttonShaS}em -${0.0625 / buttonShaS}em 0 rgba(255,255,255, 0.2),
+                  ${0.0625 / buttonShaS}em -${0.0625 / buttonShaS}em 0 rgba(255,255,255, 0.3),
+                  -${0.0625 / buttonShaS}em ${0.0625 / buttonShaS}em 0 rgba(255,255,255, 0.2),
+                  ${0.0625 / buttonShaS}em ${0.0625 / buttonShaS}em 0 rgba(255,255,255, 0.3),
+                  0 -${0.125 / buttonShaS}em ${1.2 / buttonShaS}em,
+                  0 0 ${0.125 / buttonShaS}em,
+                  0 0 ${0.3125 / buttonShaS}em rgba(255,126,0,0.5),
+                  0 0 ${5.9375 / buttonShaS}em rgba(255, 68, 68,0.6),
+                  0 0 ${0.125 / buttonShaS}em rgba(255,126,0,0.5),
+                  0 ${0.125 / buttonShaS}em ${0.1875 / buttonShaS}em rgba(0,0,0,0.7)`;    
+    qsa('#projectNavigator .button').forEach(v => {
+        v.style.boxShadow = buttonSha
+    })
+
+
+    
+    props.parallax =  qsa('.para')
+    const windowHeight = window.innerHeight
+    props.parallax.forEach(obj => {
+        
+        const aspect = obj.naturalWidth / obj.naturalHeight
+
+        const tA = 1700 * aspect
+        obj.style.minWidth = tA+'px'
+
+
+
+        obj.style.marginTop = -obj.offsetHeight/2 + 'px'  
+        
+        const parent = obj.parentElement.getBoundingClientRect()   
+        const mid = window.scrollY + parent.top + (parent.height / 2)
+        const halfHeight = window.innerHeight / 2
+
+        const relativePos = (window.scrollY + halfHeight - mid)
+        const speed = relativePos * (obj.dataset.dist/100)
+        obj.style.position = "absolute"
+        obj.style.left = "50%"
+        obj.style.transform = `translateX(-50%) translateY(${speed}px)`
+        
+    })
+}
+
+
+function parallax() {
+
+    props.parallax.forEach(obj => {
+        const parent = obj.parentElement.getBoundingClientRect()   
+        const mid = window.scrollY + parent.top + (parent.height / 2)
+        const halfHeight = window.innerHeight / 2
+
+        const relativePos = (window.scrollY + halfHeight - mid)
+        const speed = relativePos * (obj.dataset.dist/100)
+        obj.style.transform = `translateX(-50%) translateY(${speed}px)`
+    })
+
+}
+
+function uLoaded() {
 
 }
 
 
 
+function uDuringResizer() {
+
+}
+
+function uResizer() {
+    const windowHeight = window.innerHeight
+    props.parallax.forEach(obj => {
+        obj.style.marginTop = -obj.offsetHeight/2 + 'px'  
+        
+        const parent = obj.parentElement.getBoundingClientRect()   
+        const mid = window.scrollY + parent.top + (parent.height / 2)
+        const halfHeight = window.innerHeight / 2
+
+        const relativePos = (window.scrollY + halfHeight - mid)
+        const speed = relativePos * (obj.dataset.dist/100)
+        obj.style.transform = `translateX(-50%) translateY(${speed}px)`
+        
+    })
+
+}
 
 
+function uScroll() {
+    parallax()
+}
 
 
 
@@ -118,25 +222,10 @@ function intersections() {
                 if(viewportVel.indexOf(entry.target) === -1) viewportVel.push(entry.target);
             } else {
                 let tempIndex = viewportVel.indexOf(entry.target)
-                if(tempIndex !== -1) { 
-                    viewportVel.splice(tempIndex, 1); gsap.set(entry.target, { y:0 }); }
+                if(tempIndex !== -1) { viewportVel.splice(tempIndex, 1); gsap.set(entry.target, { y:0 }); }
             }
         });
     }
-
-
-    // -------------
-
-    /*          Project middle mobile interaction           */
-
-    function projectIntersect(entries, observer) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                projectDraw(entry.target)
-            } 
-        });
-    }
-
 
     // -------------
 
@@ -183,7 +272,6 @@ function intersections() {
     /*          canvas           */
     
     function canvasStaticHorizontalIntersect(e, observer) {
-        if(!props.performanceHandling.staticCanvas) return;
         let obvObjRunning = false;
         e.forEach(entry => {
             const matchingIndex = staticHorizontal.eles.findIndex((obj) => obj.canvas === entry.target);
@@ -212,11 +300,7 @@ function intersections() {
         rootMargin: '20% 0% 20% 0%'
     })
 
-    if(props.mobile) observerConstructor(projectIntersect, '.project',  {
-        rootMargin: '-50% 0% -50% 0%'
-    })
-
-    observerConstructor(floatIntersect, '.float', {
+    observerConstructor(floatIntersect, '.floated', {
         rootMargin: '0% 0% 0% 0%'
     })
     
@@ -267,92 +351,6 @@ function intersections() {
 
 
 
-/**
- * 
- * 
- *          USER INTERACTION RELATED
- *          Buttons, hover near, etc.
- * 
- * 
- */
-  
-function clickThrough(e, ev) {
-
-    let mobSwitch = (props.mobile) ? 'r' : 't', link;
-    switch(parseInt(e.dataset.linkref)) {
-        case 0: // about page
-            link = './about.html'
-            linkClick.click(mobSwitch, link)
-        break;
-        case 1: // project page            
-            qsa('.highlight').forEach((ele) => {        ele.classList.remove('highlight')     })
-           linkClick.centerSweep(ev.clientY, `./projects/${e.dataset.project}.html`)
-        break;
-        case 2: // copy phonenumber
-            if(props.mobile) {
-                window.open(`tel:${contactInfo.tel.replace(' ','')}`,'_self')
-            } else {
-                toClipboard(contactInfo.tel) 
-            }
-        break;
-        case 3: // copy email & open email client
-            toClipboard(contactInfo.email);
-            sendEmail()
-        break;
-        case 4: // open linkedin URL
-            linkClick.click(mobSwitch, contactInfo.linkdin)
-        break;
-        case 5: // open contact page
-            gsap.to('.contactInfo', {y:0, duration: 1, ease: "elastic.out(1,0.5)" })
-            qsa('#contactPlate, .contactInfo').forEach((ele) => {
-                ele.classList.add('contactOpen')
-            })            
-        break;
-        default: // within nav 
-        if(!scrollVals.autoScrolling) jumpTo(e.innerText)
-        break;
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -365,3 +363,115 @@ contactSetup()
 
 
 
+
+
+/* SVG generation
+
+        // Create an SVG element
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('width', clickedSpecs.width);
+        svg.setAttribute('height', clickedSpecs.height);
+  
+        // Create a rectangle
+        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute('width', clickedSpecs.width);
+        rect.setAttribute('height', clickedSpecs.height);
+        rect.setAttribute('stroke', 'black');
+        rect.setAttribute('stroke-width', '2');
+        rect.setAttribute('fill', 'transparent');
+  
+        const rect2 = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect2.setAttribute('width', clickedSpecs.width);
+        rect2.setAttribute('height', clickedSpecs.height);
+        rect2.setAttribute('transform-origin', `${clickedSpecs.width/2} ${clickedSpecs.height/2}`)
+        rect2.setAttribute('stroke', 'black');
+        rect2.setAttribute('stroke-width', '2');
+        rect2.setAttribute('transform','scale(-1,-1) rotate(180)')
+        rect2.setAttribute('fill', 'transparent');
+  
+
+        // Append the rectangle to the SVG
+        svg.appendChild(rect);
+        svg.appendChild(rect2);
+  
+        // Append the SVG to the body
+        div.appendChild(svg);
+  
+        // Get the length of the rectangle's perimeter
+        const rectLength = rect.getTotalLength();
+  
+        // Set the stroke-dasharray and stroke-dashoffset properties to create a dashed line
+        rect.style.strokeDasharray = rectLength;
+        rect.style.strokeDashoffset = rectLength;
+        rect2.style.strokeDasharray = rectLength;
+        rect2.style.strokeDashoffset = rectLength;
+    
+        // Add the animation
+        rect.style.animation = 'strokeFillLeft 1s forwards';
+        rect2.style.animation = 'strokeFillLeft 1s forwards';
+  
+        // Remove the SVG element after the animation is complete
+        // setTimeout(() => {
+        //   document.body.removeChild(svg);
+        // }, 1000);    
+
+
+
+
+
+function zoomable(event, target) {
+
+
+    let = zoomLayer = document.createElement('div')
+    zoomLayer.classList.add('zoomLayer')
+    
+    let img = new Image()
+    img.src = target.src
+
+    let div = document.createElement('div')
+    
+    let bounding = target.getBoundingClientRect()
+    let clickedSpecs = {
+        x: bounding.left - props.rem/2,
+        y: bounding.top - props.rem/2,
+        width: bounding.width + props.rem,
+        height: bounding.height + props.rem,
+    }
+
+
+    gsap.set(div, clickedSpecs)
+
+    zoomLayer.appendChild(div).appendChild(img)
+    qs('.linkClick').insertAdjacentElement('beforebegin', zoomLayer);
+
+
+
+
+
+//    qs('#nav').insertAdjacentElement('beforebegin', zoomLayer);
+    gsap.to(zoomLayer, {'backdrop-filter':'blur(5px)', background:`rgba(${props.secondaryCol}, 0.2)`, duration: 1})
+    gsap.to(div, {x:0, y:0, width:'100%', height:'100%', duration: 0.8, delay:0.2})
+
+
+}
+
+
+
+
+const container = document.querySelector('#wrapper');
+
+container.addEventListener('click', function(event) {
+  if (event.target.classList.contains('zoomable')) {
+
+    zoomable(event, event.target)
+    
+  }
+});
+
+*/
+
+// let DGtracking = new dynamicGallery()
+// DGtracking.setup(qs('.galleryTest'), '.DGhook1')
+
+// let DGtracking2 = new dynamicGallery()
+// DGtracking2.setup(qs('.galleryTest2'), '.DGhook2', 'right')

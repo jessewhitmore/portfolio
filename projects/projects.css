@@ -11,7 +11,7 @@
     height:0;
     width:clamp(0px, calc(100vw - 4rem), 85em);
     
-    margin-left:calc(50% - 1rem);
+    margin-left:calc(50% - 2rem);
     transform:translateX(-50%);
 }
 
@@ -97,6 +97,10 @@ p:last-child {
         width: clamp(0px, 100%, 1000px);
     }
 
+    .col .copy .subHeader:first-child {
+        margin: 0em 0 0.3em;
+    }
+
     .col .copy {
         width: clamp(0px, 46%, 750px);
         margin: 0 auto;
@@ -143,7 +147,7 @@ p:last-child {
     margin-bottom: 8em;
 
     overflow:hidden;
-    background:lime;
+    background: rgb(var(--primary-col));
 }
 
 #headerImage img {
@@ -251,11 +255,14 @@ p:last-child {
 
 
 .gals {
-    position: sticky;
     display: flex;
     justify-content: center;
     align-items: center;
     transition: all 0.5s;
+}
+
+.wider .gals {
+    position: sticky;
 }
 
 .gallery {

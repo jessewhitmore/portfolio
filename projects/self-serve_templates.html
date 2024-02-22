@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>HTML 5 Boilerplate</title>
+      <title>Jesse Whitmore</title>
+  <link rel="icon" type="image/x-icon" href="/assets/icons/icon.png" />
+
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="../mobile.css">
     <link rel="stylesheet" href="../desktop.css">
@@ -21,7 +23,7 @@
 
       <div id="subpageHeader" class = "section">
         <div id="headerImage" class="section60">
-          <img class = 'para dist50' src="./dog-system/header.png" />
+          <img class = 'para dist50' src="./self-serve_templates/header.png" />
           <div class="shade"></div>
         </div>
         <div class = "secHeader"><span class="baseline ignite">Self-serve Templates</span></div>
@@ -43,7 +45,7 @@
           <divider></divider>
           <div id="read">
             <span class="statHeader">LENGTH</span>
-            <span class="statData">22.9min read</span>
+            <span class="statData">5.2min read</span>
           </div>
         </div>
         <div class="copy">
@@ -52,11 +54,26 @@
           </br><span class = "boldText">SDK:</span> Software Development Kit - A set of tools and resources that enables the development of software for a specific platform, designed to be more flexible and adaptable.</p>
           <div class = "subHeader">The Problem</div>
           <p>The existing templates within the Playground ecosystem were becoming increasingly limited in comparison to the innovative possibilities explored by the in-house design team, leading to a heavy reliance on bespoke builds. This reliance on custom solutions places significant strain on our relatively small design team. To address this issue, I aimed to revamp our templates, transforming them into a self-service mechanism that would empower external users to take control of their creations. The goal was to make the templates more competitive to the work produced by our Creative Technologist. This would be aided by leveraging the capabilities introduced by our Sliders project, which meant templates could be simplified while being made more robust and customisable. An additional challenge was that users frequently filled in the templates incorrectly due to information flow issues and often neglected to utilise the built-in features, resulting in default animations or requests for manual intervention by the in-house team.</p>
-          <div class = "subHeader">The Investigation and Developement</div>
+          </div>
+          <div class="col">
+            <div class="copy">
+          <div class = "subHeader">The Investigation and&nbsp;Developement</div>
           <p>The redevelopment process focused on enhancing the usability and clarity of our templates. To achieve this, several key improvements were implemented. Firstly, a reordering of information was introduced to make information passing more organic to the way English is read. I created banded segments that followed the left to right flow, starting with a general help band for instructions, the working panel for the Ad building, and finally the preview panel for seeing how the flat layed work would look. These layout changes I felt would drastically reduce common errors and encouraged more logical use of the templates as compared to having the preview first which often saw user designing over top of the preview ignoring the working layers.</p>
           <p>Font size was a big consideration to deal with the issue arising when first opening a document in Photoshop, as it zooms out to see the entire panel. The numbered steps of the working panel were deliberately eye catching from this zoomed out state with the layer name also legible. The instructions on what to do with the layer were deliberately made legible on zooming in to encourage user consideration.</p>
           <p>To declutter the template, the togglable layers that controlled animation were removed and consolidated on the sliders once uploaded, replaced with an explanation of where to go to make these modifications once uploaded. Something that is easy to do as the sliders exist below the drop zone. Additionally, a layered view within the preview tab was introduced to showcase how elements were structured within the render stack, addressing instances where clients obscured underlying art by placing fully opaque elements a the front of the stack.</p>
           <p>A tutorial utilising Photoshop’s timeline feature was incorporated to offer users a comprehensive tour of template usage. This tutorial featured a visual narrator, our wizard character, guiding users through the template. Recognising that the end-user might not be familiar with our product, this approach encourages users to invest time in learning rather than attempting to navigate the template without guidance, in a fun and engaging way.</p>
+          <div class="gals mobileOnly">
+            <img src="./self-serve_templates/ex1.jpg" alt="Examples of the PSD on open and throughout tutorial">
+            <img src="./self-serve_templates/ex2.jpg" alt="Working document with zoom in on features such as: help panel, step hierarchy and preflight checklist">
+          </div>          
+        </div><div class="copy desktopOnly wider">
+          <div class="gals">
+            <img src="./self-serve_templates/ex1.jpg" alt="Examples of the PSD on open and throughout tutorial">
+            <img src="./self-serve_templates/ex2.jpg" alt="Working document with zoom in on features such as: help panel, step hierarchy and preflight checklist">
+          </div>
+        </div>
+        </div>
+        <div class="copy">
           <div class = "subHeader">The Solution</div>
           <p>The implementation phase began with the modernisation of our flagship product, the HangTime, along with the newly introduced format, Velocity. These products were chosen strategically to serve as testing grounds for the effectiveness of the improvements, covering the majority of used products .The update included the integration of sliders specific to the templates, accompanied by a clean-up of the templates’ JavaScript panel, utilising the soft SDK introduced in the Sliders Project.</p>
           <p>This comprehensive update resulted in a streamlined process for external designers, enabling them to swiftly navigate through basic designs with comparable customisation as done by the in-house team. Furthermore, there was a notable reduction in the workload for Technologists, as non-technically skilled producers could now create more comparable animations using the sliders and new templates.</p>          
@@ -83,7 +100,7 @@
   
             <div class="heading">
               LIKE WHAT YOU</br>
-              SAW?
+              SEE?
             </div>
             <div class="buttonPlate vel dur1200 dist50 pushable">
               <div class="button">

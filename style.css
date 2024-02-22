@@ -151,9 +151,7 @@ body {
 
 #wrapper {
     position: relative;
-
     width: 100%;
-
     margin: auto;
 }
 
@@ -165,6 +163,8 @@ body {
 
     width: 100%;
 
+    overflow:clip;
+    contain: paint;
     padding: clamp(4rem, 15vw, 6rem) 2rem;
     box-sizing: border-box;
     
@@ -243,6 +243,7 @@ p + .subHeader {
 .copy .boldText {
     font-weight:bold;
 }
+
 
 .copy p {
     position:relative;
@@ -460,7 +461,11 @@ canvas, .screen {
     height:100%;
 }
 
-
+.button svg {
+    display:inline-block;
+    height:0.75em;
+    width:auto;
+}
 
 
 /**
@@ -1090,7 +1095,7 @@ PROJECT
 }
 
 #projects .reveal {
-    background:rgb(var(--secondary-col));
+    background:rgb(var(--primary-col));
     color:rgb(var(--primary-col));
     overflow:hidden;
 }
@@ -1189,6 +1194,7 @@ CONTACT
     align-items: stretch;
 
     color: rgb(var(--primary-col));
+    box-shadow: 0 0 2em rgba(255, 184, 114, 0.7);
 }
 
 #contact #buttonText {
@@ -1409,7 +1415,7 @@ CONTACT
     transform: translateY(calc(50vh + 50%));
 
     backdrop-filter: blur(8px);    
-    box-shadow: 0rem 0.5rem 1.5rem rgb(var(--secondary-col), 0.5);
+    box-shadow: 0rem 0.5rem 1.5rem rgb(var(--primary-col), 0.5);
 }
 
 .contactInfo span {
