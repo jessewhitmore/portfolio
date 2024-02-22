@@ -1094,7 +1094,6 @@ class fgGallery {
     bg.classList.add('loading')
     let ready = ()=> {
         bg.classList.remove('loading')
-        console.log('ready to go')
         this.index = 0
         gsap.set(bg.children[0], {opacity:1, zIndex:1})
 
@@ -1196,14 +1195,7 @@ class fgGallery {
   
         // tilt max
         const tiltX = Math.max(-30, Math.min(30,-(deltaY / 100))); 
-        const tiltY = Math.max(-30, Math.min(30, deltaX / 100));
- 
-        
-        console.log('x')
-
-        // this.ele.querySelectorAll('> div').forEach(e => {
-        //     e.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
-        // })
+        const tiltY = Math.max(-30, Math.min(30, deltaX / 100)); 
 
         this.ele.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
     }
@@ -1212,20 +1204,6 @@ class fgGallery {
         e.forEach(entry => {
 
             if (entry.isIntersecting) {
-                // if(this.firstRun) {
-                //     this.firstRun = false
-                //     this.autoClick()
-                //     this.hookIndex.forEach((v, i) => {
-                //         if(this.index == i) {
-                //             v.forEach((val,ind,a)=> {
-                //                 if(a.length > 1) val.classList.add('focused','multiSegment'); else val.classList.add('focused')
-                //             })
-                //         } else {
-                //             v.forEach(val => val.classList.remove('focused','multiSegment'))
-                //         }
-                //     })
-
-                // }
 
                 this.onScreen = true
 //                window.addEventListener('scroll', this.handleScroll.bind(this))
