@@ -6,19 +6,23 @@
  * 
  */
 
-// clean up JS further
-// dynamically generate everything that should be on a page (this includes nav)
-// group everything by section regardless of it's type unless universal
-// group all event listeners together
-// grain control setup - off / on
-// detech if framefrate has dropped and turn off qualities indicate where to turn it back on 
-// universal request animation frame with page specific.
-// Rename "custom" to "page" +++
-//
+// add icons to tech menu
+// change from CSS hover to mouseOver for main menu
+// Dynamic gal for example of work at PXYZ
+// flickering icon in tab
+// CV open tab rather than replace
+// get to bottom of flicker issue by youtube iframes
+// random chance of flicker for buttons
+// turn flicker into a callable function
+// Gallery padding and sizing fix
+// about animation revision
+// address sweep issues caused by phones
+// multi-browser analysis
+// dist calc on mobile vs PC for projects
+// trigger animation on point for BHT
+// 
 
 
-// determine CSS per page
-// UI altering thang set-up
 
 /*          MAJOR EDITABLE VARIABLES           */
 
@@ -52,16 +56,16 @@ const props = {
 // projects manifest -- used to geneterate projects on index only currently
 const projectManifest = [
     {
+        title: 'New Format: Velocity',
+        desc: 'PROJECT - CODE - UI/UX - DESIGN' 
+    },     
+    {
         title: 'DOG System',
         desc: 'UI/UX - DESIGN - PROJECT' 
     }, 
     {
         title: '2021 Roadmap',
         desc: 'PROJECT - LEADERSHIP' 
-    }, 
-    {
-        title: 'New Format: Velocity',
-        desc: 'PROJECT - CODE - UI/UX - DESIGN' 
     }, 
     {
         title: 'Studio Sliders',

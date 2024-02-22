@@ -108,6 +108,10 @@ function processElements() {
         obj.style.transform = `translateX(-50%) translateY(${speed}px)`
         
     })
+
+
+
+
 }
 
 

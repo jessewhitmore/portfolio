@@ -75,6 +75,14 @@
           <div class = "copy">
           <div class = "subHeader">The Conclusion</div>
           <p>The culmination of the development efforts resulted in the creation of a series of blank and templated executions tailored for the design team’s and external designers' use. Additionally, a comprehensive package of marketing collateral was created to empower the sales team with an impressive site list of bought in publishers. All metric seemed to meet or beat that of other formats, it performed so well that the data team felt it maybe issues with how they were collecting data – the data team are never shy to expect the worse. The solution included clear guidance on the next steps for the official deployment onto the site. At the time of my departure from the company, the product was ready for internal requests but had not yet been officially launched on the public facing site. The pending release awaits further mergers and the introduction of a new universal studio tool, which will serve both GumGum and PXYZ designers allowing the format to be globally used through the company.</p>          
+          <div class="phoneGal">
+            <div class="phoneImgs">
+
+            </div>
+            <img src="https://assets.playground.xyz/JWhitmore/a27ecb94_phone.png">
+            <div class="arrowLeft"><img src="/assets/icons/menuArrow.svg"/></div>
+            <div class="arrowRight"><img src="/assets/icons/menuArrow.svg"/></div>
+          </div>          
           <div id="projectNavigator">
             <div class="info ignite mobileOnly">Want to</br>see more?</div>
             <div class="previous react-open">
@@ -161,6 +169,32 @@
   <script src="../js/classes.js"></script>
   <script src="../js/base.js"></script>
   <script src="../js/projects.js"></script>
+  <script>
+  const vel = [
+      {
+          name:'Velocity',
+          link: 'https://studio.playgroundxyz.com/cunawu/quiet?pos=header-ad&size=320x50&show-engagements=true', 
+          gif: 'https://metababy.playground.xyz/cunawu/375x745/velocity/gif?cb=1679224949',
+      }, 
+      {
+          name:'2k22',
+          link: 'https://studio.playgroundxyz.com/leyako/quiet?pos=header-ad&size=320x50&show-engagements=true', 
+          gif: 'https://metababy.playground.xyz/leyako/375x745/velocity/gif?cb=1679225191',
+      },
+      {
+          name:'airforce',
+          link: 'https://studio.playgroundxyz.com/pitimi/quiet?pos=header-ad&size=320x50&show-engagements=true', 
+          gif: 'https://metababy.playground.xyz/pitimi/375x745/velocity/gif?cb=1679225452',
+      }, 
+      {
+          name:'tiffany',
+          link: 'https://studio.playgroundxyz.com/hipaxi/quiet?pos=header-ad&size=320x50&show-engagements=true', 
+          gif: 'https://metababy.playground.xyz/hipaxi/375x745/velocity/gif?cb=1679225712',
+      },     
+  ]
+  const phone = new fgGallery()
+    phone.setup(qs('.phoneGal'), qs('.phoneImgs'), vel, qs('.phoneGal > img'))
 
+  </script>
   </body>
 </html>

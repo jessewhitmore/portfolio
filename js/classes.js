@@ -1025,3 +1025,219 @@ class dynamicGallery { // canvas builder
     }
     
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class fgGallery {
+    constructor() {
+        this.tilt = null
+    }
+
+    setup(parent, bg, work, clickZone, tilt) {
+        this.tilt = tilt || 30
+        this.gal = bg
+
+        const observer = new IntersectionObserver(this.galOnScreen.bind(this), {
+            rootMargin:'0% 0% 0% 0%'
+        })
+
+        observer.observe(parent)
+
+        const wrapper = document.createElement('div')
+        batchSet(wrapper, 'style', {
+            position:'absolute',
+            width:'100%',
+            height:'100%',
+            display:'flex',
+            justifyContent:'center',
+            transformStyle: 'preserve-3d'
+        })
+
+        console.log(parent.children)
+        Array.from(parent.children).forEach((e,i) => {
+            e.style.zIndex = i
+            wrapper.appendChild(e)
+        })
+
+
+        parent.appendChild(wrapper)
+        this.ele = wrapper
+
+        this.manifest = work;
+
+    const imageSources = [];
+    const images = [];
+
+    for(let i=0; i < work.length; i++) {
+        imageSources.push(work[i].gif)
+    }          
+
+    bg.classList.add('loading')
+    let ready = ()=> {
+        bg.classList.remove('loading')
+        console.log('ready to go')
+        this.index = 0
+        gsap.set(bg.children[0], {opacity:1, zIndex:1})
+
+        parent.querySelector('.arrowLeft img').classList.add('react-play','active')
+        parent.querySelector('.arrowRight img').classList.add('react-play','active')
+
+        clickZone.classList.add('react-open')
+        bg.style.pointerEvents = 'none'
+        clickZone.addEventListener('click', ()=> {this.click()})
+        parent.querySelector('.arrowLeft').addEventListener('click', ()=> {this.move(-1)})
+        parent.querySelector('.arrowRight').addEventListener('click', ()=> {this.move(1)})                
+    } 
+
+    document.addEventListener("DOMContentLoaded", ()=> {
+    setTimeout(()=>{
+
+        function loadImageSequentially(index) {
+
+            if (index < imageSources.length) {
+                const img = new Image();
+                img.onload = () => {
+                    if(index == 0) ready()
+                    // Set the src attribute of the corresponding img element
+                    document.getElementById(`image-${index}`).src = img.src;
+                    // Load the next image recursively
+                    loadImageSequentially(index + 1);
+                };
+                img.src = imageSources[index];
+            }
+        }
+        
+        // Create img elements and append them to the document
+        imageSources.forEach((source, index) => {
+            const img = document.createElement('img');
+            img.id = `image-${index}`;
+            gsap.set(img, {opacity:0, zIndex:0 })
+            bg.appendChild(img);
+        });
+        
+        // Start loading images sequentially from the first one
+        loadImageSequentially(0);
+
+
+
+
+        },300)
+        })
+
+    }
+
+    click() {
+        window.open(this.manifest[this.index].link,'_blank')
+    }
+
+    move(dir) {
+
+
+        gsap.set(this.gal.children, {
+            zIndex:0
+        })
+
+        gsap.set(this.gal.children[this.index], {
+            zIndex:1,
+        })
+
+        console.log(this.index)
+
+        this.index += dir;
+        if(this.index < 0) this.index = this.manifest.length - 1;
+        if(this.index > this.manifest.length-1) this.index = 0;
+
+
+        if(this.gal.children[this.index].src == '') {
+            this.gal.classList.add('loading')
+            this.gal.children[this.index].onload = () => {
+                this.gal.classList.remove('loading')
+            }
+            this.gal.children[this.index].src = this.manifest[this.index].gif
+        }
+
+        gsap.set(this.gal.children[this.index], {
+            zIndex:2,
+            autoAlpha:0,
+        })
+
+        gsap.to(this.gal.children[this.index], {
+            autoAlpha:1,
+            duration: 0.1,
+        })
+    }
+
+    handleTilt(event) {
+        const elementRect = this.ele.getBoundingClientRect();
+        const elementCenterX = elementRect.left + elementRect.width / 2;
+        const elementCenterY = elementRect.top + elementRect.height / 2;
+  
+        const deltaX = event.clientX - elementCenterX;
+        const deltaY = event.clientY - elementCenterY;
+  
+        // tilt max
+        const tiltX = Math.max(-30, Math.min(30,-(deltaY / 100))); 
+        const tiltY = Math.max(-30, Math.min(30, deltaX / 100));
+ 
+        
+        console.log('x')
+
+        // this.ele.querySelectorAll('> div').forEach(e => {
+        //     e.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+        // })
+
+        this.ele.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+    }
+
+    galOnScreen(e) {
+        e.forEach(entry => {
+
+            if (entry.isIntersecting) {
+                // if(this.firstRun) {
+                //     this.firstRun = false
+                //     this.autoClick()
+                //     this.hookIndex.forEach((v, i) => {
+                //         if(this.index == i) {
+                //             v.forEach((val,ind,a)=> {
+                //                 if(a.length > 1) val.classList.add('focused','multiSegment'); else val.classList.add('focused')
+                //             })
+                //         } else {
+                //             v.forEach(val => val.classList.remove('focused','multiSegment'))
+                //         }
+                //     })
+
+                // }
+
+                this.onScreen = true
+//                window.addEventListener('scroll', this.handleScroll.bind(this))
+                window.addEventListener('mousemove', this.handleTilt.bind(this));
+            } else {
+                this.onScreen = false
+//                window.removeEventListener('scroll', this.handleScroll.bind(this));     
+                window.removeEventListener('mousemove', this.handleTilt.bind(this));
+            }
+        });
+
+    }    
+
+
+}

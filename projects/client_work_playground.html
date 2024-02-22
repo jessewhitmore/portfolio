@@ -55,7 +55,19 @@
           
           <p>Here, I present a selection of builds that I created during my tenure in this role. It’s crucial to note that each build represented one of numerous projects-sometimes up to six — conceived, designed, and coded within a single day, often without pre-existing assets. This dynamic environment sharpened my ability to work swiftly and effectively, strategically applying polish where it mattered most. The role also presented numerous opportunities for experimentation, allowing me to continually push the limits of what I deemed possible.</p>
           
-          <p>See below a selection of builds I am most proud of, you can click on the phone to launch the experience in a new tab. The preview gif doesn’t exactly do justice to work done:</p>          
+          <p>See below a selection of builds I am most proud of, you can click on the phone to launch the experience in a new tab. The preview gif doesn’t exactly do justice to work done:</p>
+          
+          <div class="phoneGal">
+            <div class="phoneImgs">
+
+            </div>
+            <img src="https://assets.playground.xyz/JWhitmore/a27ecb94_phone.png">
+            <div class="arrowLeft"><img src="/assets/icons/menuArrow.svg"/></div>
+            <div class="arrowRight"><img src="/assets/icons/menuArrow.svg"/></div>
+          </div>
+
+          
+          
           <div id="projectNavigator">
             <div class="info ignite mobileOnly">Want to</br>see more?</div>
             <div class="previous react-open">
@@ -141,6 +153,169 @@
   <script src="../js/classes.js"></script>
   <script src="../js/base.js"></script>
   <script src="../js/projects.js"></script>
+    <script>
+const bau = [
+    {
+        name:'Tenet (pre-sale)',
+        link: 'https://studio.playgroundxyz.com/higina/4/quiet?pos=middle-ad&size=300x250&show-engagements=true', // ht
+        gif: 'https://metababy.playground.xyz/higina/4/375x745/hang-time/gif?cb=1679204552',
+        descp: 'I\'m proud fo this build due to the lack of assets I had to work with. I found a single poster online and through image restoration and careful cutting I was able to seperate, and aniamte the background to make an extremely dynamic feeling placement.'
+    },    
+    {
+        name:'Coca-cola (pre-sale)',
+        link: 'https://studio.playgroundxyz.com/welono/10/quiet?pos=middle-ad&size=300x250&show-engagements=true', // ht
+        gif: 'https://metababy.playground.xyz/welono/375x745/hang-time/gif?cb=1679204309',
+        descp: 'This build is a great example of Coca-cola\'s silhouette design. No elements except for the logo was provided and everything else seen is hand drawn. This was a great bit of fun and I love my use of attaching both auto playing at a point animation with scroll based.'
+    },    
+    {
+        name:'Budlight (post-sale)',
+        link: 'https://studio.playgroundxyz.com/pocapo/109/quiet?pos=middle-ad&size=300x250&show-engagements=true', // ht
+        gif:'https://metababy.playground.xyz/pocapo/109/375x745/hang-time/gif?cb=1679204471',
+        descp: 'Although I personally do not recommend such complicated builds within an ad placement. It\'s what won the brief so who to judge what the customer wants! Beside it was a great challenge to sitdown and figure out how to get working Tetris within an ad placement. To play the keys are A + D + S to move and go down. Q + E to rotate! Have fun!'
+    },
+    {
+        name:'Budlight (post-sale)',
+        link: 'https://studio.playgroundxyz.com/ridare/4/quiet?pos=header-ad&size=320x50&show-engagements=true', // ss
+        gif: 'https://metababy.playground.xyz/ridare/375x745/super-skin-v2/gif',
+        descp: 'Although I personally do not recommend such complicated builds within an ad placement. It\'s what won the brief so who to judge what the customer wants! Beside it was a great challenge to sitdown and figure out how to get working Tetris within an ad placement. To play the keys are A + D + S to move and go down. Q + E to rotate! Have fun!'    
+    },
+    {
+        name:'Holy Moley (post-sale)',
+        link: 'https://studio.playgroundxyz.com/dacali/6/quiet?pos=middle-ad&size=300x250&show-engagements=true', // ht
+        gif: 'https://metababy.playground.xyz/dacali/6/375x745/hang-time/gif?cb=1679204608',
+        descp: 'Another gamfiied example was done for channel 7. All assets provided were scaled up and work with from 300 x 600 placement. Over the course of a half-week this game was made and refined for Holey Moley. The game requires you to get 5 balls into the mouth as quickly as possible. With a score screen letting you know how you did with a randomly generated name. This campaign went on to form part of a case study for the massive success of this campaign.'
+    },
+    {
+        name:'Sony (pre-sale)',
+        link: 'https://studio.playgroundxyz.com/ruhoqe/3/quiet?pos=middle-ad&size=300x250&show-engagements=true', // ht
+        gif:'https://metababy.playground.xyz/ruhoqe/3/375x745/hang-time/gif?cb=1679204510',
+        descp: 'Sometimes we got the opportunity to explore more moodier creatives. I\'m proud of this execution as I feel the atmosphere it creates perfectly aligns with the aesthetic of which the game was trying to achieve. All assets were flat and through careful cutting and coding I was able to create a great piece of storytelling.'
+    },
+    {
+        name:'University of Queensland (post-sale)',
+        link: 'https://studio.playgroundxyz.com/jazihe/14/quiet?pos=middle-ad&size=300x250&show-engagements=true', // ht
+        gif: 'https://metababy.playground.xyz/jazihe/14/375x745/hang-time/gif?cb=1679204596',
+        descp: 'UQ set us the challenge of showcasing the vast array of courses they had with videos for those interested. I came to the solution of randomly assigning sets of 3 courses with a split video with 3 courses. I feel this execution hit all the marks in an extremely smart lightweight way. Refresh to see other options!'
+    },
+    {
+        name:'Mazda (post-sale)',
+        link: 'https://studio.playgroundxyz.com/nazexo/16/quiet?pos=middle-ad&size=300x250&show-engagements=true', // ht
+        gif: 'https://metababy.playground.xyz/nazexo/16/375x745/hang-time/gif?cb=1679204645',
+        descp: 'This execution uses an CAT encore. This allows us to put the key message to those who aim to rush through the ad while giving a deeper execution to those who stay. If you scrub up and down multiple times playing with the car spinning you\'ll execute the Encore transitioning to a microsite I created where you could rotate, and explore feature options.'
+    },    
+    {
+        name:'Koko Black (post-sale)',
+        link: 'https://studio.playgroundxyz.com/curiya/19/quiet?pos=middle-ad&size=300x250', // ht
+        gif:'https://metababy.playground.xyz/curiya/19/375x745/hang-time/gif?cb=1679204634',
+        descp: 'Within this execution Koko black wanted to showcase the wide range of partnerships they had with different alcohol brands. We pitched in showing it in different combinations depending on the end user. In this execution I dynamically generate the div structure and then load only the images needed and queue up the animation based on staggered specification. I think the end result in dynamic and nails the brief. Refresh to see other combinations!'
+    },
+    {
+        name:'Pandora (pre-sale)',
+        link: 'https://studio.playgroundxyz.com/keyoxo/11/quiet?pos=header-ad&size=320x50&show-engagements=true', // ss
+        gif: 'https://metababy.playground.xyz/keyoxo/375x745/super-skin-v2/gif',
+        descp: 'This pre-sale mock was done on an extremely tight turnaround. I\'m happy with how I brought to life the ability to customise the jewellery then have it feature in the final ad placement.'
+    },    
+    {
+        name:'Gimmie (post-sale)',
+        link: 'https://studio.playgroundxyz.com/noqibu/5/quiet?pos=header-ad&size=320x50&show-engagements=true', // ss
+        gif: 'https://metababy.playground.xyz/noqibu/375x745/super-skin-v2/gif',
+        descp: 'Although this may look like video this was all hand animated using anime.js with assets being supplied as loose vectors and a rough storyboard being given. I think the execution came together great'
+    },
+    {
+        name:'Glenfiddich (pre-sale)',
+        link: 'https://studio.playgroundxyz.com/jogami/6/quiet?pos=middle-ad&size=300x250&show-engagements=true', // ht
+        gif: 'https://metababy.playground.xyz/jogami/6/375x745/hang-time/gif?cb=1679204569',
+        descp: 'Sometimes a simple idea can just be effective. I think the animation reflects well with the brands tranquil elegant image'
+    },
+    {
+        name:'AEG (pre-sale)',
+        link: 'https://studio.playgroundxyz.com/bosota/10/quiet?pos=header-ad&size=320x50&show-engagements=true', // ss
+        gif: 'https://metababy.playground.xyz/bosota/375x745/super-skin-v2/gif',
+        descp: 'Other times a brand wants to appear tough and ready. In this example I created high energy text transition with a energetic rumble.'
+    },
+    {
+        name:'Lexus (pre-sale)',
+        link: 'https://studio.playgroundxyz.com/wazonu/6/quiet?pos=middle-ad&size=300x250&show-engagements=true', // ht
+        gif: 'https://metababy.playground.xyz/wazonu/6/375x745/hang-time/gif?cb=1679204574',
+        descp: 'The brief was to showcase 3 of the cars and their colour options. Microsites are a big request form the auto-sector and in this one I think I was able to convey Lexus luxury nature while making the car and colour chosen fold back into the first message of the ad if you choose to scroll back.'
+    },
+    {
+        name:'Olivia Burton (pre-sale)',
+        link: 'https://studio.playgroundxyz.com/gavabi/4/quiet?pos=header-ad&size=320x50&show-engagements=true', // hh
+        gif: 'https://assets.playground.xyz/JWhitmore/a4f4a8ac_hh.png',
+        descp: 'In this now defunct format I was able through a lot of finessing able to replace the zoom effect the docking animation made with an elegant flutter of the bird. I think this execution really showcase the power of multiple element seamlessly interacting with each other. Simple but effective'
+    },
+    {
+        name:'UK lotto (pre-sale)',
+        link: 'https://studio.playgroundxyz.com/noqodi/5/quiet?pos=middle-ad&size=300x250&show-engagements=true', // ht
+        gif: 'https://metababy.playground.xyz/noqodi/5/375x745/hang-time/gif?cb=1679204584',
+        descp: 'This execution execution is purely jsut clever animation work on my behalf, no fancy tricks just timing and an understand of transform properties'
+    },
+    {
+        name:'Apple (pre-sale)',
+        link: 'https://studio.playgroundxyz.com/nigase/5/quiet?pos=header-ad&size=320x50&show-engagements=true', // ss
+        gif: 'https://metababy.playground.xyz/nigase/375x745/super-skin-v2/gif',
+        descp: 'This execution has made the cut due to how seemlessly 3 different iframes have been made to interact with each other with an sleek rolling transition between carousel frames. Sometimes it\'s the small things that make all the difference'
+    },
+    {
+        name:'Home Depot (post-sale)',
+        link: 'https://studio.playgroundxyz.com/nodisa/9/quiet?pos=header-ad&size=320x50&show-engagements=true', // ss
+        gif: 'https://metababy.playground.xyz/nodisa/375x745/super-skin-v2/gif',
+        descp: 'This execution brought to life for home deopt allowed for the locating of their local stores to the user as well as an exploration of their colour range through emotive animations.'
+    },
+    {
+        name:'Grill\'d (pre-sale) 1 of 3',
+        link: 'https://studio.playgroundxyz.com/vudeve/6/quiet?pos=middle-ad&size=300x250&show-engagements=true', // ht
+        gif:'https://metababy.playground.xyz/vudeve/6/375x745/hang-time/gif?cb=1679204613',
+        descp: 'Grill\'d has been added as I worked on both the presale and post-sale exeuctions. This is a great example of how our presale ideation can translate into real world campaign direction.'
+    },
+    {
+        name:'Grill\'d (pre-sale) 2 of 3',
+        link: 'https://studio.playgroundxyz.com/hixoti/5/quiet?pos=middle-ad&size=300x250&show-engagements=true', // ht
+        gif:'https://metababy.playground.xyz/hixoti/5/375x745/hang-time/gif?cb=1679204619',
+        descp: 'Grill\'d has been added as I worked on both the presale and post-sale exeuctions. This is a great example of how our presale ideation can translate into real world campaign direction.'
+    },
+    {
+        name:'Grill\'d (post-sale) 3 of 3',
+        link: 'https://studio.playgroundxyz.com/dufeha/1/quiet?pos=middle-ad&size=300x250', // ht
+        gif:'https://metababy.playground.xyz/dufeha/1/375x745/hang-time/gif?cb=1679204625',
+        descp: 'Grill\'d has been added as I worked on both the presale and post-sale exeuctions. This is a great example of how our presale ideation can translate into real world campaign direction.'
+    },
+    {
+        name:'Adidas (pre-sale)',
+        link: 'https://studio.playgroundxyz.com/dozoca/5/quiet?pos=middle-ad&size=300x250&show-engagements=true', // ht
+        gif: 'https://metababy.playground.xyz/dozoca/5/375x745/hang-time/gif?cb=1679205642',
+        descp: 'Through a combination of video, collision detection, and animation I was able to create a fairy simple yet engaging micro engagement'
+    },
+    {
+        name:'Wizard of the Coast (pre-sale)',
+        link: 'https://studio.playgroundxyz.com/jokedi/quiet?pos=middle-ad&size=300x250', // ht
+        gif: 'https://metababy.playground.xyz/jokedi/375x745/hang-time/gif?cb=1679204640',
+        descp: 'Created from a single PSD I feel that this parallax solution capture the sinister creepy nature of the artwork. I personally love the touch of the flickering pocket watch and matching face reflection.'
+    },
+    {
+        name:'Hasbro (pre-sale)',
+        link: 'https://studio.playgroundxyz.com/cihuva/5/quiet?pos=middle-ad&size=300x250&show-engagements=true', // hb
+        gif: 'https://metababy.playground.xyz/cihuva/375x745/hover-board/gif',
+        descp: 'A quiant engagement which encourages the user to rengage to throw another card'
+    },
+    {
+        name:'Youi (pre-sale)',
+        link: 'https://studio.playgroundxyz.com/xuwemi/5/quiet?pos=middle-ad&size=300x250&show-engagements=true', // ss
+        gif: 'https://metababy.playground.xyz/xuwemi/5/375x745/hang-time/gif?cb=1679205536',
+        descp: 'This execution went on to be re-requested a number of times for other brands. I think this execution allows for a lot of information to be put into an extremely small area and I\m proud of coming up with the idea.'
+    },
+    {
+        name:'Sonic (pre-sale)',
+        link: 'https://studio.playgroundxyz.com/pesoqe/6/quiet?pos=middle-ad&size=300x250&show-engagements=true ', // hb
+        gif: 'https://metababy.playground.xyz/pesoqe/375x745/hover-board/gif',
+        descp: 'This although a little goofy has also been used countless times. SomWetimes high energy is what the client responds to!'
+    },       
+  ]
 
+  const phone = new fgGallery()
+    phone.setup(qs('.phoneGal'), qs('.phoneImgs'), bau, qs('.phoneGal > img'))
+
+    </script>
   </body>
 </html>
