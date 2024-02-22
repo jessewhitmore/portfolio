@@ -953,7 +953,29 @@ function wrapProcessing() {
         }
     }
 
+    jankFlicker()
 }
+
+
+function jankFlicker() {
+
+
+    let index = -1;
+    const link = document.querySelector('link[rel="icon"]')
+
+    if(link.href == null || props.mobile) return;
+    console.log('here')
+    function hrefLoop() {
+        index++;
+        link.href = (index%2 == 0) ? "assets/icons/icon.png" : "assets/icons/icon2.png";
+       // if(index > flickerDelay.length -1) index = 0;
+        let flip = (index%2 !== 0) ? 200 : (randomChance(20)) ? Math.random() * 5000 : Math.random() * 600 + 300
+        setTimeout(hrefLoop, flip)
+    } hrefLoop()
+
+
+}
+
 
 /**
  * 
