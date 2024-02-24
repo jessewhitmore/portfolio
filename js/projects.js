@@ -131,23 +131,36 @@ function parallax() {
 
 function uLoaded() {
 
-    setTimeout(()=>{
+    qsa('ifr').forEach(v => {
+        const ifr = document.createElement('iframe')
+
+        batchSet(v, 'style', {
+            width:'100%',
+            height:'auto',
+            aspectRatio: v.getAttribute('width')/v.getAttribute('height'),
+            padding: '0.25em 0 0.75em'
+        })
+
+        v.removeAttribute('height')
+        v.removeAttribute('width')
+        
+        for (var i = 0; i < v.attributes.length; i++) {
+            var attributeName = v.attributes[i].name;
+            var attributeValue = v.attributes[i].value;
+            ifr.setAttribute(attributeName, attributeValue);
+
+
+            v.insertAdjacentElement('afterend',ifr)
+            v.remove()
+        }
+
+    })
+
         qsa('iframe').forEach(v => {
 
-            v.src = v.dataset.src
     
-            batchSet(v, 'style', {
-                width:'100%',
-                height:'auto',
-                aspectRatio: v.getAttribute('width')/v.getAttribute('height'),
-                padding: '0.25em 0 0.75em'
-            })
-    
-            v.removeAttribute('height')
-            v.removeAttribute('width')
-    
+
         })
-    },500)
 
 }
 

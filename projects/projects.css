@@ -267,12 +267,8 @@ p:last-child {
 
 .gallery {
     margin-left: -1rem;
-    margin-bottom:4.5rem;
-
+    margin-top:1rem;
     width:calc(100% + 2rem);
-
-
-
 
     aspect-ratio: 4/3.3;
     
@@ -334,7 +330,8 @@ p:last-child {
 .gallery-nav {
     position: relative;
 
-    top:1rem;
+    margin-top:1rem;
+    height:auto;
     padding: 0.5rem 0.75rem;
 
     outline: 0.2rem solid rgba(var(--secondary-col),0.1);

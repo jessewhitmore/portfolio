@@ -6,20 +6,20 @@
  * 
  */
 
-// add icons to tech menu
-// change from CSS hover to mouseOver for main menu
-// Dynamic gal for example of work at PXYZ
-// flickering icon in tab
-// CV open tab rather than replace
-// get to bottom of flicker issue by youtube iframes
-// random chance of flicker for buttons
-// turn flicker into a callable function
-// Gallery padding and sizing fix
-// about animation revision
+// add icons to tech menu - x
+// change from CSS hover to mouseOver for main menu - x
+// Dynamic gal for example of work at PXYZ - x
+// flickering icon in tab - x
+// CV open tab rather than replace -x
+// get to bottom of flicker issue by youtube iframes  - x
+// random chance of flicker for buttons - x
+// turn flicker into a callable function - x
+// Gallery padding and sizing fix - 
+// about animation revision - x
 // address sweep issues caused by phones
 // multi-browser analysis
-// dist calc on mobile vs PC for projects
-// trigger animation on point for BHT
+// dist calc on mobile vs PC for projects - x
+// trigger animation on point for BHT - x
 // 
 
 
@@ -41,7 +41,7 @@ const contactTreatment = {
     tel: {type: 'link', hover:'react-copy', func: ()=> {window.open(`tel:${contactInfo.tel.replace(' ','')}`,'_self')} },
     email: {type: 'link', hover:'react-copy', func: ()=> sendEmail() },
     linkdin: {type: 'link', hover:'react-open', text: 'linkdIn',  trans:true, },
-    CV: {type: 'link', hover:'react-open', text: 'CV' }
+    CV: {type: 'link', hover:'react-open', text: 'CV', func: ()=> {window.open(contactInfo.CV,'_blank')} }
 }
 
 // any property I want universal
@@ -166,6 +166,7 @@ const scrollVals = {
 const bht = {
     visible: null,
     scenes:{},
+    trigger:{}
 }
 
 let screens = []
@@ -437,12 +438,18 @@ techMenuEle = document.createElement('div')
 techMenuEle.classList.add('techMenu')
 
 let techMenuContent = [
-    { content: 'V', id: 'quality-physics', react: 'react-play', state: 3 }, // Physics 1. pushable, 2. proejct para, 3. velocity
-    { content: 'C', id: 'quality-canvas', react: 'react-play', state: 1 }, // Canvas 1. turn off canvas
-    { content: 'G', id: 'quality-post', react: 'react-play', state: 3 }, // post processing 1. heavy off, 2. light off. 3. highlight effects off.
+    { content: '', id: 'quality-physics', react: 'react-play', state: 3 }, // Physics 1. pushable, 2. proejct para, 3. velocity
+    { content: '', id: 'quality-canvas', react: 'react-play', state: 1 }, // Canvas 1. turn off canvas
+    { content: '', id: 'quality-post', react: 'react-play', state: 3 }, // post processing 1. heavy off, 2. light off. 3. highlight effects off.
 
 ]
 techMenuContent.forEach(v =>  menuBuilder(v.content, v.id, techMenuEle, v.react, v.state))
+
+techMenuEle.querySelectorAll('span').forEach(v=> {
+    const ele = document.createElement('div')
+    v.appendChild(ele)
+})
+
 
 let menuSize = 5; // Adjust this variable as needed
 let menuSha = `-${0.0625 / menuSize}em -${0.0625 / menuSize}em 0 rgba(255,255,255, 0.2),
@@ -646,8 +653,9 @@ linkClick.centerSweep = function(pos, link, dur) {
     let moveVal = { value: pos };
     dur = dur || 0.5;
 
+
     gsap.set('.linkClick', {
-        top: pos,
+        top: pos+10,
         height: '100%',
         width: '100%',
         y: '-50%',
@@ -950,6 +958,22 @@ function wrapProcessing() {
             let percentage = Math.max(0, Math.min(1,(T / (H - VH) * -1)))
             let length = bht.scenes[bht.visible].timeline._tDur
             bht.scenes[bht.visible].timeline.seek(length*percentage)
+
+
+
+            Object.keys(bht.scenes[bht.visible].timeline.labels).forEach(key => {
+                if(bht.scenes[bht.visible].timeline.labels[key] > length*percentage) {
+                    if( !bht.trigger[bht.visible][key].triggered ) {
+                        bht.trigger[bht.visible][key].triggered = true
+                        bht.trigger[bht.visible][key].run()
+                    }
+               } else {
+                bht.trigger[bht.visible][key].triggered = false;
+               }
+            })
+
+
+
         }
     }
 
@@ -959,16 +983,13 @@ function wrapProcessing() {
 
 function jankFlicker() {
 
-
     let index = -1;
     const link = document.querySelector('link[rel="icon"]')
 
     if(link.href == null || props.mobile) return;
-    console.log('here')
     function hrefLoop() {
         index++;
         link.href = (index%2 == 0) ? "assets/icons/icon.png" : "assets/icons/icon2.png";
-       // if(index > flickerDelay.length -1) index = 0;
         let flip = (index%2 !== 0) ? 200 : (randomChance(20)) ? Math.random() * 5000 : Math.random() * 600 + 300
         setTimeout(hrefLoop, flip)
     } hrefLoop()
@@ -1477,6 +1498,82 @@ function floatAnimation(mt) {
     }
 }
 
+function flickerObj(ele, em, type) {
+    type = type || 'boxShadow';
+    const timeline = gsap.timeline()
+
+
+
+    /*          neons           */
+
+    let neon = ele
+    let flickerDelay = [], flickerDur = []
+    let BflickerTimes = (randomChance(80)) ? 40 + Math.floor(10*Math.random()) : 60 + Math.round(10*Math.random())
+
+    let parentEM = em || 27; // Adjust this variable as needed
+    txtSha = `-${0.0625 / parentEM}em -${0.0625 / parentEM}em 0 rgba(255,255,255, 0.2),
+                  ${0.0625 / parentEM}em -${0.0625 / parentEM}em 0 rgba(255,255,255, 0.3),
+                  -${0.0625 / parentEM}em ${0.0625 / parentEM}em 0 rgba(255,255,255, 0.2),
+                  ${0.0625 / parentEM}em ${0.0625 / parentEM}em 0 rgba(255,255,255, 0.3),
+                  0 -${0.125 / parentEM}em ${1.2 / parentEM}em,
+                  0 0 ${0.125 / parentEM}em,
+                  0 0 ${0.3125 / parentEM}em rgba(255,126,0,0.5),
+                  0 0 ${5.9375 / parentEM}em rgba(255, 68, 68,0.6),
+                  0 0 ${0.125 / parentEM}em rgba(255,126,0,0.5),
+                  0 ${0.125 / parentEM}em ${0.1875 / parentEM}em rgba(0,0,0,0.7)`;    
+//    let txtSha = '-1px -1px 0 rgba(255,255,255, 0.2), 1px -1px 0 rgba(255,255,255, 0.3), -1px 1px 0 rgba(255,255,255, 0.2), 1px 1px 0 rgba(255,255,255, 0.3), 0 -2px 8px, 0 0 2px, 0 0 5px rgba(255,126,0,0.5), 0 0 15px rgba(255, 68, 68,0.6), 0 0 2px rgba(255,126,0,0.5), 0 2px 3px rgba(0,0,0,0.7)'
+    let fOn = (type == 'boxShadow') ? { background: 'rgba(255,204,0,1)', boxShadow: txtSha } : { color: 'rgba(255,204,0,1)', textShadow: txtSha }
+    let fOff = (type == 'boxShadow') ? { background: 'rgba(137,114,42,1)', boxShadow: '0 2px 3px rgba(0,0,0,0.7)' } : { color: 'rgba(137,114,42,1)', textShadow: '0 2px 3px rgba(0,0,0,0.7)' }
+
+    let ts = 7 // scale of flicker speed
+
+    // --
+    // -------------
+
+    // set-up flicker delays
+    for(let lonF = 0; lonF < BflickerTimes; lonF++) {
+        // determine and push the big flicker delay and duration
+        let longFlick = Math.ceil(5 * Math.random())
+        flickerDelay.push(longFlick)
+        let duration = (randomChance(70)) ? 1 : Math.ceil(3*Math.random())
+        flickerDur.push(duration/10)
+
+        // determine and push the small flicker delay and duration
+        let SflickerTimes = (randomChance(70)) ? 1 + Math.floor(3*Math.random())  : 2 + Math.floor(6*Math.random())
+        if(SflickerTimes % 2 === 0) SflickerTimes++;
+        for(let shoF = 0; shoF < SflickerTimes; shoF++) {
+            let shortFlick = (randomChance(60)) ? 1 : 2 + Math.floor(2*Math.random())
+            flickerDelay.push(shortFlick/10)
+            duration = ((randomChance(70)) ? 1 : Math.ceil(3*Math.random()))/10 
+            flickerDur.push(duration/10)
+        }
+
+        // determine the points in which large flickers exist 
+    }
+
+
+    // -------------
+
+    //set up gsap animations using flicker arrays
+
+        for(let tlset = 0; tlset < flickerDelay.length; tlset++) {
+            let aniObj = {};
+            aniObj.delay = flickerDelay[tlset]
+            aniObj.duration = flickerDur[tlset]
+            Object.assign(aniObj,(tlset%2 !== 0) ? fOn : fOff)
+            timeline.to(neon, aniObj, (tlset > 0) ? '>' : 5+0.4*Math.random())
+        }
+        // end on always
+        let aniObj = {delay:0.1, duration:0.1}
+        Object.assign(aniObj, fOn)
+        timeline.to(neon, aniObj, '>')
+    
+
+
+    timeline.timeScale(ts)
+    timeline.play()
+
+}
 
 
 
@@ -1721,6 +1818,10 @@ function mouse(PN, rf) {
                     ease: "back.in(1.7)",
                     duration: 0.2
                 })
+                gsap.to(menuEle.children, {
+                    color: `rgb(${props.secondaryCol})`,
+                    duration:0.2
+                })                
                 props.menuHover = null
             },1500)
 
@@ -1737,6 +1838,15 @@ function mouse(PN, rf) {
                     left: bound.x,
                     width: bound.width,
                     ease: "back.out(1.4)"
+                })
+
+                gsap.to(menuEle.children, {
+                    color: `rgb(${props.secondaryCol})`,
+                    duration:0.2
+                })                   
+                gsap.to(pm.target, {
+                    color: `rgb(${props.primaryCol})`,
+                    duration:0.2
                 })
             }
         }        
@@ -2129,7 +2239,6 @@ function load() {
 
     if(typeof uResizer === 'function') uResizer()
     
-    document.querySelector('#blocker').style.background = "none"
 
     if(internalRedirect) {
         (props.mobile) ? linkClick.fromClicked('r') : linkClick.fromClicked('t')
@@ -2142,29 +2251,9 @@ function load() {
         if(typeof uResizer === 'function') uLoaded()
         props.loaded = true
     }
-    // setTimeout(()=>{
-    //     qsa('.screen').forEach(v => {
-    //         let si = parseInt(v.dataset.si) || 0
-    //         let si1 = (si+1) % (siV.length-1)
-    //         let backV = v.querySelector('.backV')
-    //         let frontV = v.querySelector('.frontV')
 
-    //         gsap.set([backV, frontV], {autoAlpha:0})
-    //         backV.src = siV[si]
-    //         backV.load()
+    document.querySelector('#blocker').style.background = "none"
 
-    //         frontV.src = siV[si1]
-
-    //         setTimeout(()=>{
-    //             gsap.set(backV, {autoAlpha:1})
-    //         },12000)
-
-    //         backV.addEventListener('play', function(event) {
-    //             setTimeout(()=>gsap.set(event.target, {autoAlpha:1}),250)
-    //         });            
-    //     })
-
-    // },10)
 
 
 

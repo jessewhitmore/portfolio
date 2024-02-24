@@ -42,7 +42,8 @@ function processElements() {
         let reveal = document.createElement('div')
         reveal.classList.add('reveal')
         img = new Image();
-        img.classList.add('para','dist50')
+        const distClass = (props.mobile) ? 'dist25' : 'dist50'
+        img.classList.add('para',distClass)
         img.onerror = function() {
             this.src = './img/test.jpg'
         }
@@ -164,15 +165,29 @@ function processElements() {
     s1bht.from(qs('#multidissub2').parentElement,{
         opacity:0,
         x:100,
-        duration:10
+        duration:10,
     },'>')
 
     s1bht.from('#multidissub2 .button',{
-        scaleY:0,
-        duration:10
-    },'>')
+        opacity:0,
+        x:100,
+        duration:10,
+    },'<3')
+
+    s1bht.addLabel('flicker','>')
+
+    bht.trigger.scene0 = {}
+    bht.trigger.scene0.flicker = {
+        run:()=> {
+            flickerObj(qs('#about .button'), 6)
+        },
+        triggered: false
+    }
 
     bht.scenes.scene0.timeline = s1bht;
+
+
+
 }
 
 
@@ -469,18 +484,18 @@ function aboutSetup() {
 
     // -------------
 
-    parentEM = 6
-    txtSha = `-${0.0625 / parentEM}em -${0.0625 / parentEM}em 0 rgba(255,255,255, 0.2),
-                  ${0.0625 / parentEM}em -${0.0625 / parentEM}em 0 rgba(255,255,255, 0.3),
-                  -${0.0625 / parentEM}em ${0.0625 / parentEM}em 0 rgba(255,255,255, 0.2),
-                  ${0.0625 / parentEM}em ${0.0625 / parentEM}em 0 rgba(255,255,255, 0.3),
-                  0 -${0.125 / parentEM}em ${1.2 / parentEM}em,
-                  0 0 ${0.125 / parentEM}em,
-                  0 0 ${0.3125 / parentEM}em rgba(255,126,0,0.5),
-                  0 0 ${5.9375 / parentEM}em rgba(255, 68, 68,0.6),
-                  0 0 ${0.125 / parentEM}em rgba(255,126,0,0.5),
-                  0 ${0.125 / parentEM}em ${0.1875 / parentEM}em rgba(0,0,0,0.7)`;       
-    qs('#about .button').style.boxShadow = txtSha
+    // parentEM = 6
+    // txtSha = `-${0.0625 / parentEM}em -${0.0625 / parentEM}em 0 rgba(255,255,255, 0.2),
+    //               ${0.0625 / parentEM}em -${0.0625 / parentEM}em 0 rgba(255,255,255, 0.3),
+    //               -${0.0625 / parentEM}em ${0.0625 / parentEM}em 0 rgba(255,255,255, 0.2),
+    //               ${0.0625 / parentEM}em ${0.0625 / parentEM}em 0 rgba(255,255,255, 0.3),
+    //               0 -${0.125 / parentEM}em ${1.2 / parentEM}em,
+    //               0 0 ${0.125 / parentEM}em,
+    //               0 0 ${0.3125 / parentEM}em rgba(255,126,0,0.5),
+    //               0 0 ${5.9375 / parentEM}em rgba(255, 68, 68,0.6),
+    //               0 0 ${0.125 / parentEM}em rgba(255,126,0,0.5),
+    //               0 ${0.125 / parentEM}em ${0.1875 / parentEM}em rgba(0,0,0,0.7)`;       
+    // qs('#about .button').style.boxShadow = txtSha
 
 
     // -------------
