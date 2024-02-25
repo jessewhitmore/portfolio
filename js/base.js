@@ -11,10 +11,10 @@
 // Dynamic gal for example of work at PXYZ - x
 // flickering icon in tab - x
 // CV open tab rather than replace -x
-// get to bottom of flicker issue by youtube iframes  - x
+// get to bottom of flicker issue by youtube iframes - x
 // random chance of flicker for buttons - x
 // turn flicker into a callable function - x
-// Gallery padding and sizing fix - 
+// Gallery padding and sizing fix - x
 // about animation revision - x
 // address sweep issues caused by phones
 // multi-browser analysis
@@ -962,7 +962,8 @@ function wrapProcessing() {
 
 
             Object.keys(bht.scenes[bht.visible].timeline.labels).forEach(key => {
-                if(bht.scenes[bht.visible].timeline.labels[key] > length*percentage) {
+//                console.log(bht.scenes[bht.visible].timeline.labels[key])
+                if(bht.scenes[bht.visible].timeline.labels[key] < length*percentage) {
                     if( !bht.trigger[bht.visible][key].triggered ) {
                         bht.trigger[bht.visible][key].triggered = true
                         bht.trigger[bht.visible][key].run()

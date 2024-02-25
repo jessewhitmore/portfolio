@@ -172,14 +172,15 @@ function processElements() {
         opacity:0,
         x:100,
         duration:10,
-    },'<3')
+    },'<5')
 
-    s1bht.addLabel('flicker','>')
-
+    s1bht.addLabel('flicker','<-5')
+    console.log(s1bht)
     bht.trigger.scene0 = {}
     bht.trigger.scene0.flicker = {
         run:()=> {
             flickerObj(qs('#about .button'), 6)
+            console.log('run')
         },
         triggered: false
     }
