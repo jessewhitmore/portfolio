@@ -672,7 +672,7 @@ linkClick.click = function(dir,link, postMessage, dur) {
                     scaleX: 0,
                     scaleY: 0
                 })
-            },500) 
+            },1000) 
         }
     })
 }
@@ -722,7 +722,7 @@ linkClick.centerSweep = function(pos, link, dur) {
                 scaleX: 0,
                 scaleY: 0
             })
-        },500) 
+        },1000) 
     }
     })
 }
@@ -920,8 +920,10 @@ function wrapProcessing() {
         float.push(tempObj)
     });    
 
-
-
+    const interactive = document.createElement('div')
+    interactive.classList.add('interactionText')
+    interactive.innerText = "hello world"
+    qs('#contact .button').appendChild(interactive)
     
 
     /*          pushable element creation           */
@@ -990,7 +992,6 @@ function wrapProcessing() {
 
 
             Object.keys(bht.scenes[bht.visible].timeline.labels).forEach(key => {
-//                console.log(bht.scenes[bht.visible].timeline.labels[key])
                 if(bht.scenes[bht.visible].timeline.labels[key] < length*percentage) {
                     if( !bht.trigger[bht.visible][key].triggered ) {
                         bht.trigger[bht.visible][key].triggered = true
@@ -1312,17 +1313,34 @@ function changeContact(e, i, p) {
         },700)
     } else if(i === 69 && props.contactLock ) return;
 
+    if(i !== 69) {
+        gsap.fromTo('#contact .interactionText',{
+            y:0,
+            autoAlpha:1,
+        }, {
+            y:'-1em',
+            autoAlpha:0,
+            duration:0.9,
+            delay:0.1
+        })          
+    }
+
     switch(i) {
         case 0: // telephone
+            qs('#contact .interactionText').innerText = "Copied to clipboard"
             toClipboard(contactInfo.tel) 
         break;
         case 1: // email
+            qs('#contact .interactionText').innerText = "Copied to clipboard"
             toClipboard(contactInfo.email);
         break;
         case 2: // linkedin
+            qs('#contact .interactionText').innerText = "Opening"
             linkClick.click((props.mobile) ? 'r' : 't', contactInfo.linkdin)
         break;
     }
+
+
 
     if(props.conButton == undefined) props.conButton = qs('#buttonText')
     if(props.conLastState == undefined) props.conLastState = qs('#buttonText .defaultState')
@@ -1443,7 +1461,7 @@ function contactSetup() {
     })
 
     // handle contact hover clicks
-    qsa('.buttonCells div').forEach((ele, index, parent) => {
+    qsa('.buttonCells > div').forEach((ele, index, parent) => {
         ele.addEventListener('click', () => changeContact(ele, index, parent))
     })
 
@@ -1463,21 +1481,36 @@ function contactSetup() {
 
 function contactClickthrough(e) {
     let mobSwitch = (props.mobile) ? 'r' : 't'
+    
+
+    gsap.fromTo('#contact .interactionText',{
+        y:0,
+        autoAlpha:1,
+    }, {
+        y:'-1em',
+        autoAlpha:0,
+        duration:0.9,
+        delay:0.1
+    })   
 
     switch(e) {
         case 0: // copy phonenumber
         if(props.mobile) {
+            qs('#contact .interactionText').innerText = 'opening phone'
             window.open(`tel:${contactInfo.tel.replace(' ','')}`,'_self')
         } else {
+            qs('#contact .interactionText').innerText = 'Copied to clipboard'
             toClipboard(contactInfo.tel) 
         }
         break;
         case 1: // copy email & open email client
-        toClipboard(contactInfo.email);
-        sendEmail()
+            qs('#contact .interactionText').innerText = 'Copied to clipboard'
+            toClipboard(contactInfo.email);
+            sendEmail()
         break;
         case 2: // open linkedin URL
-        linkClick.click(mobSwitch, contactInfo.linkdin)
+            qs('#contact .interactionText').innerText = 'Opening'
+            linkClick.click(mobSwitch, contactInfo.linkdin)
         break;
         default: // open contact page
         gsap.to('.contactInfo', {y:0, duration: 1, ease: "elastic.out(1,0.5)" })
@@ -1485,6 +1518,8 @@ function contactClickthrough(e) {
             ele.classList.add('contactOpen')
         })            
     }
+
+ 
     
 }
 
@@ -2222,7 +2257,7 @@ techMenuEle.addEventListener('click', ev => {
     if(ev.target !== techMenuEle) manualPerformance(ev.target)
 })
 
-qsa('#buttonText div').forEach((ele, i) => {
+qsa('#buttonText > div').forEach((ele, i) => {
     ele.addEventListener('click', ev => {
         contactClickthrough(i)
     })
@@ -2432,20 +2467,6 @@ function preloadImages() {
 
 // Call the function to preload images
 preloadImages();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     // const scrollY = window.scrollY;

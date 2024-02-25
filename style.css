@@ -1644,6 +1644,16 @@ CONTACT
     aspect-ratio: 10/5;
 }
 
+#contact .button .interactionText {
+    position:absolute;
+    top:-1.25em;
+    right:0;
+    color: rgb(var(--accent-col));
+    text-shadow: 0 0 0.6em rgb(var(--accent-shade));
+    opacity:0;
+    font-size: 0.7em;
+}
+
 
 
 
