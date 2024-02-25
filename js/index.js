@@ -174,7 +174,7 @@ function processElements() {
         duration:10,
     },'<5')
 
-    s1bht.addLabel('flicker','<-5')
+    s1bht.addLabel('flicker','<')
     console.log(s1bht)
     bht.trigger.scene0 = {}
     bht.trigger.scene0.flicker = {
