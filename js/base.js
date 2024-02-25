@@ -470,7 +470,35 @@ if(props.mobile) {
 
     menuEle.classList.add('vel','dur1000','dist20')
     menuEle.id = 'menu'
-    menuEle.innerText = "|||"
+
+    // File path to your SVG image
+    const filePath = '/assets/icons/hamburger.svg';
+
+    // Fetch the SVG file
+    fetch(filePath)
+        .then(response => response.text())
+        .then(svgData => {
+                const container = document.createElement('div');
+                container.innerHTML = svgData;
+
+                // Access and manipulate SVG elements
+                const hamburger = container.querySelector('svg');
+                batchSet(hamburger, 'style', {
+                    width:'1.5rem',
+                    height:'1.5rem',
+                    margin:'auto',
+                    fill:`rgb(${props.primaryCol})`
+
+                })
+                hamburger.innerText = "|||"
+                menuEle.appendChild(hamburger)
+
+        })
+        .catch(error => {
+            menuEle.innerText = "|||"
+            console.error('Error loading SVG:', error);
+        });
+
     wrapper.appendChild(menuEle)
     qs('#nav').appendChild(techMenuEle)
     
@@ -2083,6 +2111,50 @@ if(props.mobile) {
             document.body.classList.toggle('menuOpen')
             qs('#nav').classList.toggle('menuOpen')
             qs('#navCanvas').classList.toggle('menuOpen')
+
+            if(document.body.classList.contains('menuOpen')) {
+                gsap.to(menuEle.querySelectorAll('svg rect')[0], {
+                    transformOrigin: '50% 50%',
+                    y:10,
+                    rotate:45,
+                    duration:0.2,
+                    ease: "back.out(1.7)"
+                })
+                gsap.to(menuEle.querySelectorAll('svg rect')[1], {
+                    transformOrigin: '50% 50%',
+                    y:-10,
+                    rotate:-45,
+                    duration:0.2,
+                    ease: "back.out(1.7)"
+                })
+                gsap.to(menuEle.querySelectorAll('svg rect')[2], {
+                    transformOrigin: '50% 50%',
+                    y:20,
+                    duration:0.2,
+                    ease: "back.out(1.7)"
+                })
+            } else {
+                gsap.to(menuEle.querySelectorAll('svg rect')[0], {
+                    transformOrigin: '50% 50%',
+                    y:0,
+                    rotate:0,
+                    duration:0.2,
+                    ease: "back.out(1.4)"
+                })
+                gsap.to(menuEle.querySelectorAll('svg rect')[1], {
+                    transformOrigin: '50% 50%',
+                    y:0,
+                    rotate:0,
+                    duration:0.2,
+                    ease: "back.out(1.4)"
+                })
+                gsap.to(menuEle.querySelectorAll('svg rect')[2], {
+                    transformOrigin: '50% 50%',
+                    y:0,
+                    duration:0.2,
+                    ease: "back.out(1.4)"
+                })                
+            }
 
             menuEle.classList.add('highlightHover')
             setTimeout(()=>{

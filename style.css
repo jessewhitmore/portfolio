@@ -496,9 +496,12 @@ MENU
     right: 1rem;
     top: 1rem;
 
-    padding: 0.625rem 1.25rem; /* Converted from 10px 20px to rem */
+    padding: 0.4rem 0.8rem; /* Converted from 10px 20px to rem */
 
     background: rgb(var(--accent-col));
+    display:flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* ani */ body.menuOpen {
