@@ -276,7 +276,7 @@ function menuBuilder(content, id, parent, react, state) {
     if(react) {
         classList.add(react)
     } else {
-        if(matchingChild) classList.add('react-play'); else classList.add('react-open')
+        if(matchingChild || id == 'menu-cv') classList.add('react-play'); else classList.add('react-open')
     }
     if(state) { 
         ele.setAttribute('data-states',state)
