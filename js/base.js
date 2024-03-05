@@ -2859,9 +2859,15 @@ function CVconstructor() {
 
     const progressIndicator = document.createElement('div')
     progressIndicator.classList.add('progressIndicator')
-    setNeon(progressIndicator, 'on', 13); 
+    setNeon(progressIndicator, 'on', 13);
 
     custCVbacking.appendChild(progress).appendChild(progressIndicator)
+
+    const explainer = document.createElement('div')
+    explainer.classList.add('explainer')
+    explainer.innerHTML = "Please selected from above the relevant skills you would like to populate into a PDF.</br>If you'd just like a generic one please click default CV"
+
+    custCVbacking.appendChild(explainer)
 
     const buttonSec = document.createElement('div')
     buttonSec.classList.add('buttonSec')
