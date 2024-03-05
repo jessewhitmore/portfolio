@@ -4,7 +4,7 @@ async function genPDF() {
     const { degrees, PDFDocument, rgb, StandardFonts } = PDFLib
 
     // Fetch an existing PDF document
-    const url = 'test/blankCV.pdf'
+    const url = '/test/blankCV.pdf'
     const existingPdfBytes = await fetch(url).then(res => res.arrayBuffer())
     // Load a PDFDocument from the existing PDF bytes
     const pdfDoc = await PDFDocument.load(existingPdfBytes)
