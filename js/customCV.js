@@ -218,7 +218,7 @@ async function genPDF() {
     appendBlock(p2zone, subheadline, 'Work Experience')
     p2zone.children[p2zone.children.length - 1].style.marginBottom = '4px'
     const CVtl = new Image()
-    CVtl.src = 'test/cvTimeline.png'
+    CVtl.src = '/test/cvTimeline.png'
     batchSet(CVtl, 'style', {
         float:'left',
         marginTop:'1%',
