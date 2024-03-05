@@ -41,7 +41,12 @@ const contactTreatment = {
     tel: {type: 'link', hover:'react-copy', func: ()=> {window.open(`tel:${contactInfo.tel.replace(' ','')}`,'_self')} },
     email: {type: 'link', hover:'react-copy', func: ()=> sendEmail() },
     linkdin: {type: 'link', hover:'react-open', text: 'linkdIn',  trans:true, },
-    CV: {type: 'link', hover:'react-open', text: 'CV', func: ()=> {window.open(contactInfo.CV,'_blank')} }
+    CV: {type: 'link', hover:'react-open', text: 'CV', func: ()=> {
+        gsap.to('.custCVblur', {
+            x:'100%',
+            duration:0.5,
+            ease: "back.out(1.4)"
+        })} }
 }
 
 // any property I want universal
@@ -524,7 +529,8 @@ if(props.mobile) {
         { content: 'HOME', id: 'menu-header' },
         { content: 'ABOUT', id: 'menu-about' },
         { content: 'PROJECTS', id: 'menu-projects' },
-        { content: 'CONTACT', id: 'menu-contact' }
+        { content: 'CONTACT', id: 'menu-contact' },
+        { content: 'RESUME', id: 'menu-cv' }
     ]
     MenuContent.forEach(v =>  menuBuilder(v.content, v.id, menuEle))
 
@@ -1542,7 +1548,6 @@ function contactClickthrough(e) {
 
 
 
-
 /**
  * 
  * 
@@ -1938,6 +1943,16 @@ function navHandling(e) {
         case 'about':
             if(e === 'about') posEle = qs('#wrapper')
         break;
+    }
+
+    if(e == 'resume') {
+        if(props.mobile && document.body.classList.contains('menuOpen')) menuToggle()
+        gsap.to('.custCVblur', {
+            x:'100%',
+            duration:0.5,
+            ease: "back.out(1.4)"
+        })
+        return;
     }
 
     if(posEle === null) {
@@ -2514,3 +2529,360 @@ preloadImages();
 
 
 */
+
+function dynamicFlicker(ele, type, number, col, shadow, size) {
+    number = number || [5, 10]
+    col = col 
+    // -------------
+    const timeline = gsap.timeline()
+    /*          neons           */
+
+    let neon = ele
+    let breakAt = [], flickerDelay = [], flickerDur = []
+    let BflickerTimes = (randomChance(80)) ? number[0] + Math.floor(number[0]*2*Math.random()) : number[1] +(number[1]*2*Math.random())
+
+    let parentEM = size || 27; // Adjust this variable as needed
+    txtSha = shadow || `-${0.0625 / parentEM}em -${0.0625 / parentEM}em 0 rgba(255,255,255, 0.2),
+                  ${0.0625 / parentEM}em -${0.0625 / parentEM}em 0 rgba(255,255,255, 0.3),
+                  -${0.0625 / parentEM}em ${0.0625 / parentEM}em 0 rgba(255,255,255, 0.2),
+                  ${0.0625 / parentEM}em ${0.0625 / parentEM}em 0 rgba(255,255,255, 0.3),
+                  0 -${0.125 / parentEM}em ${1.2 / parentEM}em,
+                  0 0 ${0.125 / parentEM}em,
+                  0 0 ${0.3125 / parentEM}em rgba(255,126,0,0.5),
+                  0 0 ${5.9375 / parentEM}em rgba(255, 68, 68,0.6),
+                  0 0 ${0.125 / parentEM}em rgba(255,126,0,0.5),
+                  0 ${0.125 / parentEM}em ${0.1875 / parentEM}em rgba(0,0,0,0.7)`;    
+
+    col = col || ['rgba(255,204,0,1)', 'rgba(137,114,42,1)']
+    let fOn = (type == 'boxShadow') ? { background: col[0], boxShadow: txtSha } : { color: col[0], textShadow: txtSha }
+    let fOff = (type == 'boxShadow') ? { background: col[1], boxShadow: '0 2px 3px rgba(0,0,0,0.7)' } : { color: col[1], textShadow: '0 2px 3px rgba(0,0,0,0.7)' }
+              
+
+    let ts = 7 // scale of flicker speed
+
+    // -------------
+
+    // set-up flicker delays
+    for(let lonF = 0; lonF < BflickerTimes; lonF++) {
+        // determine and push the big flicker delay and duration
+        let longFlick = Math.ceil(5 * Math.random())
+        flickerDelay.push(longFlick)
+        let duration = (randomChance(70)) ? 1 : Math.ceil(3*Math.random())
+        flickerDur.push(duration/10)
+
+        // determine and push the small flicker delay and duration
+        let SflickerTimes = (randomChance(70)) ? 1 + Math.floor(3*Math.random())  : 2 + Math.floor(6*Math.random())
+        if(SflickerTimes % 2 === 0) SflickerTimes++;
+        for(let shoF = 0; shoF < SflickerTimes; shoF++) {
+            let shortFlick = (randomChance(60)) ? 1 : 2 + Math.floor(2*Math.random())
+            flickerDelay.push(shortFlick/10)
+            duration = ((randomChance(70)) ? 1 : Math.ceil(3*Math.random()))/10 
+            flickerDur.push(duration/10)
+        }
+    }
+
+
+    // -------------
+    flickerDelay.shift()
+    //set up gsap animations using flicker arrays
+    for(let tlset = 0; tlset < flickerDelay.length; tlset++) {
+        let aniObj = {};
+        aniObj.delay = flickerDelay[tlset]
+        aniObj.duration = flickerDur[tlset]
+        Object.assign(aniObj,(tlset%2 !== 0) ? fOn : fOff)
+        timeline.to(neon, aniObj, '>')
+    }
+    // end on always
+    let aniObj = {delay:0.1, duration:0.1}
+    Object.assign(aniObj, fOn)
+    timeline.to(neon, aniObj, '>')
+    
+
+    // set a scale 
+
+    timeline.timeScale(ts)
+    timeline.play()
+
+}
+
+
+let custCV = {
+    qualities:[
+        ['market research and analysis', 'Excel in comprehensive <span class = "bodyBold">market research and analysis,</span> impressing peers and superiors at PXYZ with a robust investigative approach. Utilise techniques such as competitive sets and 2x2 analysis to ensure a solid foundation for every solution.', ],
+        ['cross-functional collaboration', 'Extensive <span class = "bodyBold">cross-functional collaboration</span> throughout my career, with a commitment to understanding various team roles. I believe effective collaboration stems from a comprehensive understanding of each team\'s responsibilities and tasks.'],
+        ['Product Lifecycle Management', 'Proficient in end-to-end, data-driven <span class = "bodyBold">Product Lifecycle Management</span> at PXYZ and JCDecaux. Preference for overseeing all products and projects from initiation to deployment.'],
+        ['Analytical skills', '<span class = "bodyBold">Analytically driven</span> decision-maker adept at transforming big data into actionable insights. Proven track record, including using Jira data for a comprehensive 2021 plan and presenting data-driven insights, the catalyst for promotion to APAC Design Lead.'],
+        ['technical perspective', 'Background in both design and development, providing a valuable <span class = "bodyBold">technical perspective</span> when collaborating with project contributors. Driven by a desire for clear communication by peers and subordinates, fostering effective collaboration.'],
+        ['decisive leadership', 'Embody a \'lead from the front\' mentality, evident in my promotion to Head of APAC Design, recognised by the CEO for passion, drive, and <span class = "bodyBold">decisive leadership.</span> Firm believer in the principle that success is a team effort, while failure rests on leadership.'],
+        ['prioritising', 'Adept at <span class = "bodyBold">prioritising</span> multiple products and projects in dynamic, multi-disciplinary roles. Skilled in balancing short-term and long-term objectives, emphasising business importance.'],
+        ['financial acumen', 'I demonstrated <span class = "bodyBold">financial acumen</span> unusual for the fast-paced angel investor world of startup tech. I always prioritise maximising output with minimal expenditure, recognising it as a multiplier for a solution\'s success.'],
+        ['risk management', 'Incorporated \'tombstone\' sections in all product presentations at PXYZ, emphasising a proactive approach to <span class = "bodyBold">risk management.</span> View it as building solid foundations and a valuable tool for anticipating and predicting points of possible adaptation.'],
+        ['Creativity and innovation', 'At JCDecaux I was within the innovation department, and since my title always begins with ‘Creative’. <span class = "bodyBold">Creativity and innovation</span> have always been integral to my entire professional career.'],
+        ['design leadership', 'As Head of Design at PXYZ, my <span class = "bodyBold">design leadership</span> addressed team collaboration issues and successfully aligned creative vision with organisational goals. Improved team cohesion, consistently achieving one of the highest \'team alignment\' scores in anonymous surveys during my leadership.'],
+        ['team leadership', 'Exemplifying great <span class = "bodyBold">team leadership</span> by leading from the front, ensuring open communication. Recognized for late-night mentorship, fostering a safe space for discussing professional or personal challenges. Remains a go-to person for career advice, even after leaving PXYZ.'],
+        ['project management', 'Skilled in <span class = "bodyBold">project management,</span> having worked as a project manager at JCDecaux and taken on additional responsibilities as a product manager at PXYZ. Proficient in PLM and cross-team collaboration.'],
+        ['Proficient in visual design', '<span class = "bodyBold">Proficient in visual design,</span> showcased through work with global brands at PXYZ and JCDecaux. Delivered high-quality designs within industry-leading timelines.'],
+        ['Mastery of design', '<span class = "bodyBold">Mastery of design tools</span> demonstrated through diverse work at PXYZ and JCDecaux, covering photo manipulation, vector work, and video editing across various design aspects.'],
+        ['prototyping and wireframing', 'Expert in <span class = "bodyBold">prototyping and wireframing,</span> leveraging a Creative Technologist background to build functional and logically feasible products. Invaluable at bridging customer needs with technical feasibility.'],
+        ['design system', 'Championed the creation and maintenance of consistent <span class = "bodyBold">design system</span> at PXYZ and JCDecaux. Known for crafting pragmatic design systems that are intuitive and user-friendly for non-designers.'],
+        ['time management', 'Deft at <span class = "bodyBold">time management,</span> balancing short-term and long-term objectives in dynamic, multi-disciplinary roles with numerous products and projects at various companies.'],
+        ['passion for design', 'At my core, I am a creative problem-solver with a <span class = "bodyBold">passion for design.</span> I believe effective communication through design is essential and has been a focal point in all my roles.'],
+        ['strategic thinker', 'I am a <span class = "bodyBold">strategic thinker,</span> driving impactful decisions across large-scale organisational changes, product positioning, and brand campaigns. Noteworthy achievements include overhauling the Design Department at PXYZ, strategically positioning products like Velocity and Sliders, and crafting effective brand campaigns during my tenure at JCDecaux.'],
+        ['customer-first', 'Exemplified a <span class = "bodyBold">customer-first</span> approach through work on the Sliders product at PXYZ. Conducted in-depth analysis of company queries and pain points, enhancing the product to cater to users of all technical skill levels, both internal and external.'],
+        ['communication skills', 'Proven <span class = "bodyBold">communication skills</span> developed in diverse environments, from corporate settings at ANZ to the dynamic startup culture at PXYZ. Proficient in articulating ideas and actively listening to ensure effective collaboration.'],
+        ['problem-solving', 'Known at PXYZ for holistic <span class = "bodyBold">problem-solving</span> solutions addressing primary objectives while simultaneously tackling related issues through my blend of foresight, analytical and creative skill sets.'],
+        ['adaptability', 'Integral to agile environments, I incorporate <span class = "bodyBold">adaptability</span> into all projects, accounting for drift with corrective milestones. Emphasise solid foundational analysis to ensure minor corrections rather than extensive redesigns in response to market or business changes.']
+    ],
+    ProdSkills:[19, 0, 20, 1, 21, 2, 3, 22, 4, 5, 6, 23, 7, 8, 9],
+    designSkills:[10, 19, 20, 11, 12, 21, 13, 14, 15, 16, 1, 22, 17, 23, 18],
+    A4ratio: 1/1.4151260504201681,
+}
+
+function CVconstructor() {
+
+
+    function setNeon(ele, state, size, col, shadow) {
+
+        let parentEM = size || 27; // Adjust this variable as needed
+        txtSha = shadow || `-${0.0625 / parentEM}em -${0.0625 / parentEM}em 0 rgba(255,255,255, 0.2),
+                      ${0.0625 / parentEM}em -${0.0625 / parentEM}em 0 rgba(255,255,255, 0.3),
+                      -${0.0625 / parentEM}em ${0.0625 / parentEM}em 0 rgba(255,255,255, 0.2),
+                      ${0.0625 / parentEM}em ${0.0625 / parentEM}em 0 rgba(255,255,255, 0.3),
+                      0 -${0.125 / parentEM}em ${1.2 / parentEM}em,
+                      0 0 ${0.125 / parentEM}em,
+                      0 0 ${0.3125 / parentEM}em rgba(255,126,0,0.5),
+                      0 0 ${5.9375 / parentEM}em rgba(255, 68, 68,0.6),
+                      0 0 ${0.125 / parentEM}em rgba(255,126,0,0.5),
+                      0 ${0.125 / parentEM}em ${0.1875 / parentEM}em rgba(0,0,0,0.7)`;    
+    
+        col = col || ['rgba(255,204,0,1)', 'rgba(137,114,42,1)']
+        let setState = (state == 'on') ? { background: col[0], boxShadow: txtSha } : { background: col[1], boxShadow: '0 2px 3px rgba(0,0,0,0.7)' } 
+
+        gsap.set(ele, setState)
+    }
+
+
+    
+    
+    const custCVbackingBlur = document.createElement('div')
+    custCVbackingBlur.classList = 'custCVblur'
+
+    const custCVbacking = document.createElement('div')
+    custCVbacking.classList = 'custCV'
+
+    document.body.appendChild(custCVbackingBlur).appendChild(custCVbacking)
+
+
+    const close = document.createElement('div')
+    close.classList.add('close')
+    fetch('/assets/icons/close.svg')
+        .then(response => response.text())
+        .then(svgData => {
+                const container = document.createElement('div');
+                container.innerHTML = svgData;
+
+                // Access and manipulate SVG elements
+                const closeButton = container.querySelector('svg');
+                batchSet(closeButton, 'style', {
+                    width:'100%',
+                    height:'100%',
+                    margin:'auto',
+                    fill:`rgb(${props.secondaryCol})`,
+                    pointerEvents:'none'
+                })
+                close.appendChild(closeButton)
+
+        })
+        .catch(error => {
+            close.innerText = "X"
+            console.error('Error loading SVG:', error);
+        })
+    
+    custCVbacking.appendChild(close)
+
+    const attachClose = [close, custCVbackingBlur]
+    attachClose.forEach(ele => {
+            ele.addEventListener('click', ev => {
+                if(ev.target == ele) {
+
+                gsap.to(custCVbackingBlur, {
+                    x:'0%',
+                    duration:0.5,
+                    ease: "back.in(1.4)"
+                })
+                }
+            })
+    })
+
+    const headText = document.createElement('div')
+    headText.classList.add('headText')
+    headText.innerText = 'CV BUILDER'
+    custCVbacking.appendChild(headText)
+
+    const preSelector = document.createElement('div')
+    preSelector.classList.add('preSelector')
+    preSelector.innerHTML = '<div class = "backing"> </div><div class = "option">All</div><div class = "option">Product</div><div class = "option">Design</div>'
+    custCVbacking.appendChild(preSelector)
+    setNeon(qs('.custCV .backing'), 'on', 6); 
+    
+
+    // highlight options for all, product, design
+    function moveOption(ele, dur) {
+        dur = dur || 0.5
+        const eBB = ele.getBoundingClientRect()
+        const pBB = ele.parentElement.getBoundingClientRect()
+
+        switch(ele.innerText) {
+            case 'All':
+                gsap.to(skill.children, {
+                    autoAlpha: 1,
+                    duration: 0.2
+                })
+            break;
+            case 'Product':
+                gsap.to(skill.children, {
+                    autoAlpha: 0.5,
+                    duration: 0.2
+                })
+                custCV.ProdSkills.forEach(v => {
+                    gsap.to(skill.children[v], {
+                        autoAlpha: 1,
+                        duration: 0.2
+                    })
+                })
+            break;
+            case 'Design':
+                gsap.to(skill.children, {
+                    autoAlpha: 0.5,
+                    duration: 0.2
+                })
+                custCV.designSkills.forEach(v => {
+                    gsap.to(skill.children[v], {
+                        autoAlpha: 1,
+                        duration: 0.2
+                    })
+                })                
+            break;
+        }
+
+        const percentMove = (eBB.left - pBB.left) / pBB.width * 100
+
+        gsap.to('.custCV .option', {
+            color: `rgb(${props.secondaryCol})`,
+            duration: dur
+        })
+
+        gsap.to(ele, {
+            color: `rgb(${props.primaryCol})`,
+            duration: dur
+        })
+
+        gsap.to('.custCV .backing', {
+            marginLeft:`${percentMove}%`,
+            width: eBB.width,
+            ease: "back.out(1.3)",
+            duration: dur
+        })
+        
+    }
+
+    qsa('.custCV .option').forEach(e => {
+       e.addEventListener('mouseover', () =>  moveOption(e))
+    })
+
+    gsap.set('.custCV .backing', {
+        y:`${qs('.custCV .option')}%`
+    })
+
+    const skill = document.createElement('div')
+    batchSet(skill, 'style', {
+        position:'relative',
+        width:'100%',
+        height:'auto',
+        display:'flex',
+        justifyContent:'center',
+        gap:'0.75em',
+        flexWrap:'wrap',
+    })
+    custCVbacking.appendChild(skill)
+    
+
+    custCV.qualities.forEach((v,i) => {
+        const span = document.createElement('span')
+        span.innerText = v[0]
+
+        span.classList.add('skills', 'react-play')
+
+        span.setAttribute('data-qindex',i)
+        
+        const text = document.createElement('div')
+        text.innerHTML = v[1]
+        span.setAttribute('data-vlen',text.innerText.length)
+        setNeon(span, 'off', 10,  ['rgba(255,204,0,1)', 'rgba(128,108,65,1)']) 
+
+        span.addEventListener('click', ()=> {
+            span.classList.toggle('selected')
+            if(span.classList.contains('selected')) setNeon(span, 'on', 10); else setNeon(span, 'off', 10,  ['rgba(255,204,0,1)', 'rgba(128,108,65,1)']) 
+            updateWord(i, span)
+        })
+        skill.appendChild(span)
+    })
+    moveOption(qs('.custCV .option'), 0.01)
+
+    const progMax = 2200
+    function updateWord(index, ele) {
+        let progressValue = parseInt(progress.dataset.progval)
+        if(ele.classList.contains('selected')) {
+            progressValue += parseInt(ele.dataset.vlen)
+        } else {
+            progressValue -= parseInt(ele.dataset.vlen)
+        }
+        progress.setAttribute('data-progval', progressValue)
+
+        qsa('.skills').forEach(e => {
+            if(!e.classList.contains('selected')) {
+                const lens = parseInt(e.dataset.vlen)
+                if(progressValue + lens > progMax) e.classList.add('invalid'); else e.classList.remove('invalid');
+            }
+        })
+
+        gsap.to(progressIndicator, {
+            width: `${(progressValue / progMax)*100}%`,
+            ease: "back.out(1.3)",
+            duration: 0.3
+        })
+    }
+
+    const progress = document.createElement('div')
+    progress.classList.add('progressBar')
+    progress.setAttribute('data-progval',0)
+
+    const progressIndicator = document.createElement('div')
+    progressIndicator.classList.add('progressIndicator')
+    setNeon(progressIndicator, 'on', 13); 
+
+    custCVbacking.appendChild(progress).appendChild(progressIndicator)
+
+    const buttonSec = document.createElement('div')
+    buttonSec.classList.add('buttonSec')
+
+    const custCVgen = document.createElement('div')
+    custCVgen.classList.add('generateButton', 'react-play')
+    setNeon(custCVgen, 'on', 7)
+    
+    custCVgen.innerText = 'CUSTOM CV'
+    custCVgen.addEventListener('click', genPDF)
+    buttonSec.appendChild(custCVgen)
+
+    const defaultCVgen = document.createElement('div')
+    defaultCVgen.classList.add('generateButton', 'react-play')
+    setNeon(defaultCVgen, 'on', 7)
+    
+    defaultCVgen.innerText = 'DEFAULT CV'
+    defaultCVgen.addEventListener('click', ()=> {window.open('CV-Jesse-Whitmore.pdf', '_blank')})
+
+    buttonSec.appendChild(defaultCVgen)
+    custCVbacking.appendChild(buttonSec)
+
+}
+CVconstructor()

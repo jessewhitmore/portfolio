@@ -48,7 +48,7 @@ function processElements() {
             this.src = './img/test.jpg'
         }
 
-        img.src = `/projects/${titleDashed}/title.jpg`;
+        img.src = `projects/${titleDashed}/title.jpg`;
         img.setAttribute('data-projectIndex', i+1)
         reveal.appendChild(img)
 
@@ -122,7 +122,7 @@ function processElements() {
 
         // attach event
         project.addEventListener('click', ev => {
-            linkClick.centerSweep(ev.clientY, `./projects/${titleDashed}.html`)
+            linkClick.centerSweep(ev.clientY, `projects/${titleDashed}.html`)
         })
 
         // finalise and attach
@@ -482,22 +482,6 @@ function aboutSetup() {
     let fOff = { color: 'rgba(137,114,42,1)', textShadow: '0 2px 3px rgba(0,0,0,0.7)' } 
 
     let ts = 7 // scale of flicker speed
-
-    // -------------
-
-    // parentEM = 6
-    // txtSha = `-${0.0625 / parentEM}em -${0.0625 / parentEM}em 0 rgba(255,255,255, 0.2),
-    //               ${0.0625 / parentEM}em -${0.0625 / parentEM}em 0 rgba(255,255,255, 0.3),
-    //               -${0.0625 / parentEM}em ${0.0625 / parentEM}em 0 rgba(255,255,255, 0.2),
-    //               ${0.0625 / parentEM}em ${0.0625 / parentEM}em 0 rgba(255,255,255, 0.3),
-    //               0 -${0.125 / parentEM}em ${1.2 / parentEM}em,
-    //               0 0 ${0.125 / parentEM}em,
-    //               0 0 ${0.3125 / parentEM}em rgba(255,126,0,0.5),
-    //               0 0 ${5.9375 / parentEM}em rgba(255, 68, 68,0.6),
-    //               0 0 ${0.125 / parentEM}em rgba(255,126,0,0.5),
-    //               0 ${0.125 / parentEM}em ${0.1875 / parentEM}em rgba(0,0,0,0.7)`;       
-    // qs('#about .button').style.boxShadow = txtSha
-
 
     // -------------
 
