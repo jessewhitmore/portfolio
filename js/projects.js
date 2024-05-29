@@ -24,7 +24,7 @@ function processElements() {
         })
         const gal = new gallery()
         v.innerHTML = '';
-        gal.setup(imgs, v, caption)
+        gal.setup(imgs, v, caption, true)
     })
 
 

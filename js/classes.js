@@ -426,6 +426,55 @@ class gallery {
 
     }
 
+    zoom(src) {
+        const container = document.createElement('div')
+        container.classList.add('overlay-img')
+
+        const img = new Image()
+        img.src = src
+
+
+        gsap.fromTo(container, {
+            opacity:0,
+            backdropFilter:'blur(0px)'
+        }, {
+            opacity:1,
+            backdropFilter:'blur(20px)',
+            duration:0.5
+        })        
+
+        gsap.fromTo(img, {
+            opacity:0,
+            scale:0.8
+        }, {
+            opacity:1,
+            scale:1,
+            duration:0.5
+        })
+
+
+        container.appendChild(img)
+        document.body.appendChild(container)
+
+        container.addEventListener('click', ()=>{
+            gsap.to(container, {
+                opacity:0,
+                backdropFilter:'blur(0px)',
+                duration:0.5,
+                onComplete:()=>{
+                    container.remove()
+                }
+            })
+
+            gsap.to(img, {
+                opacity:0,
+                scale:1.2,
+                duration:0.5
+            })            
+        })
+        
+    }
+
     move(dir,speed) {
 
         clearTimeout(this.moveInterval)
@@ -516,7 +565,7 @@ class gallery {
                     gsap.to(img, {'mask-image': 'linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 1))', duration:Math.max(0.3, speed*0.5) })
                     gsap.to(img.dataset, {dist:50, dur:1600, duration: speed, onComplete: () => {
                         if(this.zoomable) img.classList.add('zoomable')
-                        img.classList.remove('react-play')
+//                        img.classList.remove('react-play')
                     } })
                     target.querySelector('.gallery-nav').children[i].classList.add('gallery-navOn')
                 } else if(rati === 1) {
@@ -541,6 +590,7 @@ class gallery {
     clicked(event) {
         if(this.actioning) return;
         let imGalPos = event.target.dataset.gallerypos
+        if(event.target.classList.contains('zoomable')) this.zoom(event.target.src)
         if(imGalPos == this.index) return;
 
         clearInterval(this.moveRapid)
