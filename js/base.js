@@ -2344,7 +2344,7 @@ function drawFrame() {
 
 
 
-const loadForce = false;
+let loadForce = false;
 function load() {
 
     if(loadForce) return;
