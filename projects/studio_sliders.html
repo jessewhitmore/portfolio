@@ -271,6 +271,8 @@ const imz = [
     'up',
       
     ]
+    setTimeout(()=>{
+
     if(!prop.mobile) {
 
     const ss = document.querySelector('#slides')
@@ -284,9 +286,10 @@ const imz = [
     show.setup(ss, null, null, imz, slideAni)
     } else {
 
-      document.querySelector('.deck').remove()
-
+      document.querySelector('.deck').remove()      
     }
+  },200)
+
   </script>
 
   </body>
