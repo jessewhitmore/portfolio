@@ -354,6 +354,8 @@ const imz = [
       
     ]
 
+    if(!prop.mobile) {
+
     const ss = document.querySelector('#slides')
     ss.style.position = 'relative'
     ss.style.width = 'calc(100% - 100px)'
@@ -363,7 +365,8 @@ const imz = [
     ss.style.margin = 'auto'
     const show = new slideInstance()
     show.setup(ss, null, null, imz, slideAni)
-
+  }
+  
   </script>
 
   </body>
