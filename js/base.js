@@ -2344,8 +2344,11 @@ function drawFrame() {
 
 
 
-
+const loadForce = false;
 function load() {
+
+    if(loadForce) return;
+    loadForce = true
     const url = new URL(window.location.href);
 
     // Get the search parameters
@@ -2382,20 +2385,7 @@ function load() {
 
 }
 
-window.onload = function() {
-    console.log('onload')
-    load()
-}
 
-window.addEventListener('popstate', (event) => {
-    console.log('popstate')
-    load()
-});
-
-window.addEventListener("hashchange", function(e) {
-    console.log('hashchange')
-    if(e.oldURL.length > e.newURL.length) load()
-});
 
 /*
 
@@ -2892,3 +2882,22 @@ function CVconstructor() {
 
 }
 CVconstructor()
+
+
+
+setTimeout(load, 700)
+
+window.onload = function() {
+    console.log('onload')
+    load()
+}
+
+window.addEventListener('popstate', (event) => {
+    console.log('popstate')
+    load()
+});
+
+window.addEventListener("hashchange", function(e) {
+    console.log('hashchange')
+    if(e.oldURL.length > e.newURL.length) load()
+});
