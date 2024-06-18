@@ -48,7 +48,12 @@
             <span class="statData">7.0min read</span>
           </div>
         </div>
+
+        <div class = "subHeader deck">Case study deck:</div>
+        <div id = "slides"></div>
+        
         <div class="copy">
+
           <div class = "subHeader">The Problem</div>
           <p>Upon the initiation of paperwork for the acquisition of Playground (PXYZ), I was entrusted with the critical task of crafting a format that strategically capitalised on PXYZ’s focus on attention and captivating bespoke Ads while aligning seamlessly with GumGum’s existing footprint. The challenge at hand involved defining a format design that not only embodies the essence of attention-centric content but also presents a fresh and captivating proposition for the sales team, enhancing their sales strategies.</p>
           </div>
@@ -172,7 +177,311 @@
   <script src="../js/classes.js"></script>
   <script src="../js/base.js"></script>
   <script src="../js/projects.js"></script>
+
+  <script src ="../js/slideshow.js"></script>
+
+  <style>
+    .slide {
+      width:100%;
+      height:100%;
+    }
+
+    .deck {
+      text-align: center;
+    }
+
+    .slide img {
+      position:absolute;
+      width:100%;
+      height:auto;
+    }
+
+    .slideshow .controls div {
+      display:flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+
+    .slideshow .controls img {
+      filter: drop-shadow(0px 0px 8px rgba(0,0,0,0.8));
+      opacity:0.1;
+      transition: all 0.2s;
+    }
+
+    .slideshow .next:hover > img, .slideshow .prev:hover > img {
+      filter: drop-shadow(0px 0px 3px rgba(255,204,0,0.8));
+      opacity: 0.8;
+    }
+
+
+    .slideshow .next img {
+      transform: rotate(180deg);
+    }
+
+  </style>  
+
   <script>
+
+const imz = [
+      `
+      <img src = "./new_format_velocity/bg.png" />
+      <img src = "./new_format_velocity/slide1-1.png" />
+      <img src = "./new_format_velocity/slide1-2.png" />
+      <img src = "./new_format_velocity/logo.png" />
+      `,
+      `
+      <img src = "./new_format_velocity/bg.png" />
+      <img src = "./new_format_velocity/slide2-1.png" />
+      <img src = "./new_format_velocity/slide2-2.png" />
+      <img src = "./new_format_velocity/logo.png" />
+      `,
+      `
+      <img src = "./new_format_velocity/bg.png" />
+      <img src = "./new_format_velocity/slide3-1.png" />
+      <img src = "./new_format_velocity/slide3-2.png" />
+      <img src = "./new_format_velocity/slide3-3.png" />
+      <img src = "./new_format_velocity/slide3-4.png" />
+      <img src = "./new_format_velocity/slide3-5.png" />
+      <img src = "./new_format_velocity/logo.png" />
+      `,
+      `
+      <img src = "./new_format_velocity/bg.png" />
+      <img src = "./new_format_velocity/slide4-1.png" />
+      <img src = "./new_format_velocity/slide4-2.png" />
+      <img src = "./new_format_velocity/logo.png" />
+      `,
+      `
+      <img src = "./new_format_velocity/bg.png" />
+      <img src = "./new_format_velocity/slide4-1.png" />
+      <img src = "./new_format_velocity/slide4-3.png" />
+      <img src = "./new_format_velocity/logo.png" />
+      `,
+      `
+      <img src = "./new_format_velocity/bg.png" />
+      <img src = "./new_format_velocity/slide5-1.png" />
+      <img src = "./new_format_velocity/slide5-2.png" />
+      <img src = "./new_format_velocity/slide5-3.png" />
+      <img src = "./new_format_velocity/slide5-4.png" />
+      <img src = "./new_format_velocity/logo.png" />
+      `,
+      `
+      <img src = "./new_format_velocity/bg.png" />
+      <img src = "./new_format_velocity/slide6-1.png" />
+      <img src = "./new_format_velocity/slide6-2.png" />
+      <img src = "./new_format_velocity/slide6-3.png" />
+      <img src = "./new_format_velocity/slide6-4.png" />
+      <img src = "./new_format_velocity/slide6-5.png" />
+      <img src = "./new_format_velocity/slide6-6.png" />
+      <img src = "./new_format_velocity/slide6-7.png" />
+      <img src = "./new_format_velocity/slide6-8.png" />
+      <img src = "./new_format_velocity/logo.png" />
+      `,
+      `
+      <img src = "./new_format_velocity/bg.png" />
+      <img src = "./new_format_velocity/slide7-1.png" />
+      <img src = "./new_format_velocity/slide7-2.png" />
+      <img src = "./new_format_velocity/slide7-3.png" />
+      <img src = "./new_format_velocity/slide7-4.png" />
+      <img src = "./new_format_velocity/slide7-5.png" />
+      <img src = "./new_format_velocity/slide7-6.png" />
+      <img src = "./new_format_velocity/slide7-7.png" />
+      <img src = "./new_format_velocity/logo.png" />
+      `,
+      `
+      <img src = "./new_format_velocity/bg.png" />
+      <img src = "./new_format_velocity/slide8-1.png" />
+      <img src = "./new_format_velocity/slide8-2.png" />
+      <img src = "./new_format_velocity/slide8-3.png" />
+      <img src = "./new_format_velocity/logo.png" />
+      `, 
+      `
+      <img src = "./new_format_velocity/bg.png" />
+      <img src = "./new_format_velocity/slide9-1.png" />
+      <img src = "./new_format_velocity/slide9-2.png" />
+      <img src = "./new_format_velocity/slide9-3.png" />
+      <img src = "./new_format_velocity/logo.png" />
+      `,    
+      `
+      <img src = "./new_format_velocity/bg.png" />
+      <img src = "./new_format_velocity/slide10-1.png" />
+      <img src = "./new_format_velocity/slide10-2.png" />
+      <img src = "./new_format_velocity/slide10-3.png" />
+      <img src = "./new_format_velocity/slide10-4.png" />
+      <img src = "./new_format_velocity/slide10-5.png" />
+      <img src = "./new_format_velocity/slide10-6.png" />
+      <img src = "./new_format_velocity/slide9-3.png" />
+      <img src = "./new_format_velocity/logo.png" />
+      `,
+      `
+      <img src = "./new_format_velocity/bg.png" />
+      <img src = "./new_format_velocity/slide10-6.png" />
+      <img src = "./new_format_velocity/slide11-1.png" />
+      <img src = "./new_format_velocity/slide11-2.png" />
+      <img src = "./new_format_velocity/slide11-3.png" />
+      <img src = "./new_format_velocity/slide11-4.png" />
+      <img src = "./new_format_velocity/slide11-5.png" />
+      <img src = "./new_format_velocity/slide11-6.png" />
+      <img src = "./new_format_velocity/slide11-7.png" />
+      <img src = "./new_format_velocity/slide9-3.png" />
+      <img src = "./new_format_velocity/logo.png" />
+      `,
+      `
+      <img src = "./new_format_velocity/bg.png" />
+      <img src = "./new_format_velocity/slide12-1.png" />
+      <img src = "./new_format_velocity/slide12-2.png" />
+      <img src = "./new_format_velocity/slide12-3.png" />
+      <img class = 'D-laptop' src = "./new_format_velocity/slide12-4.png" />
+      <img class = 'D-text' src = "./new_format_velocity/slide12-5.png" />
+      <img class = 'D-laptop' src = "./new_format_velocity/slide12-6.png" />
+      <img class = 'D-text' src = "./new_format_velocity/slide12-7.png" />
+      <img class = 'D-laptop' src = "./new_format_velocity/slide12-8.png" />
+      <img class = 'D-text' src = "./new_format_velocity/slide12-9.png" />
+      <img src = "./new_format_velocity/slide12-10.png" />
+      <img src = "./new_format_velocity/logo.png" />
+
+
+      `,
+      `
+      <img src = "./new_format_velocity/bg.png" />
+      <img src = "./new_format_velocity/slide13-1.png" />
+      <img src = "./new_format_velocity/slide13-2.png" />
+      <img src = "./new_format_velocity/slide13-3.png" />
+      <img src = "./new_format_velocity/slide13-4.png" />
+      <img src = "./new_format_velocity/logo.png" />
+      `,
+      `
+      <img src = "./new_format_velocity/bg.png" />
+      <img src = "./new_format_velocity/slide13-1.png" />
+      <img src = "./new_format_velocity/slide13-3.png" />
+      <img src = "./new_format_velocity/slide13-5.png" />
+      <img src = "./new_format_velocity/slide13-6.png" />
+      <img src = "./new_format_velocity/logo.png" />
+      `,      
+      `
+      <img src = "./new_format_velocity/bg.png" />
+      <img src = "./new_format_velocity/slide14-1.png" />
+      <img src = "./new_format_velocity/logo.png" />
+      `,      
+    ]
+    const slideAni = [
+    'left',
+    'left',
+    'left',
+    'fade',
+    'left',
+    'left',
+    'left',
+    'left',
+    'left',
+    'fade',
+    'fade',
+    'left',
+    'left',
+    'left',
+    'left',
+    'left',
+    'left',
+    'left',
+    'left',      
+    ]
+
+
+
+    const ss = document.querySelector('#slides')
+    ss.style.position = 'relative'
+    ss.style.width = 'calc(100% - 100px)'
+    ss.style.maxWidth = 'calc(100vh * (16/9) - 100px)'
+    ss.style.height = 'auto'
+    ss.style.aspectRatio = '16/9'
+    ss.style.margin = 'auto'
+    const show = new slideInstance()
+    show.setup(ss, null, null, imz, slideAni)
+
+
+    const DLaptop = document.querySelectorAll('.D-laptop')
+    const Dtext = document.querySelectorAll('.D-text')
+    const tl = gsap.timeline({repeat:-1})
+        tl.fromTo(DLaptop[1], {
+          autoAlpha:0,
+        }, {
+          autoAlpha:1,
+          duration:1
+        },'>5')    
+        tl.fromTo(DLaptop[2], {
+          autoAlpha:0,
+        }, {
+          autoAlpha:1,
+          duration:1
+        },'>5') 
+        
+        tl.fromTo([DLaptop[1], DLaptop[2]], {
+          autoAlpha:1,
+        }, {
+          autoAlpha:0,
+          duration:1
+        },'>5')
+
+
+
+        tl.fromTo(Dtext[1], {
+          autoAlpha:0,
+          y:'10%'
+        }, {
+          autoAlpha:1,
+          y:0,
+          duration:1
+        },'5')
+        tl.fromTo(Dtext[0], {
+          autoAlpha:1,
+          y:0
+        }, {
+          autoAlpha:0,
+          y:'-10%',
+          duration:1
+        },'<')        
+
+        tl.fromTo(Dtext[2], {
+          autoAlpha:0,
+          y:'10%'
+        }, {
+          autoAlpha:1,
+          y:0,
+          duration:1
+        },'>5')
+
+        tl.fromTo(Dtext[1], {
+          autoAlpha:1,
+          y:0
+        }, {
+          autoAlpha:0,
+          y:'-10%',
+          duration:1
+        },'<')
+
+
+        tl.fromTo(Dtext[0], {
+          autoAlpha:0,
+          y:'10%'
+        }, {
+          autoAlpha:1,
+          y:0,
+          duration:1
+        },'>5')
+
+        tl.fromTo(Dtext[2], {
+          autoAlpha:1,
+          y:0
+        }, {
+          autoAlpha:0,
+          y:'-10%',
+          duration:1
+        },'<')
+ 
+
+        tl.seek(5)
+        tl.play()
+
   const vel = [
       {
           name:'Velocity',

@@ -47,8 +47,16 @@
             <span class="statHeader">LENGTH</span>
             <span class="statData">7.9min read</span>
           </div>
-        </div>
+          </div>
+          
+          <div class = "subHeader deck">Case study deck:</div>
+          <div id = "slides"></div>
+
         <div class="copy">
+
+
+  
+
           <div class = "subHeader">Technical Terminology</div>
           <p>List of terms used within this case study that are not layman's terms parlance 
           </br><span class = "boldText">PSD:</span> Photoshop Document - A file format used for graphic design, allowing users to work with layers and various image adjustments in Adobe Photoshop.
@@ -175,6 +183,106 @@
   <script src="../js/classes.js"></script>
   <script src="../js/base.js"></script>
   <script src="../js/projects.js"></script>
+
+  <script src ="../js/slideshow.js"></script>
+
+  <style>
+    .slide {
+      width:100%;
+      height:100%;
+    }
+
+    .deck {
+      text-align: center;
+    }
+
+    .slide img {
+      position:absolute;
+      width:100%;
+      height:auto;
+    }
+
+    .slideshow .controls div {
+      display:flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+
+    .slideshow .controls img {
+      filter: drop-shadow(0px 0px 8px rgba(0,0,0,0.8));
+      opacity:0.1;
+      transition: all 0.2s;
+    }
+
+    .slideshow .next:hover > img, .slideshow .prev:hover > img {
+      filter: drop-shadow(0px 0px 3px rgba(255,204,0,0.8));
+      opacity: 0.8;
+    }
+
+
+    .slideshow .next img {
+      transform: rotate(180deg);
+    }
+
+  </style>  
+  <script>
+
+const imz = [
+      '<img src = "./studio_sliders/slide1.jpg" />',
+      '<img src = "./studio_sliders/slide2.jpg" />',
+      '<img src = "./studio_sliders/slide3.jpg" />',
+      '<img src = "./studio_sliders/slide4.jpg" />',
+      '<img src = "./studio_sliders/slide5.jpg" />',
+      '<img src = "./studio_sliders/slide6.jpg" />',
+      '<img src = "./studio_sliders/slide7.jpg" />',
+      '<img src = "./studio_sliders/slide8.jpg" />',
+      '<img src = "./studio_sliders/slide9.jpg" />',
+      '<img src = "./studio_sliders/slide10.jpg" />',
+      '<img src = "./studio_sliders/slide11.jpg" />',
+      '<img src = "./studio_sliders/slide12.jpg" />',
+      '<img src = "./studio_sliders/slide13.jpg" />',
+      '<img src = "./studio_sliders/slide14.jpg" />',
+      '<img src = "./studio_sliders/slide15.jpg" />',
+      '<img src = "./studio_sliders/slide16.jpg" />',
+      '<img src = "./studio_sliders/slide17.jpg" />',
+      '<img src = "./studio_sliders/slide18.jpg" />',
+      '<img src = "./studio_sliders/slide19.jpg" />'
+    ]
+    const slideAni = [
+    'fade',
+    'up',
+    'up',
+    'none',
+    'up',
+    'up',
+    'up',
+    'up',
+    'fade',
+    'up',
+    'up',
+    'up',
+    'fade',
+    'up',
+    'fade',
+    'up',
+    'fade',
+    'up',
+    'up',
+      
+    ]
+
+    const ss = document.querySelector('#slides')
+    ss.style.position = 'relative'
+    ss.style.width = 'calc(100% - 100px)'
+    ss.style.maxWidth = 'calc(100vh * (16/9) - 100px)'
+    ss.style.height = 'auto'
+    ss.style.aspectRatio = '16/9'
+    ss.style.margin = 'auto'
+    const show = new slideInstance()
+    show.setup(ss, null, null, imz, slideAni)
+
+  </script>
 
   </body>
 </html>
